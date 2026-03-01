@@ -1,7 +1,6 @@
 {
   "name": "ai-club-frontend",
   "private": true,
-  "version": "0.0.5",
   "type": "module",
   "scripts": {
     "dev": "vite",
