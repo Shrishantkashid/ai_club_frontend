@@ -12,6 +12,7 @@ export default defineConfig({
     outDir: 'dist',
     assetsDir: 'assets',
     minify: 'terser',
+    sourcemap: true,
     rollupOptions: {
       output: {
         manualChunks: {
@@ -22,5 +23,7 @@ export default defineConfig({
   },
   define: {
     'process.env': process.env
-  }
+  },
+  // Base URL for GitHub Pages or subdirectory deployments
+  base: './'
 })
