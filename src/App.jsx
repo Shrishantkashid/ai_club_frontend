@@ -343,7 +343,7 @@ function App() {
         display: showContest ? 'none' : 'block', // Hide footer during contest
         fontSize: isMobile ? '0.7rem' : '0.8rem'
       }}>
-        <p style={{ margin: '0.25rem 0' }}>© 2024 AI Club. All rights reserved.</p>
+        <p style={{ margin: '0.25rem 0' }}>© 2026 AI Club. All rights reserved.</p>
         <p style={{ margin: '0.25rem 0', color: '#64ffda' }}>
           Empowering the next generation of AI innovators
         </p>
