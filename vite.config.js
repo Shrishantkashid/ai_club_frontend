@@ -11,20 +11,16 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    // Remove terser to avoid dependency issues
     minify: false,
-    sourcemap: true,
+    sourcemap: false,
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-        }
+        manualChunks: undefined
       }
     }
   },
   define: {
     'process.env': process.env
   },
-  // Base URL for GitHub Pages or subdirectory deployments
   base: './'
 })
