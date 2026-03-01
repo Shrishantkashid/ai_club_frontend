@@ -7,20 +7,5 @@ export default defineConfig({
   server: {
     port: 3000,
     host: true
-  },
-  build: {
-    outDir: 'dist',
-    assetsDir: 'assets',
-    minify: false,
-    sourcemap: false,
-    rollupOptions: {
-      output: {
-        manualChunks: undefined
-      }
-    }
-  },
-  define: {
-    'process.env': process.env
-  },
-  base: './'
+  }
 })
