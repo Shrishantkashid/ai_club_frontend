@@ -1,11 +1,11 @@
 {
   "name": "ai-club-frontend",
   "private": true,
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node build.js",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {

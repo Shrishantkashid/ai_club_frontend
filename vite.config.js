@@ -11,7 +11,8 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    minify: 'terser',
+    // Remove terser to avoid dependency issues
+    minify: false,
     sourcemap: true,
     rollupOptions: {
       output: {
