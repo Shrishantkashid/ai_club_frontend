@@ -170,7 +170,7 @@ const Leaderboard = ({ onBackToHome }) => {
             }}>
               {leaderboard.map((entry, index) => (
                 <div 
-                  key={entry.userId}
+                  key={`${entry.userId}-${index}`}
                   style={{
                     backgroundColor: index < 3 ? 'rgba(74, 222, 128, 0.1)' : 'rgba(10, 25, 47, 0.3)',
                     padding: '0.75rem',
@@ -262,7 +262,7 @@ const Leaderboard = ({ onBackToHome }) => {
               <tbody>
                 {leaderboard.map((entry, index) => (
                   <tr 
-                    key={entry.userId}
+                    key={`${entry.userId}-${index}`}
                     style={{
                       borderBottom: '1px solid rgba(100, 255, 218, 0.1)',
                       backgroundColor: index < 3 ? 'rgba(74, 222, 128, 0.1)' : 'transparent'

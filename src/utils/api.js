@@ -6,6 +6,7 @@ export const API = {
   LOGIN: `${API_BASE_URL}/api/contest/login`,
   ROUND1_SUBMIT: `${API_BASE_URL}/api/contest/round1/submit`,
   ROUND2_SUBMIT: `${API_BASE_URL}/api/contest/round2/submit`,
+  ROUND3_SUBMIT: `${API_BASE_URL}/api/contest/round3/submit`,
   LEADERBOARD: `${API_BASE_URL}/api/contest/leaderboard`,
 };
 

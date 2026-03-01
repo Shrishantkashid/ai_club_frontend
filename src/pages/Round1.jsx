@@ -13,7 +13,7 @@ const Round1 = ({ onCompleteRound1 }) => {
   // Track initial fullscreen status
   const initialFullscreenRef = useRef(false);
 
-  // 10 MCQ questions about AI
+  // 15 MCQ questions about AI
   const mcqQuestions = [
     {
       id: 1,
@@ -74,13 +74,43 @@ const Round1 = ({ onCompleteRound1 }) => {
       question: "Which of these is an example of unsupervised learning?",
       options: ["Image classification", "Customer segmentation", "Spam detection", "Medical diagnosis"],
       correct: 1
+    },
+    {
+      id: 11,
+      question: "What is the main difference between AI and Machine Learning?",
+      options: ["AI is broader concept, ML is subset of AI", "ML is broader than AI", "They are the same thing", "AI doesn't require data"],
+      correct: 0
+    },
+    {
+      id: 12,
+      question: "Which neural network architecture is best suited for image recognition?",
+      options: ["Recurrent Neural Networks", "Convolutional Neural Networks", "Feedforward Networks", "Autoencoders"],
+      correct: 1
+    },
+    {
+      id: 13,
+      question: "What is 'reinforcement learning' primarily used for?",
+      options: ["Pattern recognition", "Decision making in dynamic environments", "Data clustering", "Statistical analysis"],
+      correct: 1
+    },
+    {
+      id: 14,
+      question: "Which of these is a natural language processing task?",
+      options: ["Image filtering", "Sentiment analysis", "Data sorting", "Network optimization"],
+      correct: 1
+    },
+    {
+      id: 15,
+      question: "What does 'NLP' stand for in AI context?",
+      options: ["Neural Learning Process", "Natural Language Processing", "Network Layer Protocol", "Numerical Logic Programming"],
+      correct: 1
     }
   ]
 
   // 5 Code debugging questions
   const debuggingQuestions = [
     {
-      id: 11,
+      id: 16,
       question: "Identify the bug in this Python code:",
       code: `def calculate_average(numbers):
     total = 0
@@ -101,7 +131,7 @@ print(f"Average: {result}")`,
       explanation: "The code will throw a ZeroDivisionError if an empty list is passed. It should check if the list is empty before division."
     },
     {
-      id: 12,
+      id: 17,
       question: "What's wrong with this JavaScript code?",
       code: `function findMax(arr) {
     let max = 0;
@@ -124,7 +154,7 @@ console.log(findMax([-5, -2, -10, -1]));`,
       explanation: "The function initializes max to 0, so it will return 0 for arrays with all negative numbers instead of the actual maximum."
     },
     {
-      id: 13,
+      id: 18,
       question: "Debug this Python list comprehension:",
       code: `# Create a list of squares of even numbers
 numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -139,7 +169,7 @@ squares = [x**2 for x in numbers if x % 2 = 0]`,
       explanation: "The condition uses assignment operator '=' instead of comparison operator '=='. It should be 'if x % 2 == 0'."
     },
     {
-      id: 14,
+      id: 19,
       question: "What's the bug in this recursive function?",
       code: `function factorial(n) {
     if (n === 0) {
@@ -159,7 +189,7 @@ console.log(factorial(5));`,
       explanation: "The function doesn't handle negative inputs (will cause infinite recursion) and lacks protection against stack overflow for large numbers."
     },
     {
-      id: 15,
+      id: 20,
       question: "Identify the issue in this API call:",
       code: `fetch('https://api.example.com/data')
     .then(response => response.json())
@@ -431,6 +461,64 @@ console.log(factorial(5));`,
     document.addEventListener('paste', preventCopy);
     document.addEventListener('click', handleMouseClick);  // Add click listener for re-entry
 
+    // Store event listener functions for proper cleanup
+    const handleSelectStart = (e) => {
+      e.preventDefault();
+      return false;
+    };
+    
+    const handleKeyDown = (e) => {
+      // Prevent Ctrl+A (select all)
+      if (e.ctrlKey && (e.key === 'a' || e.key === 'A')) {
+        e.preventDefault();
+        return false;
+      }
+      // Prevent Ctrl+C (copy)
+      if (e.ctrlKey && (e.key === 'c' || e.key === 'C')) {
+        e.preventDefault();
+        return false;
+      }
+      // Prevent Ctrl+X (cut)
+      if (e.ctrlKey && (e.key === 'x' || e.key === 'X')) {
+        e.preventDefault();
+        return false;
+      }
+      // Prevent Ctrl+V (paste)
+      if (e.ctrlKey && (e.key === 'v' || e.key === 'V')) {
+        e.preventDefault();
+        return false;
+      }
+      // Prevent Ctrl+Z (undo)
+      if (e.ctrlKey && (e.key === 'z' || e.key === 'Z')) {
+        e.preventDefault();
+        return false;
+      }
+      // Prevent Ctrl+Shift+Z (redo)
+      if (e.ctrlKey && e.shiftKey && (e.key === 'z' || e.key === 'Z')) {
+        e.preventDefault();
+        return false;
+      }
+      // Prevent F12 (developer tools)
+      if (e.key === 'F12') {
+        e.preventDefault();
+        return false;
+      }
+      // Prevent Ctrl+Shift+I (developer tools)
+      if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+        e.preventDefault();
+        return false;
+      }
+      // Prevent Ctrl+U (view source)
+      if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
+        e.preventDefault();
+        return false;
+      }
+    };
+    
+    // Add text selection prevention listeners
+    document.addEventListener('selectstart', handleSelectStart);
+    document.addEventListener('keydown', handleKeyDown);
+    
     return () => {
       clearTimeout(timer); // Clear the initial fullscreen request timeout
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
@@ -440,6 +528,8 @@ console.log(factorial(5));`,
       document.removeEventListener('cut', preventCopy);
       document.removeEventListener('paste', preventCopy);
       document.removeEventListener('click', handleMouseClick);  // Remove click listener
+      document.removeEventListener('selectstart', handleSelectStart);
+      document.removeEventListener('keydown', handleKeyDown);
       
       // Don't exit fullscreen when transitioning to next round
       // Only exit if we're not in the process of transitioning

@@ -1,4 +1,12 @@
 import React, { useState, useEffect } from 'react'
+import nithinImage from '../assets/Nithin.jpg'
+import image1 from '../assets/WhatsApp Image 2026-02-23 at 7.34.24 PM.jpeg'
+import image2 from '../assets/WhatsApp Image 2026-02-24 at 10.16.53 PM.jpeg'
+import image3 from '../assets/WhatsApp Image 2026-03-01 at 3.30.49 PM.jpeg'
+import image4 from '../assets/WhatsApp Image 2026-03-01 at 3.30.51 PM.jpeg'
+import image5 from '../assets/WhatsApp Image 2026-03-01 at 3.30.53 PM.jpeg'
+import image6 from '../assets/WhatsApp Image 2026-03-01 at 3.30.55 PM.jpeg'
+import image7 from '../assets/WhatsApp Image 2026-03-01 at 3.30.57 PM.jpeg'
 
 const OfficeBearers = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -12,19 +20,19 @@ const OfficeBearers = () => {
       id: 1,
       name: "Nithin Raj G",
       position: "President",
-      department: "Computer Engineering & Engineering",
+      department: "Computer Science & Engineering",
       year: "Third Year",
-      image: "D:\Downloads\WhatsApp Image 2026-03-01 at 3.30.46 PM.jpeg",
-      bio: "The President defines the vision and strategic direction of Aritificial Intelligence Club .They coordinate with faculty and External Partners to organize events and initiatives. They oversee operations and motivate members to actively participate and innovate. "
+      image: nithinImage,
+      bio: "Leading the club with vision and dedication. Specializes in machine learning and neural networks. Passionate about AI research and innovation."
     },
     {
       id: 2,
       name: "Nishanth R",
       position: "Vice President",
-      department: "Computer Science & Engieering",
+      department: "Computer Science & Engineering",
       year: "Third Year",
-      image: "D:\Downloads\WhatsApp Image 2026-02-24 at 10.16.53 PM.jpeg",
-      bio: "THE VICE PRESIDENT SUPPORTS THE PRESIDENT IN LEADING THE CLUB AND OVERSEEING MAJOR DECISIONS AND ACTIVITIES. THEY STEP IN DURING THE PRESIDENT'S ABSENCE AND HELP ENSURE SMOOTII PLANNING, COORDINATION. AND EXECUTION OF EVENTS"
+      image: image2,
+      bio: "Overseeing technical operations and project coordination. Expertise in computer vision and robotics. Leads AI workshops and hackathons."
     },
     {
       id: 3,
@@ -32,7 +40,7 @@ const OfficeBearers = () => {
       position: "Secretary",
       department: "Computer Science & Engineering",
       year: "Third Year",
-      image: "D:\Downloads\WhatsApp Image 2026-03-01 at 3.30.49 PM.jpeg",
+      image: image3,
       bio: "Managing administrative tasks and member coordination. Focused on natural language processing and chatbot development. Organizes technical events."
     },
     {
@@ -41,8 +49,8 @@ const OfficeBearers = () => {
       position: "Joint-Secretary",
       department: "Computer Science & Engineering",
       year: "Third Year",
-      image: "D:\Downloads\WhatsApp Image 2026-02-23 at 7.34.24 PM.jpeg",
-      bio: "THE JOINT SECRETARY ASSISTS THE SECRETARY IN ORGANIZING MEETINGS, MANAGING RECORDS. AND COORDINATING CLUB ACTIVITIES. THEY TAKE CHARGE IN THE SECRETARY'S ABSENCE AND ENSURE SMOOTH COMMUNICATION AND TEAMWORK WITHIN THE CLUB"
+      image: image1,
+      bio: "The joint secretary assists the secretary in organizing meeting managing records and coordinating club activities. They take charge in the secretary's absence and ensure smooth communication and teamwork within the club."
     },
     {
       id: 5,
@@ -50,8 +58,8 @@ const OfficeBearers = () => {
       position: "Treasurer",
       department: "Computer Science & Engineering",
       year: "Third Year",
-      image: "D:\Downloads\WhatsApp Image 2026-03-01 at 3.30.51 PM.jpeg",
-      bio: "THE TREASURER MANAGES THE CLUB'S FINANCES. INCLUDING BUDGETING EXPENSE TRACKING. AND THEY HANDLE FUND COLLECTION, APPROVALS, MAINTAIN TRANSPARENT FINANCIAL AND RECORDS. THEY ENSURE EFFECTIVE UTILIZATION OF FUNDS FOR EVENTS, PROJECTS. AND ACTIVITIES.   "
+      image: image4,
+      bio: "Handling financial matters and resource management. Interested in AI ethics and policy. Manages club budget and sponsorships."
     },
     {
       id: 6,
@@ -59,26 +67,26 @@ const OfficeBearers = () => {
       position: "Social Media Lead",
       department: "Computer Science & Engineering",
       year: "Second Year",
-      image: "D:\Downloads\WhatsApp Image 2026-03-01 at 3.30.53 PM.jpeg",
-      bio: "THE SOCIAL MEDIA LEAD MANAGES THE CLUB'S ONLINE PRESENCE ACROSS ALL PLATFORMS. THEY CREATE AND PROMOTE EVENTS. ACTIVITIES. PUBLISH CONTENT TO ACHIEVEMENTS. AND THEY ENGAGE WITH THE AUDIENCE AND MAINTAIN A BRAND IMAGE. CONSISTENT, PROFESSIONAL"
+      image: image5,
+      bio: "The social media Lead Mangesh the clubs online presence across all platforms.They create and promote events activites publish content to achievements and they engage with the audience and maintain a brand image."
     },
     {
       id: 7,
-      name: "Rakshitha J K ",
+      name: "Rakshitha J K",
       position: "Documentation Lead",
-      department: "Computer Engineering & Engineering",
+      department: "Computer Science & Engineering",
       year: "Second Year",
-      image: "D:\Downloads\WhatsApp Image 2026-03-01 at 3.30.57 PM.jpeg",
-      bio: "THE DOCUMENTATION LEAD PREPARES AND MAINTAINS RECORDS OF ALL CLUB ACTIVITIES AND EVENTS. THEY COMPILE REPORTS, PRESENTATIONS, AND ARCHIVES FOR INTERNAL AND OFFICIAL USE. THEY ENSURE ACCURACY, CONSISTENCY, AND TIMELY SUBMISSION OF ALL DOCUMENTATION."
-    }
+      image: image7,
+      bio: "The documentation lag prepare and maintain record of all club activities and events. They compile reports presentation and archives for internal and offical use. They ensure accuracy consistency and timely submission of all documentation."
+    },
     {
       id: 8,
       name: "Shreekara Bhat A P",
-      position: "Membership Coordinator ",
-      department: "Computer Engineering & Engineering",
+      position: "Membership Coordinator",
+      department: "Computer Science & Engineering",
       year: "Second Year",
-      image: "D:\Downloads\WhatsApp Image 2026-03-01 at 3.30.55 PM.jpeg",
-      bio: "THE MEMBERSHIP COORDINATOR IS RESPONSIBLE FOR RECRUITING NEW MEMBERS AND MAINTAINING MEMBER RECORDS. THEY ENGAGE MEMBERS, ENCOURAGE PARTICIPATION, AND ENSURE EFFECTIVE COMMUNICATION WITHIN THE CLUB"
+      image: image6,
+      bio: "The membership coordinator is responsible for recruiting new members and maintaining members records. They engage memebers encourage effective communication within the club."
     }
   ]
 
@@ -129,7 +137,14 @@ const OfficeBearers = () => {
               height: '200px',
               backgroundImage: `url(${bearer.image})`,
               backgroundSize: 'cover',
-              backgroundPosition: 'center',
+              backgroundPosition: bearer.name === 'Nithin Raj G' ? 'center 20%' : 
+                bearer.name === 'Nishanth R' ? 'center 10%' :
+                bearer.name === 'Sanjana R' ? 'center 65%' :
+                bearer.name === 'Shrishant Shridhar Kashid' ? 'center 48%' :
+                bearer.name === 'Akshay A Agile' ? 'center 25%' :
+                bearer.name === 'Yashwanth Gowda H' ? 'center 27%' :
+                bearer.name === 'Rakshitha J K' ? 'center 53%' :
+                bearer.name === 'Shreekara Bhat A P' ? 'center 50%' : 'center',
               display: 'flex',
               alignItems: 'flex-end',
               justifyContent: 'center',

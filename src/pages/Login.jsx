@@ -6,10 +6,64 @@ const Login = ({ onLoginSuccess, onBack }) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
+  // Prevent text selection in Login page
+  React.useEffect(() => {
+    const preventTextSelection = (e) => {
+      e.preventDefault();
+      return false;
+    };
+    
+    const preventKeyboardShortcuts = (e) => {
+      // Prevent Ctrl+A (select all)
+      if (e.ctrlKey && (e.key === 'a' || e.key === 'A')) {
+        e.preventDefault();
+        return false;
+      }
+      // Prevent Ctrl+C (copy)
+      if (e.ctrlKey && (e.key === 'c' || e.key === 'C')) {
+        e.preventDefault();
+        return false;
+      }
+      // Prevent F12 (developer tools)
+      if (e.key === 'F12') {
+        e.preventDefault();
+        return false;
+      }
+      // Prevent Ctrl+Shift+I (developer tools)
+      if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+        e.preventDefault();
+        return false;
+      }
+    };
+    
+    // Add event listeners
+    document.addEventListener('selectstart', preventTextSelection);
+    document.addEventListener('keydown', preventKeyboardShortcuts);
+    
+    // Cleanup
+    return () => {
+      document.removeEventListener('selectstart', preventTextSelection);
+      document.removeEventListener('keydown', preventKeyboardShortcuts);
+    };
+  }, []);
+
   const handleLogin = async (e) => {
     e.preventDefault()
     setLoading(true)
     setError('')
+
+    // Client-side email validation
+    if (!email || !email.includes('@')) {
+      setError('Please enter a valid email address')
+      setLoading(false)
+      return
+    }
+    
+    if (!email.toLowerCase().endsWith('@saividya.ac.in')) {
+      setError('Only @saividya.ac.in email addresses are allowed')
+      setLoading(false)
+      return
+    }
 
     try {
       // Simulate API call to login endpoint
@@ -98,7 +152,7 @@ const Login = ({ onLoginSuccess, onBack }) => {
           <div style={{ marginBottom: '1.5rem' }}>
             <input
               type="email"
-              placeholder="Enter your college email"
+              placeholder="Enter your @saividya.ac.in email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -153,7 +207,7 @@ const Login = ({ onLoginSuccess, onBack }) => {
           fontSize: isMobile ? '0.8rem' : '0.9rem', 
           marginTop: '1rem' 
         }}>
-          Use your official college email to participate
+          Only @saividya.ac.in email addresses are accepted
         </p>
       </div>
     </div>

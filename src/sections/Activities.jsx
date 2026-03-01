@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-const Activities = ({ navigateToContest, navigateToTestQuiz }) => {
+const Activities = ({ navigateToContest, setShowContest, setContestState }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isLocked, setIsLocked] = useState(false); // Set to false to unlock the activity
 
@@ -101,12 +101,10 @@ const Activities = ({ navigateToContest, navigateToTestQuiz }) => {
           </p>
           <button
             onClick={() => {
-              if (navigateToTestQuiz) {
-                navigateToTestQuiz();
-              } else {
-                // Fallback to direct navigation
-                window.location.hash = '#/test-quiz';
-              }
+              // Navigate to test quiz instead of main contest
+              window.location.hash = '#/test-quiz';
+              setShowContest(true);
+              setContestState('test-quiz');
             }}
             style={{
               backgroundColor: '#4ade80',

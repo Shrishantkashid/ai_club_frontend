@@ -5,6 +5,45 @@ const Instructions = ({ onProceed }) => {
 
   useEffect(() => {
     setIsVisible(true);
+    
+    // Prevent text selection in Instructions page
+    const preventTextSelection = (e) => {
+      e.preventDefault();
+      return false;
+    };
+    
+    const preventKeyboardShortcuts = (e) => {
+      // Prevent Ctrl+A (select all)
+      if (e.ctrlKey && (e.key === 'a' || e.key === 'A')) {
+        e.preventDefault();
+        return false;
+      }
+      // Prevent Ctrl+C (copy)
+      if (e.ctrlKey && (e.key === 'c' || e.key === 'C')) {
+        e.preventDefault();
+        return false;
+      }
+      // Prevent F12 (developer tools)
+      if (e.key === 'F12') {
+        e.preventDefault();
+        return false;
+      }
+      // Prevent Ctrl+Shift+I (developer tools)
+      if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+        e.preventDefault();
+        return false;
+      }
+    };
+    
+    // Add event listeners
+    document.addEventListener('selectstart', preventTextSelection);
+    document.addEventListener('keydown', preventKeyboardShortcuts);
+    
+    // Cleanup
+    return () => {
+      document.removeEventListener('selectstart', preventTextSelection);
+      document.removeEventListener('keydown', preventKeyboardShortcuts);
+    };
   }, []);
 
   return (

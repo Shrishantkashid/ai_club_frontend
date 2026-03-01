@@ -11,11 +11,10 @@ import Round1 from './pages/Round1'
 import Round2 from './pages/Round2'
 import Round3 from './pages/Round3'
 import Leaderboard from './pages/Leaderboard'
-import TestQuiz from './pages/TestQuiz'
 
 function App() {
   const [activeSection, setActiveSection] = useState('home')
-  const [contestState, setContestState] = useState('activity-card') // activity-card, instructions, login, round1, round2, round3, leaderboard, test-quiz
+  const [contestState, setContestState] = useState('activity-card') // activity-card, instructions, login, round1, round2, round3, leaderboard
   const [currentUser, setCurrentUser] = useState(null)
   const [showContest, setShowContest] = useState(false)
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
@@ -37,9 +36,6 @@ function App() {
       if (hash === 'contest') {
         setShowContest(true)
         setContestState('activity-card')
-      } else if (hash === 'test-quiz') {
-        setShowContest(true)
-        setContestState('test-quiz')
       } else if (hash.startsWith('contest/')) {
         setShowContest(true)
         setContestState(hash.split('/')[1])
@@ -62,13 +58,6 @@ function App() {
     window.location.hash = '#/contest';
     setShowContest(true);
     setContestState('activity-card');
-  }
-
-  // Function to navigate to test quiz
-  const navigateToTestQuiz = () => {
-    window.location.hash = '#/test-quiz';
-    setShowContest(true);
-    setContestState('test-quiz');
   }
 
   // Function to logout
@@ -144,7 +133,7 @@ function App() {
       case 'faculty':
         return <Faculty />
       case 'activities':
-        return <Activities navigateToContest={navigateToContest} navigateToTestQuiz={navigateToTestQuiz} />
+        return <Activities navigateToContest={navigateToContest} />
       default:
         return <Home />
     }
@@ -360,7 +349,7 @@ function App() {
         display: showContest ? 'none' : 'block', // Hide footer during contest
         fontSize: isMobile ? '0.7rem' : '0.8rem'
       }}>
-        <p style={{ margin: '0.25rem 0' }}>© 2026 AI Club. All rights reserved.</p>
+        <p style={{ margin: '0.25rem 0' }}>© 2024 AI Club. All rights reserved.</p>
         <p style={{ margin: '0.25rem 0', color: '#64ffda' }}>
           Empowering the next generation of AI innovators
         </p>

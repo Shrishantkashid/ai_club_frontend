@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
-
+import sowmya from "../assets/teachers/sowmya.jpg"
+import pavithra from "../assets/teachers/pavithra.jpeg"
+import jayaprada from "../assets/teachers/jayaprada.jpeg"
 const Faculty = () => {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -10,53 +12,27 @@ const Faculty = () => {
   const facultyMembers = [
     {
       id: 1,
-      name: "Dr. Robert Chen",
-      designation: "Professor & Head of Department",
-      department: "Computer Science",
-      specialization: "Machine Learning, Data Science",
-      experience: "15+ years",
-      image: "/placeholder-faculty.jpg",
-      bio: "Leading researcher in deep learning applications. Published over 50 research papers in international journals."
+      name: "Prof. Sowmya H N",
+      designation: "Assistant Professor",
+      department: "Computer Science & Engineering",
+      specialization: "AI & Machine Learning",
+      image: sowmya,
     },
     {
       id: 2,
-      name: "Dr. Amanda Foster",
-      designation: "Associate Professor",
-      department: "Electronics & Communication",
-      specialization: "Computer Vision, Robotics",
-      experience: "12+ years",
-      image: "/placeholder-faculty.jpg",
-      bio: "Expert in computer vision systems and autonomous robotics. Industry experience with leading tech companies."
+      name: "Prof. Pavithra B G",
+      designation: "Assistant Professor",
+      department: "Computer Science & Engineering",
+      specialization: "Digital Communication And Networking",
+      image: pavithra,
     },
     {
       id: 3,
-      name: "Dr. James Rodriguez",
+      name: "Prof. Jayaprada S Hiremath",
       designation: "Assistant Professor",
-      department: "Information Technology",
-      specialization: "Natural Language Processing, AI Ethics",
-      experience: "8+ years",
-      image: "/placeholder-faculty.jpg",
-      bio: "Research focus on ethical AI implementation and natural language understanding systems."
-    },
-    {
-      id: 4,
-      name: "Dr. Maria Thompson",
-      designation: "Assistant Professor",
-      department: "Computer Science",
-      specialization: "Neural Networks, Deep Learning",
-      experience: "10+ years",
-      image: "/placeholder-faculty.jpg",
-      bio: "Specializes in convolutional neural networks and their applications in medical imaging."
-    },
-    {
-      id: 5,
-      name: "Dr. Christopher Lee",
-      designation: "Associate Professor",
-      department: "Electronics & Communication",
-      specialization: "Reinforcement Learning, IoT",
-      experience: "13+ years",
-      image: "/placeholder-faculty.jpg",
-      bio: "Focus on reinforcement learning algorithms and Internet of Things integration with AI systems."
+      department: "Computer Science & Engineering",
+      specialization: "AIML ,DL,Computer Vision",
+      image: jayaprada,
     }
   ]
 
@@ -104,33 +80,49 @@ const Faculty = () => {
           }}
           >
             <div style={{
-              height: '200px',
-              background: 'linear-gradient(135deg, #1e3a5f 0%, #0f1e37 100%)',
+              height: '300px',
+              backgroundImage: `url(${faculty.image})`,
+              backgroundSize: faculty.name === 'Prof. Sowmya H N' ? '80%' : 'cover',
+              backgroundPosition: faculty.name === 'Prof. Jayaprada S Hiremath' ? 'center 2%' : 
+                           faculty.name === 'Prof. Pavithra B G' ? 'center 30%' : 'center',
               display: 'flex',
-              alignItems: 'center',
+              alignItems: 'flex-end',
               justifyContent: 'center',
-              color: '#64ffda',
-              fontSize: '4rem'
+              position: 'relative'
             }}>
-              <span>👨‍🏫</span>
+              <div style={{
+                position: 'absolute',
+                bottom: '0',
+                left: '0',
+                right: '0',
+                height: '60%',
+                background: 'linear-gradient(to top, rgba(10, 25, 47, 0.9) 0%, transparent 100%)'
+              }}></div>
+              <div style={{
+                position: 'relative',
+                zIndex: 2,
+                padding: '1rem',
+                textAlign: 'center'
+              }}>
+                <h3 style={{ 
+                  color: '#64ffda', 
+                  margin: '0',
+                  fontSize: '1.4rem'
+                }}>
+                  {faculty.name}
+                </h3>
+                <p style={{ 
+                  color: '#4ade80', 
+                  fontWeight: 'bold', 
+                  margin: '0.25rem 0',
+                  fontSize: '1.1rem'
+                }}>
+                  {faculty.designation}
+                </p>
+              </div>
             </div>
             
             <div style={{ padding: '1.5rem' }}>
-              <h3 style={{ 
-                color: '#64ffda', 
-                marginBottom: '0.5rem',
-                fontSize: '1.4rem'
-              }}>
-                {faculty.name}
-              </h3>
-              <p style={{ 
-                color: '#4ade80', 
-                fontWeight: 'bold', 
-                marginBottom: '0.5rem',
-                fontSize: '1.1rem'
-              }}>
-                {faculty.designation}
-              </p>
               <p style={{ 
                 color: '#cbd5e0', 
                 marginBottom: '0.5rem' 
@@ -143,18 +135,6 @@ const Faculty = () => {
                 marginBottom: '1rem' 
               }}>
                 {faculty.specialization}
-              </p>
-              <p style={{ 
-                color: '#fbbf24', 
-                marginBottom: '1rem' 
-              }}>
-                <strong>Experience:</strong> {faculty.experience}
-              </p>
-              <p style={{ 
-                color: '#e2e8f0', 
-                lineHeight: '1.4' 
-              }}>
-                {faculty.bio}
               </p>
             </div>
           </div>
