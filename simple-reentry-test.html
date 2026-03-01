@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Fullscreen Re-entry Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0a192f;
+            color: #e2e8f0;
+            padding: 2rem;
+            text-align: center;
+            margin: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(30, 58, 95, 0.6);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(30, 58, 95, 0.3);
+        }
+        .header {
+            color: #64ffda;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 8px rgba(100, 255, 218, 0.3);
+        }
+        button {
+            background: #64ffda;
+            color: #0a192f;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin: 1rem;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(100, 255, 218, 0.6);
+        }
+        .status-panel {
+            background: rgba(10, 25, 47, 0.5);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        .log {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            height: 200px;
+            overflow-y: auto;
+            text-align: left;
+            margin: 1rem 0;
+        }
+        .warning {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="header">🔄 Simple Fullscreen Re-entry Test</h1>
+        <p>Testing if fullscreen re-entry attempts are working</p>
+        
+        <div class="status-panel" id="statusPanel">
+            <h3>System Status</h3>
+            <div id="status">Ready to test fullscreen re-entry</div>
+        </div>
+        
+        <div class="status-panel">
+            <h3>Test Controls</h3>
+            <button id="enterFullscreen">Enter Fullscreen</button>
+            <button id="exitFullscreen" style="display: none;">Exit Fullscreen</button>
+            <button id="simulateExit">Simulate ESC Key</button>
+            <button id="resetTest">Reset Test</button>
+        </div>
+        
+        <div class="status-panel warning">
+            <h3>📋 Test Instructions</h3>
+            <ol style="text-align: left; margin-left: 2rem;">
+                <li>Click "Enter Fullscreen" button</li>
+                <li>Press ESC key or click "Simulate ESC Key"</li>
+                <li><strong>Watch for:</strong> Warning alert should appear</li>
+                <li><strong>Check re-entry:</strong> Should see re-entry attempts in log</li>
+                <li><strong>Verify success:</strong> Should eventually re-enter fullscreen</li>
+            </ol>
+        </div>
+        
+        <div class="status-panel">
+            <h3>📊 Real-time Log</h3>
+            <div class="log" id="logOutput">Test started. Click "Enter Fullscreen" to begin...</div>
+        </div>
+    </div>
+
+    <script>
+        // Test state
+        let isFullscreen = false;
+        let warningCount = 0;
+        let reentryAttempts = 0;
+        let isProcessing = false;
+        const MAX_REENTRY_ATTEMPTS = 3;
+        
+        // DOM elements
+        const statusDiv = document.getElementById('status');
+        const enterBtn = document.getElementById('enterFullscreen');
+        const exitBtn = document.getElementById('exitFullscreen');
+        const simulateBtn = document.getElementById('simulateExit');
+        const resetBtn = document.getElementById('resetTest');
+        const logOutput = document.getElementById('logOutput');
+        
+        // Logging function
+        const log = (message, type = 'info') => {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${message}`;
+            
+            logOutput.innerHTML += `<div style="color: ${getColorForType(type)}">${logEntry}</div>`;
+            logOutput.scrollTop = logOutput.scrollHeight;
+            
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        };
+        
+        const getColorForType = (type) => {
+            switch(type) {
+                case 'success': return '#4ade80';
+                case 'warning': return '#fbbf24';
+                case 'error': return '#f87171';
+                case 'info': return '#60a5fa';
+                default: return '#e2e8f0';
+            }
+        };
+        
+        // Simple requestFullscreen
+        const requestFullscreen = async () => {
+            try {
+                const element = document.documentElement;
+                
+                if (element.requestFullscreen) {
+                    await element.requestFullscreen();
+                } else if (element.mozRequestFullScreen) {
+                    await element.mozRequestFullScreen();
+                } else if (element.webkitRequestFullscreen) {
+                    await element.webkitRequestFullscreen();
+                } else {
+                    throw new Error('Fullscreen API not supported');
+                }
+                
+                log('✅ Successfully entered fullscreen mode', 'success');
+                return true;
+            } catch (err) {
+                log(`❌ Fullscreen request failed: ${err.message}`, 'error');
+                return false;
+            }
+        };
+        
+        // Simple exit fullscreen
+        const exitFullscreen = async () => {
+            try {
+                if (document.exitFullscreen) {
+                    await document.exitFullscreen();
+                }
+                log('🚪 Exited fullscreen mode', 'info');
+            } catch (err) {
+                log(`❌ Exit fullscreen failed: ${err.message}`, 'error');
+            }
+        };
+        
+        // Fullscreen change handler
+        const handleFullscreenChange = () => {
+            if (isProcessing) {
+                log('🔄 Already processing fullscreen change - ignoring', 'warning');
+                return;
+            }
+            
+            isProcessing = true;
+            const currentlyFullscreen = !!document.fullscreenElement;
+            isFullscreen = currentlyFullscreen;
+            
+            log(`🔄 Fullscreen state: ${currentlyFullscreen ? 'ENTERED' : 'EXITED'}`, 'info');
+            updateUI();
+            
+            // Handle fullscreen exit
+            if (!currentlyFullscreen) {
+                handleFullscreenExit();
+            } else {
+                // Reset state when entering fullscreen
+                reentryAttempts = 0;
+                isProcessing = false;
+                log('✅ Successfully in fullscreen mode', 'success');
+            }
+        };
+        
+        // Handle fullscreen exit with re-entry
+        const handleFullscreenExit = () => {
+            warningCount++;
+            log(`⚠️ Fullscreen exit detected! Warning ${warningCount}/3`, 'warning');
+            
+            if (warningCount < 3) {
+                alert(`⚠️ WARNING: Fullscreen exit detected!
+
+You have ${3 - warningCount} warnings remaining.
+
+Attempting to re-enter fullscreen mode...`);
+                
+                // Start re-entry attempts
+                const attemptReentry = () => {
+                    if (document.fullscreenElement) {
+                        log('✅ Already in fullscreen - no re-entry needed', 'success');
+                        alert('✅ Already in fullscreen mode!');
+                        reentryAttempts = 0;
+                        isProcessing = false;
+                        return;
+                    }
+                    
+                    reentryAttempts++;
+                    
+                    if (reentryAttempts > MAX_REENTRY_ATTEMPTS) {
+                        log('💥 Maximum re-entry attempts exceeded', 'error');
+                        alert('⚠️ CRITICAL: Unable to maintain fullscreen mode.\n\nPlease manually press F11 or use browser fullscreen controls.');
+                        reentryAttempts = 0;
+                        isProcessing = false;
+                        return;
+                    }
+                    
+                    log(`🔄 Re-entry attempt ${reentryAttempts}/${MAX_REENTRY_ATTEMPTS}`, 'warning');
+                    
+                    const doAttempt = async () => {
+                        try {
+                            log(`   → Attempt ${reentryAttempts}: Requesting fullscreen`, 'info');
+                            
+                            // Small delay
+                            await new Promise(resolve => setTimeout(resolve, 300));
+                            
+                            const success = await requestFullscreen();
+                            
+                            if (success && document.fullscreenElement) {
+                                log(`  ✅ Successfully re-entered fullscreen on attempt ${reentryAttempts}`, 'success');
+                                alert('✅ Successfully re-entered fullscreen mode!');
+                                reentryAttempts = 0;
+                                isProcessing = false;
+                            } else {
+                                log(`  ❌ Fullscreen request failed on attempt ${reentryAttempts}`, 'error');
+                                setTimeout(attemptReentry, reentryAttempts * 1000);
+                            }
+                        } catch (err) {
+                            log(`Attempt ${reentryAttempts} failed: ${err.message}`, 'error');
+                            setTimeout(attemptReentry, reentryAttempts * 1000);
+                        }
+                    };
+                    
+                    setTimeout(doAttempt, 500);
+                };
+                
+                setTimeout(attemptReentry, 800);
+            } else {
+                log('🚨 MAXIMUM WARNINGS REACHED', 'error');
+                alert('🚨 MAXIMUM WARNINGS REACHED\n\nIn a real exam, this would result in automatic disqualification.');
+                resetTest();
+            }
+        };
+        
+        // UI update
+        const updateUI = () => {
+            if (isFullscreen) {
+                enterBtn.style.display = 'none';
+                exitBtn.style.display = 'inline-block';
+                simulateBtn.disabled = false;
+                statusDiv.textContent = '✅ FULLSCREEN MODE ACTIVE';
+            } else {
+                enterBtn.style.display = 'inline-block';
+                exitBtn.style.display = 'none';
+                simulateBtn.disabled = true;
+                statusDiv.textContent = '🚪 FULLSCREEN MODE INACTIVE';
+            }
+        };
+        
+        // Reset test
+        const resetTest = () => {
+            warningCount = 0;
+            reentryAttempts = 0;
+            isProcessing = false;
+            isFullscreen = false;
+            updateUI();
+            logOutput.innerHTML = 'Test reset. Ready to begin testing...';
+            log('🔄 Test system reset', 'info');
+        };
+        
+        // Event listeners
+        enterBtn.addEventListener('click', requestFullscreen);
+        exitBtn.addEventListener('click', exitFullscreen);
+        simulateBtn.addEventListener('click', () => {
+            log('🎮 Simulating ESC key press...', 'info');
+            exitFullscreen();
+        });
+        resetBtn.addEventListener('click', resetTest);
+        
+        // Fullscreen change listeners
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        
+        // Initialize
+        updateUI();
+        log('🔄 Simple fullscreen re-entry test initialized', 'info');
+        log('💡 Click "Enter Fullscreen" and then press ESC to test re-entry', 'info');
+    </script>
+</body>
+</html>

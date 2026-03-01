@@ -1,0 +1,81 @@
+import React, { useState, useEffect } from 'react'
+
+const Activities = ({ navigateToContest }) => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
+  return (
+    <div style={{
+      padding: '2rem',
+      maxWidth: '1200px',
+      margin: '0 auto'
+    }}>
+      <h1 style={{
+        textAlign: 'center',
+        color: '#64ffda',
+        marginBottom: '2rem',
+        textShadow: '0 0 8px rgba(100, 255, 218, 0.3)',
+        fontSize: '2.5rem'
+      }}>
+        Club Activities
+      </h1>
+
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+        gap: '2rem',
+        marginBottom: '2rem'
+      }}>
+        <div style={{
+          backgroundColor: 'rgba(30, 58, 95, 0.6)',
+          padding: '2rem',
+          borderRadius: '12px',
+          boxShadow: '0 8px 32px rgba(30, 58, 95, 0.3)',
+          border: '1px solid rgba(100, 255, 218, 0.2)',
+          backdropFilter: 'blur(4px)',
+          textAlign: 'center'
+        }}>
+          <h2 style={{ color: '#64ffda', marginBottom: '1rem' }}>Mind vs Machine: AI Escape Arena</h2>
+          <p style={{ color: '#e2e8f0', marginBottom: '1.5rem', lineHeight: '1.5' }}>
+            Challenge your AI knowledge and problem-solving skills in our thrilling escape arena.
+          </p>
+          <button
+            onClick={() => {
+              if (navigateToContest) {
+                navigateToContest();
+              } else {
+                // Fallback to direct navigation
+                window.location.hash = '#/contest';
+              }
+            }}
+            style={{
+              backgroundColor: '#4ade80',
+              color: '#0a192f',
+              border: 'none',
+              padding: '0.75rem 1.5rem',
+              borderRadius: '30px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.transform = 'scale(1.05)';
+              e.target.style.boxShadow = '0 0 20px rgba(74, 222, 128, 0.5)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = 'scale(1)';
+              e.target.style.boxShadow = 'none';
+            }}
+          >
+            Start Contest
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default Activities
