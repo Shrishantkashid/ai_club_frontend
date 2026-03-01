@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 import API from '../utils/api'
+import JealousHusbands from './JealousHusbands'
 
 const Round2 = ({ onCompleteRound2 }) => {
+  const [currentPuzzleType, setCurrentPuzzleType] = useState('8-puzzle'); // '8-puzzle' or 'jealous-husbands'
   const [puzzle, setPuzzle] = useState([])
   const [moves, setMoves] = useState(0)
   const [gameStarted, setGameStarted] = useState(false)
@@ -401,9 +403,11 @@ const Round2 = ({ onCompleteRound2 }) => {
 
   // Initialize game
   useEffect(() => {
-    const initialPuzzle = shufflePuzzle(createInitialPuzzle())
-    setPuzzle(initialPuzzle)
-  }, [])
+    if (currentPuzzleType === '8-puzzle') {
+      const initialPuzzle = shufflePuzzle(createInitialPuzzle())
+      setPuzzle(initialPuzzle)
+    }
+  }, [currentPuzzleType])
 
   const handleSubmit = async () => {
     const endTime = Date.now()
@@ -413,7 +417,8 @@ const Round2 = ({ onCompleteRound2 }) => {
       round: 2,
       moves: moves,
       timeTaken: timeTaken,
-      completed: gameWon
+      completed: gameWon,
+      puzzleType: currentPuzzleType
     }
     
     // Send to backend
@@ -432,6 +437,11 @@ const Round2 = ({ onCompleteRound2 }) => {
     }
     
     onCompleteRound2(score)
+  }
+
+  const handleJealousHusbandsComplete = (husbandsMoves) => {
+    setGameWon(true);
+    setMoves(husbandsMoves); // Override moves with the moves from the jealous husbands game
   }
 
   if (gameWon) {
@@ -458,7 +468,7 @@ const Round2 = ({ onCompleteRound2 }) => {
             🎉 Puzzle Solved! 🎉
           </h1>
           <p style={{ color: '#e2e8f0', marginBottom: '1rem' }}>
-            Congratulations! You solved the 8-puzzle in {moves} moves.
+            Congratulations! You solved the {currentPuzzleType === '8-puzzle' ? '8-puzzle' : 'Jealous Husbands'} in {moves} moves.
           </p>
           <p style={{ color: '#e2e8f0', marginBottom: '2rem' }}>
             Time taken: {startTime ? Math.round((Date.now() - startTime) / 1000) : 0} seconds
@@ -526,7 +536,7 @@ const Round2 = ({ onCompleteRound2 }) => {
             textShadow: '0 0 8px rgba(100, 255, 218, 0.3)',
             fontSize: isMobile ? '1.2rem' : '1.5rem'
           }}>
-            Round 2: 8-Puzzle Challenge
+            Round 2: Puzzle Challenge
           </h1>
           <div style={{
             display: 'flex',
@@ -557,56 +567,18 @@ const Round2 = ({ onCompleteRound2 }) => {
           </div>
         </div>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: isMobile ? 'repeat(3, 1fr)' : 'repeat(3, 1fr)',
-          gap: isMobile ? '0.5rem' : '1rem',
-          maxWidth: isMobile ? '300px' : '400px',
-          margin: '0 auto 2rem'
-        }}>
-          {puzzle.map((tile, index) => (
-            <div
-              key={index}
-              onClick={() => tile && moveTile(index)}
-              style={{
-                aspectRatio: '1',
-                backgroundColor: tile ? '#1e40af' : '#374151',
-                color: '#e2e8f0',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: isMobile ? '1.5rem' : '2rem',
-                fontWeight: 'bold',
-                borderRadius: '8px',
-                cursor: tile ? 'pointer' : 'default',
-                border: '2px solid rgba(100, 255, 218, 0.3)',
-                transition: 'all 0.2s ease',
-                opacity: tile ? 1 : 0.7
-              }}
-            >
-              {tile}
-            </div>
-          ))}
-        </div>
-
+        {/* Puzzle Selection */}
         <div style={{
           display: 'flex',
           justifyContent: 'center',
           gap: '1rem',
-          marginTop: '2rem',
+          marginBottom: '2rem',
           flexWrap: 'wrap'
         }}>
           <button
-            onClick={() => {
-              const initialPuzzle = shufflePuzzle(createInitialPuzzle())
-              setPuzzle(initialPuzzle)
-              setMoves(0)
-              setGameStarted(false)
-              setStartTime(null)
-              setGameWon(false)
-            }}
+            onClick={() => setCurrentPuzzleType('8-puzzle')}
             style={{
-              backgroundColor: '#6b7280',
+              backgroundColor: currentPuzzleType === '8-puzzle' ? '#4ade80' : '#6b7280',
               color: 'white',
               border: 'none',
               padding: isMobile ? '0.5rem 1rem' : '0.75rem 1.5rem',
@@ -615,9 +587,111 @@ const Round2 = ({ onCompleteRound2 }) => {
               fontSize: isMobile ? '0.9rem' : '1rem'
             }}
           >
-            Reset Puzzle
+            8-Puzzle
           </button>
-          
+          <button
+            onClick={() => setCurrentPuzzleType('jealous-husbands')}
+            style={{
+              backgroundColor: currentPuzzleType === 'jealous-husbands' ? '#4ade80' : '#6b7280',
+              color: 'white',
+              border: 'none',
+              padding: isMobile ? '0.5rem 1rem' : '0.75rem 1.5rem',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: isMobile ? '0.9rem' : '1rem'
+            }}
+          >
+            Jealous Husbands
+          </button>
+        </div>
+
+        {/* Render the selected puzzle */}
+        {currentPuzzleType === '8-puzzle' && (
+          <div>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: isMobile ? 'repeat(3, 1fr)' : 'repeat(3, 1fr)',
+              gap: isMobile ? '0.5rem' : '1rem',
+              maxWidth: isMobile ? '300px' : '400px',
+              margin: '0 auto 2rem'
+            }}>
+              {puzzle.map((tile, index) => (
+                <div
+                  key={index}
+                  onClick={() => tile && moveTile(index)}
+                  style={{
+                    aspectRatio: '1',
+                    backgroundColor: tile ? '#1e40af' : '#374151',
+                    color: '#e2e8f0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: isMobile ? '1.5rem' : '2rem',
+                    fontWeight: 'bold',
+                    borderRadius: '8px',
+                    cursor: tile ? 'pointer' : 'default',
+                    border: '2px solid rgba(100, 255, 218, 0.3)',
+                    transition: 'all 0.2s ease',
+                    opacity: tile ? 1 : 0.7
+                  }}
+                >
+                  {tile}
+                </div>
+              ))}
+            </div>
+
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: '1rem',
+              marginTop: '2rem',
+              flexWrap: 'wrap'
+            }}>
+              <button
+                onClick={() => {
+                  const initialPuzzle = shufflePuzzle(createInitialPuzzle())
+                  setPuzzle(initialPuzzle)
+                  setMoves(0)
+                  setGameStarted(false)
+                  setStartTime(null)
+                  setGameWon(false)
+                }}
+                style={{
+                  backgroundColor: '#6b7280',
+                  color: 'white',
+                  border: 'none',
+                  padding: isMobile ? '0.5rem 1rem' : '0.75rem 1.5rem',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: isMobile ? '0.9rem' : '1rem'
+                }}
+              >
+                Reset Puzzle
+              </button>
+            </div>
+
+            <div style={{ 
+              marginTop: '2rem', 
+              color: '#94a3b8', 
+              fontSize: isMobile ? '0.8rem' : '0.9rem' 
+            }}>
+              <p>Click on a tile adjacent to the empty space to move it.</p>
+              <p>Solve the puzzle by arranging tiles in numerical order.</p>
+            </div>
+          </div>
+        )}
+
+        {currentPuzzleType === 'jealous-husbands' && (
+          <JealousHusbands onPuzzleComplete={handleJealousHusbandsComplete} />
+        )}
+
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '1rem',
+          marginTop: '2rem',
+          flexWrap: 'wrap'
+        }}>
           <button
             onClick={handleSubmit}
             style={{
@@ -632,15 +706,6 @@ const Round2 = ({ onCompleteRound2 }) => {
           >
             Submit Round 2
           </button>
-        </div>
-
-        <div style={{ 
-          marginTop: '2rem', 
-          color: '#94a3b8', 
-          fontSize: isMobile ? '0.8rem' : '0.9rem' 
-        }}>
-          <p>Click on a tile adjacent to the empty space to move it.</p>
-          <p>Solve the puzzle by arranging tiles in numerical order.</p>
         </div>
       </div>
     </div>

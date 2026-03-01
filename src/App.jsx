@@ -11,10 +11,11 @@ import Round1 from './pages/Round1'
 import Round2 from './pages/Round2'
 import Round3 from './pages/Round3'
 import Leaderboard from './pages/Leaderboard'
+import TestQuiz from './pages/TestQuiz'
 
 function App() {
   const [activeSection, setActiveSection] = useState('home')
-  const [contestState, setContestState] = useState('activity-card') // activity-card, instructions, login, round1, round2, round3, leaderboard
+  const [contestState, setContestState] = useState('activity-card') // activity-card, instructions, login, round1, round2, round3, leaderboard, test-quiz
   const [currentUser, setCurrentUser] = useState(null)
   const [showContest, setShowContest] = useState(false)
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
@@ -36,6 +37,9 @@ function App() {
       if (hash === 'contest') {
         setShowContest(true)
         setContestState('activity-card')
+      } else if (hash === 'test-quiz') {
+        setShowContest(true)
+        setContestState('test-quiz')
       } else if (hash.startsWith('contest/')) {
         setShowContest(true)
         setContestState(hash.split('/')[1])
@@ -58,6 +62,13 @@ function App() {
     window.location.hash = '#/contest';
     setShowContest(true);
     setContestState('activity-card');
+  }
+
+  // Function to navigate to test quiz
+  const navigateToTestQuiz = () => {
+    window.location.hash = '#/test-quiz';
+    setShowContest(true);
+    setContestState('test-quiz');
   }
 
   // Function to logout
@@ -114,6 +125,12 @@ function App() {
             setActiveSection('home');
             window.location.hash = '';
           }} />
+        case 'test-quiz':
+          return <TestQuiz onBackToActivities={() => {
+            setShowContest(false);
+            setActiveSection('activities');
+            window.location.hash = '#/activities';
+          }} />
         default:
           return <ActivityCard onStartContest={() => setContestState('instructions')} />
       }
@@ -127,7 +144,7 @@ function App() {
       case 'faculty':
         return <Faculty />
       case 'activities':
-        return <Activities navigateToContest={navigateToContest} />
+        return <Activities navigateToContest={navigateToContest} navigateToTestQuiz={navigateToTestQuiz} />
       default:
         return <Home />
     }

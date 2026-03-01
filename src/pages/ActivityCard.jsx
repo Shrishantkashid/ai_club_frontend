@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 const ActivityCard = ({ onStartContest }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [isLocked, setIsLocked] = useState(false); // Set to false to unlock the activity
 
   useEffect(() => {
     setIsVisible(true);
@@ -34,7 +35,7 @@ const ActivityCard = ({ onStartContest }) => {
           textShadow: '0 0 8px rgba(100, 255, 218, 0.3)',
           fontSize: '2rem'
         }}>
-          🧠 Mind vs Machine: AI Escape Arena
+          {isLocked ? '🔒 ' : '🧠 '}Mind vs Machine: AI Escape Arena
         </h1>
         
         <div style={{
@@ -94,29 +95,35 @@ const ActivityCard = ({ onStartContest }) => {
         </div>
 
         <button
-          onClick={onStartContest}
+          onClick={() => !isLocked && onStartContest()}
+          disabled={isLocked}
           style={{
-            backgroundColor: '#64ffda',
-            color: '#0a192f',
+            backgroundColor: isLocked ? '#6b7280' : '#64ffda',
+            color: isLocked ? '#9ca3af' : '#0a192f',
             border: 'none',
             padding: '0.75rem 2rem',
             borderRadius: '30px',
-            cursor: 'pointer',
+            cursor: isLocked ? 'not-allowed' : 'pointer',
             fontWeight: 'bold',
             fontSize: '1.1rem',
             transition: 'all 0.3s ease',
-            boxShadow: '0 4px 15px rgba(100, 255, 218, 0.3)'
+            boxShadow: isLocked ? 'none' : '0 4px 15px rgba(100, 255, 218, 0.3)',
+            opacity: isLocked ? 0.6 : 1
           }}
           onMouseEnter={(e) => {
-            e.target.style.transform = 'scale(1.05)';
-            e.target.style.boxShadow = '0 0 25px rgba(100, 255, 218, 0.6)';
+            if (!isLocked) {
+              e.target.style.transform = 'scale(1.05)';
+              e.target.style.boxShadow = '0 0 25px rgba(100, 255, 218, 0.6)';
+            }
           }}
           onMouseLeave={(e) => {
-            e.target.style.transform = 'scale(1)';
-            e.target.style.boxShadow = '0 4px 15px rgba(100, 255, 218, 0.3)';
+            if (!isLocked) {
+              e.target.style.transform = 'scale(1)';
+              e.target.style.boxShadow = '0 4px 15px rgba(100, 255, 218, 0.3)';
+            }
           }}
         >
-          Start Contest →
+          {isLocked ? 'Locked' : 'Start Contest →'}
         </button>
       </div>
     </div>
