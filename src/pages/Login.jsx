@@ -37,9 +37,11 @@ const Login = ({ onLoginSuccess, onBack }) => {
     }
   }
 
+  const isMobile = window.innerWidth <= 768
+
   return (
     <div style={{
-      padding: '2rem',
+      padding: isMobile ? '1rem' : '2rem',
       maxWidth: '1200px',
       margin: '0 auto',
       textAlign: 'center',
@@ -47,12 +49,12 @@ const Login = ({ onLoginSuccess, onBack }) => {
     }}>
       <div style={{
         backgroundColor: 'rgba(30, 58, 95, 0.6)',
-        padding: '2rem',
+        padding: isMobile ? '1rem' : '2rem',
         borderRadius: '12px',
         boxShadow: '0 8px 32px rgba(30, 58, 95, 0.3)',
         border: '1px solid rgba(100, 255, 218, 0.2)',
         backdropFilter: 'blur(4px)',
-        maxWidth: '500px',
+        maxWidth: isMobile ? '100%' : '500px',
         margin: '0 auto',
         position: 'relative'
       }}>
@@ -60,16 +62,16 @@ const Login = ({ onLoginSuccess, onBack }) => {
           onClick={onBack}
           style={{
             position: 'absolute',
-            top: '1rem',
-            left: '1rem',
+            top: isMobile ? '0.5rem' : '1rem',
+            left: isMobile ? '0.5rem' : '1rem',
             backgroundColor: 'transparent',
             color: '#64ffda',
             border: '1px solid rgba(100, 255, 218, 0.3)',
-            padding: '0.5rem 1rem',
+            padding: isMobile ? '0.4rem 0.8rem' : '0.5rem 1rem',
             borderRadius: '6px',
             cursor: 'pointer',
             fontWeight: 'bold',
-            fontSize: '0.9rem',
+            fontSize: isMobile ? '0.8rem' : '0.9rem',
             transition: 'all 0.3s ease'
           }}
           onMouseEnter={(e) => {
@@ -84,9 +86,10 @@ const Login = ({ onLoginSuccess, onBack }) => {
 
         <h1 style={{ 
           color: '#64ffda', 
-          marginBottom: '2rem',
+          marginBottom: isMobile ? '1rem' : '2rem',
           textShadow: '0 0 8px rgba(100, 255, 218, 0.3)',
-          marginTop: '2rem'
+          marginTop: isMobile ? '2rem' : '2rem',
+          fontSize: isMobile ? '1.5rem' : '2rem'
         }}>
           Contest Login
         </h1>
@@ -101,12 +104,13 @@ const Login = ({ onLoginSuccess, onBack }) => {
               required
               style={{
                 width: '100%',
-                padding: '0.75rem',
+                padding: isMobile ? '0.75rem' : '1rem',
                 borderRadius: '8px',
                 border: '1px solid rgba(100, 255, 218, 0.3)',
                 backgroundColor: 'rgba(10, 25, 47, 0.8)',
                 color: '#e2e8f0',
-                fontSize: '1rem'
+                fontSize: isMobile ? '1rem' : '1.1rem',
+                boxSizing: 'border-box'
               }}
             />
           </div>
@@ -117,7 +121,8 @@ const Login = ({ onLoginSuccess, onBack }) => {
               marginBottom: '1rem',
               padding: '0.5rem',
               backgroundColor: 'rgba(248, 113, 113, 0.1)',
-              borderRadius: '4px'
+              borderRadius: '4px',
+              fontSize: isMobile ? '0.9rem' : '1rem'
             }}>
               {error}
             </div>
@@ -130,12 +135,13 @@ const Login = ({ onLoginSuccess, onBack }) => {
               backgroundColor: loading ? '#9ca3af' : '#4ade80',
               color: '#0a192f',
               border: 'none',
-              padding: '1rem 2rem',
-              fontSize: '1.1rem',
+              padding: isMobile ? '0.75rem' : '1rem 2rem',
+              fontSize: isMobile ? '1rem' : '1.1rem',
               borderRadius: '30px',
               cursor: loading ? 'not-allowed' : 'pointer',
               fontWeight: 'bold',
-              width: '100%'
+              width: '100%',
+              transition: 'all 0.3s ease'
             }}
           >
             {loading ? 'Logging in...' : 'Login'}
@@ -144,7 +150,7 @@ const Login = ({ onLoginSuccess, onBack }) => {
         
         <p style={{ 
           color: '#94a3b8', 
-          fontSize: '0.9rem', 
+          fontSize: isMobile ? '0.8rem' : '0.9rem', 
           marginTop: '1rem' 
         }}>
           Use your official college email to participate

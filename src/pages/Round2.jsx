@@ -492,16 +492,18 @@ const Round2 = ({ onCompleteRound2 }) => {
     )
   }
 
+  const isMobile = window.innerWidth <= 768
+
   return (
     <div style={{
-      padding: '2rem',
+      padding: isMobile ? '0.5rem' : '2rem',
       maxWidth: '1200px',
       margin: '0 auto',
       textAlign: 'center'
     }}>
       <div style={{
         backgroundColor: 'rgba(30, 58, 95, 0.6)',
-        padding: '2rem',
+        padding: isMobile ? '1rem' : '2rem',
         borderRadius: '12px',
         boxShadow: '0 8px 32px rgba(30, 58, 95, 0.3)',
         border: '1px solid rgba(100, 255, 218, 0.2)',
@@ -512,26 +514,31 @@ const Round2 = ({ onCompleteRound2 }) => {
           justifyContent: 'space-between',
           alignItems: 'center',
           marginBottom: '2rem',
-          padding: '1rem',
+          padding: isMobile ? '0.5rem' : '1rem',
           backgroundColor: 'rgba(10, 25, 47, 0.5)',
-          borderRadius: '8px'
+          borderRadius: '8px',
+          flexWrap: 'wrap',
+          gap: '1rem'
         }}>
           <h1 style={{ 
             color: '#64ffda', 
             margin: 0,
-            textShadow: '0 0 8px rgba(100, 255, 218, 0.3)'
+            textShadow: '0 0 8px rgba(100, 255, 218, 0.3)',
+            fontSize: isMobile ? '1.2rem' : '1.5rem'
           }}>
             Round 2: 8-Puzzle Challenge
           </h1>
           <div style={{
             display: 'flex',
-            gap: '1rem'
+            gap: '1rem',
+            flexWrap: isMobile ? 'wrap' : 'nowrap',
+            justifyContent: isMobile ? 'center' : 'flex-end'
           }}>
             <div style={{
               color: '#e2e8f0',
-              fontSize: '1.1rem',
+              fontSize: isMobile ? '0.9rem' : '1.1rem',
               fontWeight: 'bold',
-              padding: '0.5rem 1rem',
+              padding: isMobile ? '0.25rem 0.5rem' : '0.5rem 1rem',
               backgroundColor: 'rgba(0, 0, 0, 0.3)',
               borderRadius: '8px'
             }}>
@@ -539,9 +546,9 @@ const Round2 = ({ onCompleteRound2 }) => {
             </div>
             <div style={{
               color: '#e2e8f0',
-              fontSize: '1.1rem',
+              fontSize: isMobile ? '0.9rem' : '1.1rem',
               fontWeight: 'bold',
-              padding: '0.5rem 1rem',
+              padding: isMobile ? '0.25rem 0.5rem' : '0.5rem 1rem',
               backgroundColor: 'rgba(0, 0, 0, 0.3)',
               borderRadius: '8px'
             }}>
@@ -552,9 +559,9 @@ const Round2 = ({ onCompleteRound2 }) => {
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '1rem',
-          maxWidth: '400px',
+          gridTemplateColumns: isMobile ? 'repeat(3, 1fr)' : 'repeat(3, 1fr)',
+          gap: isMobile ? '0.5rem' : '1rem',
+          maxWidth: isMobile ? '300px' : '400px',
           margin: '0 auto 2rem'
         }}>
           {puzzle.map((tile, index) => (
@@ -568,7 +575,7 @@ const Round2 = ({ onCompleteRound2 }) => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '2rem',
+                fontSize: isMobile ? '1.5rem' : '2rem',
                 fontWeight: 'bold',
                 borderRadius: '8px',
                 cursor: tile ? 'pointer' : 'default',
@@ -586,7 +593,8 @@ const Round2 = ({ onCompleteRound2 }) => {
           display: 'flex',
           justifyContent: 'center',
           gap: '1rem',
-          marginTop: '2rem'
+          marginTop: '2rem',
+          flexWrap: 'wrap'
         }}>
           <button
             onClick={() => {
@@ -601,10 +609,10 @@ const Round2 = ({ onCompleteRound2 }) => {
               backgroundColor: '#6b7280',
               color: 'white',
               border: 'none',
-              padding: '0.75rem 1.5rem',
+              padding: isMobile ? '0.5rem 1rem' : '0.75rem 1.5rem',
               borderRadius: '8px',
               cursor: 'pointer',
-              fontSize: '1rem'
+              fontSize: isMobile ? '0.9rem' : '1rem'
             }}
           >
             Reset Puzzle
@@ -616,17 +624,21 @@ const Round2 = ({ onCompleteRound2 }) => {
               backgroundColor: '#ef4444',
               color: 'white',
               border: 'none',
-              padding: '0.75rem 1.5rem',
+              padding: isMobile ? '0.5rem 1rem' : '0.75rem 1.5rem',
               borderRadius: '8px',
               cursor: 'pointer',
-              fontSize: '1rem'
+              fontSize: isMobile ? '0.9rem' : '1rem'
             }}
           >
             Submit Round 2
           </button>
         </div>
 
-        <div style={{ marginTop: '2rem', color: '#94a3b8', fontSize: '0.9rem' }}>
+        <div style={{ 
+          marginTop: '2rem', 
+          color: '#94a3b8', 
+          fontSize: isMobile ? '0.8rem' : '0.9rem' 
+        }}>
           <p>Click on a tile adjacent to the empty space to move it.</p>
           <p>Solve the puzzle by arranging tiles in numerical order.</p>
         </div>

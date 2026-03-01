@@ -17,6 +17,17 @@ function App() {
   const [contestState, setContestState] = useState('activity-card') // activity-card, instructions, login, round1, round2, round3, leaderboard
   const [currentUser, setCurrentUser] = useState(null)
   const [showContest, setShowContest] = useState(false)
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
+
+  // Handle mobile detection
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+    
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   // Handle hash routing
   useEffect(() => {
@@ -232,6 +243,17 @@ function App() {
           @keyframes float0 { 0% { transform: translateY(0px); } 100% { transform: translateY(-100vh); } }
           @keyframes float1 { 0% { transform: translate(0, 0); } 100% { transform: translate(100px, -100vh); } }
           @keyframes float2 { 0% { transform: translate(0, 0); } 100% { transform: translate(-100px, -100vh); } }
+          
+          /* Mobile-specific animations */
+          @media (max-width: 768px) {
+            @keyframes float {
+              0% { transform: translate(0, 0) rotate(0deg) scale(0.7); }
+              25% { transform: translate(10px, 15px) rotate(90deg) scale(0.7); }
+              50% { transform: translate(0, 30px) rotate(180deg) scale(0.7); }
+              75% { transform: translate(-10px, 15px) rotate(270deg) scale(0.7); }
+              100% { transform: translate(0, 0) rotate(360deg) scale(0.7); }
+            }
+          }
         `}</style>
       </div>
       
@@ -242,12 +264,13 @@ function App() {
         position: 'relative',
         zIndex: 100,
         borderBottom: '1px solid #1e3a5f', // Subtle border
-        display: showContest ? 'none' : 'block' // Hide navigation during contest
+        display: showContest ? 'none' : 'block', // Hide navigation during contest
+        padding: isMobile ? '0.5rem' : '0' // Reduced padding on mobile
       }}>
         <div style={{
           maxWidth: '1200px',
           margin: '0 auto',
-          padding: '0.5rem 1rem',
+          padding: isMobile ? '0 0.5rem' : '0.5rem 1rem',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center'
@@ -255,14 +278,14 @@ function App() {
           <h1 style={{ 
             color: '#64ffda', // Teal accent color
             margin: 0,
-            fontSize: '1.5rem',
+            fontSize: isMobile ? '1.2rem' : '1.5rem',
             fontWeight: 'bold',
             textShadow: '0 0 8px rgba(100, 255, 218, 0.3)' // Subtle glow effect
           }}>
             AI Club Portal
           </h1>
         </div>
-        <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
+        {!showContest && <Navigation activeSection={activeSection} setActiveSection={setActiveSection} isMobile={isMobile} />}
       </header>
       
       <main style={{
@@ -271,7 +294,7 @@ function App() {
         flex: 1,
         overflow: 'auto',
         padding: '0',
-        maxHeight: showContest ? '100vh' : 'calc(100vh - 120px)' // Adjust height based on navigation visibility
+        maxHeight: showContest ? '100vh' : (isMobile ? 'calc(100vh - 80px)' : 'calc(100vh - 120px)') // Adjust height based on navigation visibility
       }}>
         {showContest && contestState === 'leaderboard' && (
           <div style={{
@@ -286,11 +309,11 @@ function App() {
                 backgroundColor: '#f87171',
                 color: '#0a192f',
                 border: 'none',
-                padding: '0.5rem 1rem',
+                padding: isMobile ? '0.4rem 0.8rem' : '0.5rem 1rem',
                 borderRadius: '6px',
                 cursor: 'pointer',
                 fontWeight: 'bold',
-                fontSize: '0.9rem',
+                fontSize: isMobile ? '0.8rem' : '0.9rem',
                 transition: 'all 0.3s ease',
                 boxShadow: '0 2px 8px rgba(248, 113, 113, 0.3)'
               }}
@@ -315,12 +338,13 @@ function App() {
         backdropFilter: 'blur(10px)',
         color: '#e2e8f0',
         textAlign: 'center',
-        padding: '1rem',
+        padding: isMobile ? '0.5rem' : '1rem',
         borderTop: '1px solid #1e3a5f',
-        display: showContest ? 'none' : 'block' // Hide footer during contest
+        display: showContest ? 'none' : 'block', // Hide footer during contest
+        fontSize: isMobile ? '0.7rem' : '0.8rem'
       }}>
-        <p style={{ margin: '0.25rem 0', fontSize: '0.8rem' }}>© 2024 AI Club. All rights reserved.</p>
-        <p style={{ margin: '0.25rem 0', fontSize: '0.7rem', color: '#64ffda' }}>
+        <p style={{ margin: '0.25rem 0' }}>© 2024 AI Club. All rights reserved.</p>
+        <p style={{ margin: '0.25rem 0', color: '#64ffda' }}>
           Empowering the next generation of AI innovators
         </p>
       </footer>

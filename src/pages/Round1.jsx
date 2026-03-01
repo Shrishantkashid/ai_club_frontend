@@ -592,9 +592,11 @@ console.log(factorial(5));`,
 
   const currentQ = allQuestions[currentQuestion]
 
+  const isMobile = window.innerWidth <= 768
+
   return (
     <div style={{
-      padding: '1rem',
+      padding: isMobile ? '0.5rem' : '1rem',
       maxWidth: '1000px',
       margin: '0 auto'
     }}>
@@ -604,7 +606,7 @@ console.log(factorial(5));`,
       justifyContent: 'center',
       alignItems: 'center',
       marginBottom: '1rem',
-      padding: '0.5rem',
+      padding: isMobile ? '0.5rem' : '0.5rem',
       backgroundColor: 'rgba(239, 68, 68, 0.2)',
       borderRadius: '8px',
       border: '1px solid rgba(239, 68, 68, 0.3)'
@@ -614,16 +616,19 @@ console.log(factorial(5));`,
         alignItems: 'center',
         gap: '0.5rem',
         color: '#f87171',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        fontSize: isMobile ? '0.8rem' : '1rem'
       }}>
         <span>🔒</span>
         <span>Secure Exam Mode Active</span>
-        <span style={{ fontSize: '0.8rem', fontWeight: 'normal' }}>(Do not exit fullscreen or switch tabs)</span>
+        {!isMobile && (
+          <span style={{ fontSize: '0.8rem', fontWeight: 'normal' }}>(Do not exit fullscreen or switch tabs)</span>
+        )}
       </div>
     </div>
       <div style={{
         backgroundColor: 'rgba(30, 58, 95, 0.6)',
-        padding: '1.5rem',
+        padding: isMobile ? '1rem' : '1.5rem',
         borderRadius: '12px',
         boxShadow: '0 8px 32px rgba(30, 58, 95, 0.3)',
         border: '1px solid rgba(100, 255, 218, 0.2)',
@@ -638,16 +643,21 @@ console.log(factorial(5));`,
           flexWrap: 'wrap',
           gap: '1rem'
         }}>
-          <div style={{ color: '#64ffda', fontWeight: 'bold' }}>
+          <div style={{ 
+            color: '#64ffda', 
+            fontWeight: 'bold',
+            fontSize: isMobile ? '0.9rem' : '1rem'
+          }}>
             Question {currentQuestion + 1} of {allQuestions.length}
           </div>
           {cheatDetected && (
             <div style={{
               backgroundColor: '#f87171',
               color: '#0a192f',
-              padding: '0.5rem 1rem',
+              padding: isMobile ? '0.25rem 0.5rem' : '0.5rem 1rem',
               borderRadius: '20px',
-              fontWeight: 'bold'
+              fontWeight: 'bold',
+              fontSize: isMobile ? '0.8rem' : '1rem'
             }}>
               ⚠️ Suspicious Activity Detected
             </div>
@@ -657,7 +667,7 @@ console.log(factorial(5));`,
         {/* Progress bar */}
         <div style={{
           backgroundColor: 'rgba(100, 255, 218, 0.1)',
-          height: '8px',
+          height: isMobile ? '6px' : '8px',
           borderRadius: '4px',
           marginBottom: '1.5rem',
           overflow: 'hidden'
@@ -675,7 +685,7 @@ console.log(factorial(5));`,
           <h2 style={{ 
             color: '#64ffda', 
             marginBottom: '1rem',
-            fontSize: '1.3rem'
+            fontSize: isMobile ? '1.1rem' : '1.3rem'
           }}>
             {currentQ.question}
           </h2>
@@ -684,10 +694,10 @@ console.log(factorial(5));`,
           {currentQ.code && (
             <div style={{
               backgroundColor: 'rgba(0, 0, 0, 0.3)',
-              padding: '1rem',
+              padding: isMobile ? '0.5rem' : '1rem',
               borderRadius: '8px',
               fontFamily: 'monospace',
-              fontSize: '0.9rem',
+              fontSize: isMobile ? '0.7rem' : '0.9rem',
               marginBottom: '1rem',
               border: '1px solid rgba(100, 255, 218, 0.2)',
               overflowX: 'auto'
@@ -708,12 +718,13 @@ console.log(factorial(5));`,
                   ? 'rgba(100, 255, 218, 0.3)' 
                   : 'rgba(10, 25, 47, 0.5)',
                 border: `2px solid ${selectedAnswers[currentQ.id] === index ? '#64ffda' : 'rgba(100, 255, 218, 0.2)'}`,
-                padding: '1rem',
+                padding: isMobile ? '0.75rem' : '1rem',
                 borderRadius: '8px',
                 marginBottom: '0.75rem',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
-                color: '#e2e8f0'
+                color: '#e2e8f0',
+                fontSize: isMobile ? '0.9rem' : '1rem'
               }}
               onMouseEnter={(e) => {
                 if (selectedAnswers[currentQ.id] !== index) {
@@ -728,8 +739,8 @@ console.log(factorial(5));`,
             >
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div style={{
-                  width: '24px',
-                  height: '24px',
+                  width: isMobile ? '20px' : '24px',
+                  height: isMobile ? '20px' : '24px',
                   borderRadius: '50%',
                   border: '2px solid #64ffda',
                   display: 'flex',
@@ -738,7 +749,8 @@ console.log(factorial(5));`,
                   marginRight: '1rem',
                   backgroundColor: selectedAnswers[currentQ.id] === index ? '#64ffda' : 'transparent',
                   color: selectedAnswers[currentQ.id] === index ? '#0a192f' : '#64ffda',
-                  fontWeight: 'bold'
+                  fontWeight: 'bold',
+                  fontSize: isMobile ? '0.7rem' : '0.8rem'
                 }}>
                   {String.fromCharCode(65 + index)}
                 </div>
@@ -764,13 +776,14 @@ console.log(factorial(5));`,
                 backgroundColor: currentQuestion === 0 ? '#374151' : '#64ffda',
                 color: currentQuestion === 0 ? '#9ca3af' : '#0a192f',
                 border: 'none',
-                padding: '0.75rem 1.5rem',
+                padding: isMobile ? '0.5rem 1rem' : '0.75rem 1.5rem',
                 borderRadius: '6px',
                 cursor: currentQuestion === 0 ? 'not-allowed' : 'pointer',
                 fontWeight: 'bold',
                 marginRight: '0.5rem',
                 transition: 'all 0.2s ease',
-                opacity: currentQuestion === 0 ? 0.5 : 1
+                opacity: currentQuestion === 0 ? 0.5 : 1,
+                fontSize: isMobile ? '0.9rem' : '1rem'
               }}
             >
               ← Previous
@@ -782,11 +795,12 @@ console.log(factorial(5));`,
                   backgroundColor: '#64ffda',
                   color: '#0a192f',
                   border: 'none',
-                  padding: '0.75rem 1.5rem',
+                  padding: isMobile ? '0.5rem 1rem' : '0.75rem 1.5rem',
                   borderRadius: '6px',
                   cursor: 'pointer',
                   fontWeight: 'bold',
-                  transition: 'all 0.2s ease'
+                  transition: 'all 0.2s ease',
+                  fontSize: isMobile ? '0.9rem' : '1rem'
                 }}
               >
                 Next →
@@ -799,12 +813,13 @@ console.log(factorial(5));`,
                   backgroundColor: Object.keys(selectedAnswers).length === 0 ? '#374151' : '#4ade80',
                   color: Object.keys(selectedAnswers).length === 0 ? '#9ca3af' : '#0a192f',
                   border: 'none',
-                  padding: '0.75rem 2rem',
+                  padding: isMobile ? '0.5rem 1rem' : '0.75rem 2rem',
                   borderRadius: '30px',
                   cursor: Object.keys(selectedAnswers).length === 0 ? 'not-allowed' : 'pointer',
                   fontWeight: 'bold',
                   transition: 'all 0.3s ease',
-                  opacity: Object.keys(selectedAnswers).length === 0 ? 0.5 : 1
+                  opacity: Object.keys(selectedAnswers).length === 0 ? 0.5 : 1,
+                  fontSize: isMobile ? '0.9rem' : '1rem'
                 }}
               >
                 Submit Round 1
@@ -819,15 +834,15 @@ console.log(factorial(5));`,
           justifyContent: 'center',
           marginTop: '1.5rem',
           flexWrap: 'wrap',
-          gap: '0.5rem'
+          gap: isMobile ? '0.25rem' : '0.5rem'
         }}>
           {allQuestions.map((_, index) => (
             <div
               key={index}
               onClick={() => setCurrentQuestion(index)}
               style={{
-                width: '20px',
-                height: '20px',
+                width: isMobile ? '12px' : '20px',
+                height: isMobile ? '12px' : '20px',
                 borderRadius: '50%',
                 backgroundColor: index === currentQuestion 
                   ? '#64ffda' 
