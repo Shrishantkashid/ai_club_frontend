@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-const { build } = require('vite');
-const path = require('path');
+import { build } from 'vite';
+import { resolve } from 'path';
 
 async function buildApp() {
   try {
     await build({
-      root: path.resolve(__dirname),
+      root: resolve(process.cwd()),
       build: {
         outDir: 'dist',
         assetsDir: 'assets',
