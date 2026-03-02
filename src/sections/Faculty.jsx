@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react'
 import sowmya from "../assets/teachers/sowmya.jpg"
 import pavithra from "../assets/teachers/pavithra.jpeg"
 import jayaprada from "../assets/teachers/jayaprada.jpeg"
+import manjunath from "../assets/teachers/STAFF830.jpg"
+import shashikumar from "../assets/teachers/shashikumar.jpg"
+import shantakumar from "../assets/teachers/shantakumar.jpg"
 const Faculty = () => {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -12,6 +15,30 @@ const Faculty = () => {
   const facultyMembers = [
     {
       id: 1,
+      name: "Dr. Manjunath T N",
+      designation: "Principal & Professor",
+      department: "Sai Vidya Insititue of Technology",
+      specialization: "Data Mining and Big Data",
+      image: manjunath,
+    },
+    {
+      id: 2,
+      name: "Dr. Shashikumar D R",
+      designation: "Professor & HOD",
+      department: "Computer Science & Engineering",
+      specialization: "Expert in Machine learning and Computer Science Theory",
+      image: shashikumar,
+    },
+     {
+      id: 3,
+      name: "Dr. Shantakumar B Patil",
+      designation: "Professor & Associate Dean",
+      department: "Computer Science & Engineering",
+      specialization: "Data Mining, Artificial Intelligence, and Formal Languages and Automata Theory",
+      image: shantakumar,
+    },
+    {
+      id: 4,
       name: "Prof. Sowmya H N",
       designation: "Assistant Professor",
       department: "Computer Science & Engineering",
@@ -19,7 +46,7 @@ const Faculty = () => {
       image: sowmya,
     },
     {
-      id: 2,
+      id: 5,
       name: "Prof. Pavithra B G",
       designation: "Assistant Professor",
       department: "Computer Science & Engineering",
@@ -27,7 +54,7 @@ const Faculty = () => {
       image: pavithra,
     },
     {
-      id: 3,
+      id: 6,
       name: "Prof. Jayaprada S Hiremath",
       designation: "Assistant Professor",
       department: "Computer Science & Engineering",
@@ -83,8 +110,7 @@ const Faculty = () => {
               height: '300px',
               backgroundImage: `url(${faculty.image})`,
               backgroundSize: faculty.name === 'Prof. Sowmya H N' ? '80%' : 'cover',
-              backgroundPosition: faculty.name === 'Prof. Jayaprada S Hiremath' ? 'center 2%' : 
-                           faculty.name === 'Prof. Pavithra B G' ? 'center 30%' : 'center',
+              backgroundPosition: faculty.name === 'Prof. Jayaprada S Hiremath' ? 'center 2%' : faculty.name === 'Prof. Pavithra B G' ? 'center 30%' : faculty.name === 'Dr. Shantakumar B Patil' ? 'center 30%' : 'center',
               display: 'flex',
               alignItems: 'flex-end',
               justifyContent: 'center',
