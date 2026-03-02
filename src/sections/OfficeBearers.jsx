@@ -8,7 +8,7 @@ import image5 from '../assets/WhatsApp Image 2026-03-01 at 3.30.53 PM.jpeg'
 import image6 from '../assets/WhatsApp Image 2026-03-01 at 3.30.55 PM.jpeg'
 import image7 from '../assets/WhatsApp Image 2026-03-01 at 3.30.57 PM.jpeg'
 
-const OfficeBearers = () => {
+const OfficeBearers = ({ isMobile = false }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -99,21 +99,21 @@ const OfficeBearers = () => {
     },
     {
       id: 10,
-      name: "",
+      name: "Member Name",
       position: "Video Editing",
       department: "Computer Science & Engineering",
       year: "Second Year",
-      image: image6,
-      bio: "The membership coordinator is responsible for recruiting new members and maintaining members records. They engage memebers encourage effective communication within the club."
+      image: image4, // Using a fallback image
+      bio: "Responsible for video editing and multimedia content creation for club events and promotional materials."
     },
     {
       id: 11,
-      name: "",
+      name: "Member Name",
       position: "Photographer",
       department: "Computer Science & Engineering",
       year: "Second Year",
-      image: image6,
-      bio: "The membership coordinator is responsible for recruiting new members and maintaining members records. They engage memebers encourage effective communication within the club."
+      image: image5, // Using a fallback image
+      bio: "Captures moments at club events and creates visual content for social media and promotional purposes."
     }
   ]
 
@@ -135,8 +135,8 @@ const OfficeBearers = () => {
 
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-        gap: '2rem'
+        gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))',
+        gap: isMobile ? '1.5rem' : '2rem'
       }}>
         {bearers.map((bearer, index) => (
           <div key={bearer.id} style={{

@@ -5,7 +5,7 @@ import jayaprada from "../assets/teachers/jayaprada.jpeg"
 import manjunath from "../assets/teachers/STAFF830.jpg"
 import shashikumar from "../assets/teachers/shashikumar.jpg"
 import shantakumar from "../assets/teachers/shantakumar.jpg"
-const Faculty = () => {
+const Faculty = ({ isMobile = false }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -81,8 +81,8 @@ const Faculty = () => {
 
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-        gap: '2rem'
+        gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))',
+        gap: isMobile ? '1.5rem' : '2rem'
       }}>
         {facultyMembers.map((faculty, index) => (
           <div key={faculty.id} style={{

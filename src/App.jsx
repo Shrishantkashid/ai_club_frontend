@@ -4,6 +4,7 @@ import Home from './sections/Home'
 import OfficeBearers from './sections/OfficeBearers'
 import Faculty from './sections/Faculty'
 import Activities from './sections/Activities'
+import PhotoGallery from './sections/PhotoGallery'
 import ActivityCard from './pages/ActivityCard'
 import Instructions from './pages/Instructions'
 import Login from './pages/Login'
@@ -11,9 +12,6 @@ import Round1 from './pages/Round1'
 import Round2 from './pages/Round2'
 import Round3 from './pages/Round3'
 import Leaderboard from './pages/Leaderboard'
-import TestQuiz from './pages/TestQuiz'
-import TestQuizLogin from './pages/TestQuizLogin'
-import TestQuizLeaderboard from './pages/TestQuizLeaderboard'
 
 function App() {
   const [activeSection, setActiveSection] = useState('home')
@@ -22,13 +20,18 @@ function App() {
   const [showContest, setShowContest] = useState(false)
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
 
-  // Handle mobile detection
+  // Handle mobile detection with improved breakpoints
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768)
+      // Define breakpoints according to industry standards
+      const width = window.innerWidth;
+      // Mobile: up to 768px, Tablet: 769px to 1024px, Desktop: 1025px and above
+      setIsMobile(width <= 768)
     }
     
     window.addEventListener('resize', handleResize)
+    // Initialize on mount
+    handleResize();
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
@@ -63,12 +66,7 @@ function App() {
     setContestState('activity-card');
   }
 
-  // Function to navigate to test quiz
-  const navigateToTestQuiz = () => {
-    window.location.hash = '#/test-quiz';
-    setShowContest(true);
-    setContestState('test-quiz');
-  }
+
 
   // Function to logout
   const handleLogout = () => {
@@ -124,36 +122,7 @@ function App() {
             setActiveSection('home');
             window.location.hash = '';
           }} />
-        case 'test-quiz-login':
-          return <TestQuizLogin 
-            onLoginSuccess={(user) => {
-              setCurrentUser(user);
-              setContestState('test-quiz');
-            }}
-            onBack={() => {
-              setShowContest(false);
-              setActiveSection('activities');
-              window.location.hash = '#/activities';
-            }}
-          />
-        case 'test-quiz':
-          return <TestQuiz 
-            currentUser={currentUser}
-            setContestState={setContestState}
-            onBackToActivities={() => {
-              setShowContest(false);
-              setActiveSection('activities');
-              window.location.hash = '#/activities';
-            }} 
-          />
-        case 'test-quiz-leaderboard':
-          return <TestQuizLeaderboard 
-            onBackToActivities={() => {
-              setShowContest(false);
-              setActiveSection('activities');
-              window.location.hash = '#/activities';
-            }} 
-          />
+
         default:
           return <ActivityCard onStartContest={() => setContestState('instructions')} />
       }
@@ -161,13 +130,15 @@ function App() {
     
     switch (activeSection) {
       case 'home':
-        return <Home />
+        return <Home isMobile={isMobile} />
       case 'office-bearers':
-        return <OfficeBearers />
+        return <OfficeBearers isMobile={isMobile} />
       case 'faculty':
-        return <Faculty />
+        return <Faculty isMobile={isMobile} />
       case 'activities':
-        return <Activities navigateToContest={navigateToContest} navigateToTestQuiz={navigateToTestQuiz} setShowContest={setShowContest} setContestState={setContestState} />
+        return <Activities navigateToContest={navigateToContest} setShowContest={setShowContest} setContestState={setContestState} isMobile={isMobile} />
+      case 'photo-gallery':
+        return <PhotoGallery isMobile={isMobile} />
       default:
         return <Home />
     }
@@ -298,34 +269,77 @@ function App() {
       </div>
       
       <header style={{
-        backgroundColor: 'rgba(10, 25, 47, 0.9)', // Semi-transparent dark blue
-        backdropFilter: 'blur(10px)',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        backgroundColor: 'rgba(10, 25, 47, 0.95)', // Semi-transparent dark blue
+        backdropFilter: 'blur(15px)',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
         position: 'relative',
         zIndex: 100,
-        borderBottom: '1px solid #1e3a5f', // Subtle border
+        borderBottom: '1px solid rgba(100, 255, 218, 0.2)',
         display: showContest ? 'none' : 'block', // Hide navigation during contest
-        padding: isMobile ? '0.5rem' : '0' // Reduced padding on mobile
+        padding: isMobile ? '0.5rem 0' : '0.75rem 0',
+        width: '100vw', // Set to full viewport width
+        marginLeft: '0',
+        paddingLeft: '0'
       }}>
         <div style={{
           maxWidth: '1200px',
           margin: '0 auto',
-          padding: isMobile ? '0 0.5rem' : '0.5rem 1rem',
           display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
+          alignItems: 'center',
+          width: '100%',
+          paddingLeft: isMobile ? '1rem' : '3rem', // Reduced padding on mobile
+          paddingRight: isMobile ? '1rem' : '3rem'  // Reduced padding on mobile
         }}>
-          <h1 style={{ 
-            color: '#64ffda', // Teal accent color
-            margin: 0,
-            fontSize: isMobile ? '1.2rem' : '1.5rem',
-            fontWeight: 'bold',
-            textShadow: '0 0 8px rgba(100, 255, 218, 0.3)' // Subtle glow effect
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem', // Increased gap between logo and text
+            flexShrink: 0
           }}>
-            AI Club Portal
-          </h1>
+            <img 
+              src="./src/assets/logo/WhatsApp Image 2026-02-07 at 10.10.11 AM.jpeg" 
+              alt="AI Club Logo"
+              style={{ 
+                height: isMobile ? '40px' : '70px',
+                width: 'auto',
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 2px 8px rgba(100, 255, 218, 0.3))',
+                transition: 'transform 0.3s ease',
+                cursor: 'pointer'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'scale(1.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'scale(1)';
+              }}
+              onClick={() => {
+                setActiveSection('home');
+                setShowContest(false);
+                window.location.hash = '';
+              }}
+            />
+            <h1 style={{ 
+              color: '#64ffda',
+              margin: 0,
+              fontSize: isMobile ? '1rem' : '1.8rem',
+              fontWeight: '700',
+              textShadow: '0 0 10px rgba(100, 255, 218, 0.4)',
+              letterSpacing: isMobile ? '0.2px' : '0.5px',
+              whiteSpace: 'nowrap'
+            }}>
+              Artificial Intelligence Club
+            </h1>
+          </div>
+          <div style={{ 
+            flexGrow: 1, // Allow this middle space to grow and push navigation left
+            marginLeft: '2rem', // Add some space between logo and navigation
+            marginRight: '2rem' // Add some space between navigation and right edge
+          }}></div>
+          <div>
+            {!showContest && <Navigation activeSection={activeSection} setActiveSection={setActiveSection} isMobile={isMobile} />}
+          </div>
         </div>
-        {!showContest && <Navigation activeSection={activeSection} setActiveSection={setActiveSection} isMobile={isMobile} />}
       </header>
       
       <main style={{
@@ -334,7 +348,8 @@ function App() {
         flex: 1,
         overflow: 'auto',
         padding: '0',
-        maxHeight: showContest ? '100vh' : (isMobile ? 'calc(100vh - 80px)' : 'calc(100vh - 120px)') // Adjust height based on navigation visibility
+        maxHeight: showContest ? '100vh' : (isMobile ? 'calc(100vh - 70px)' : 'calc(100vh - 120px)'), // Adjust height based on navigation visibility
+        width: '100%'
       }}>
         {showContest && contestState === 'leaderboard' && (
           <div style={{
@@ -378,15 +393,79 @@ function App() {
         backdropFilter: 'blur(10px)',
         color: '#e2e8f0',
         textAlign: 'center',
-        padding: isMobile ? '0.5rem' : '1rem',
+        padding: isMobile ? '0.75rem 0.5rem' : '1rem',
         borderTop: '1px solid #1e3a5f',
         display: showContest ? 'none' : 'block', // Hide footer during contest
-        fontSize: isMobile ? '0.7rem' : '0.8rem'
+        fontSize: isMobile ? '0.65rem' : '0.8rem',
+        width: '100%'
       }}>
-        <p style={{ margin: '0.25rem 0' }}>© 2024 AI Club. All rights reserved.</p>
+        <p style={{ margin: '0.25rem 0' }}>© 2026 Artificial Intelligence Club. All rights reserved.</p>
         <p style={{ margin: '0.25rem 0', color: '#64ffda' }}>
           Empowering the next generation of AI innovators
         </p>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: isMobile ? '1rem' : '1.5rem',
+          marginTop: '0.5rem',
+          flexWrap: 'wrap'
+        }}>
+          <a href="https://www.instagram.com/aiclub_svit?igsh=c2pvbnE5amtkMDk5" target="_blank" rel="noopener noreferrer" style={{
+            color: '#64ffda',
+            textDecoration: 'none',
+            fontSize: isMobile ? '1.2rem' : '1.5rem',
+            transition: 'transform 0.3s ease, color 0.3s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.transform = 'scale(1.2)';
+            e.target.style.color = '#e1306c'; // Instagram color
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = 'scale(1)';
+            e.target.style.color = '#64ffda';
+          }}>
+            {/* Instagram SVG Icon with Gradient */}
+            <svg xmlns="http://www.w3.org/2000/svg" width={isMobile ? "20" : "24"} height={isMobile ? "20" : "24"} viewBox="0 0 24 24" style={{ verticalAlign: 'middle' }}>
+              <defs>
+                <linearGradient id="instaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: '#f09433', stopOpacity: 1 }} />
+                  <stop offset="25%" style={{ stopColor: '#e6683c', stopOpacity: 1 }} />
+                  <stop offset="50%" style={{ stopColor: '#dc2743', stopOpacity: 1 }} />
+                  <stop offset="75%" style={{ stopColor: '#cc2366', stopOpacity: 1 }} />
+                  <stop offset="100%" style={{ stopColor: '#bc1888', stopOpacity: 1 }} />
+                </linearGradient>
+              </defs>
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="url(#instaGradient)"/>
+              <circle cx="12" cy="12" r="4.5" fill="none" stroke="white" strokeWidth="1.5"/>
+              <circle cx="18" cy="6" r="1" fill="white"/>
+            </svg>
+          </a>
+          <a href="https://www.linkedin.com/in/artificial-intelligence-club-a5b6563ab" target="_blank" rel="noopener noreferrer" style={{
+            color: '#64ffda',
+            textDecoration: 'none',
+            fontSize: isMobile ? '1.2rem' : '1.5rem',
+            transition: 'transform 0.3s ease, color 0.3s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.transform = 'scale(1.2)';
+            e.target.style.color = '#0077b5'; // LinkedIn color
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = 'scale(1)';
+            e.target.style.color = '#64ffda';
+          }}>
+            {/* LinkedIn SVG Icon with Official Brand Color */}
+            <svg xmlns="http://www.w3.org/2000/svg" width={isMobile ? "20" : "24"} height={isMobile ? "20" : "24"} viewBox="0 0 24 24" style={{ verticalAlign: 'middle' }}>
+              <defs>
+                <linearGradient id="linkedinGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: '#0077B5', stopOpacity: 1 }} />
+                  <stop offset="100%" style={{ stopColor: '#00A0DC', stopOpacity: 1 }} />
+                </linearGradient>
+              </defs>
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" fill="url(#linkedinGradient)"/>
+            </svg>
+          </a>
+        </div>
       </footer>
     </div>
   )

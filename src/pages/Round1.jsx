@@ -13,6 +13,75 @@ const Round1 = ({ onCompleteRound1 }) => {
   // Track initial fullscreen status
   const initialFullscreenRef = useRef(false);
 
+  // Clear selected answers on component mount to ensure clean state
+  useEffect(() => {
+    setSelectedAnswers({});
+  }, []);
+
+  // 10 AI-based Riddles (MCQ format)
+  const aiRiddles = [
+    {
+      id: 1,
+      question: "I learn from data but never go to school. I can recognize faces but have no eyes. What am I?",
+      options: ["A Neural Network", "A Database", "A Calculator", "A Web Browser"],
+      correct: 0
+    },
+    {
+      id: 2,
+      question: "I get smarter the more you train me, but I make mistakes if you feed me garbage. What am I?",
+      options: ["A Machine Learning Model", "A Human Student", "A Robot", "A Search Engine"],
+      correct: 0
+    },
+    {
+      id: 3,
+      question: "I have layers like an onion, but I'm not a vegetable. I process information forward and backward. What am I?",
+      options: ["A Deep Neural Network", "A Filing Cabinet", "A Library", "A Spreadsheet"],
+      correct: 0
+    },
+    {
+      id: 4,
+      question: "I can translate languages but don't speak any. I understand context but have no brain. What am I?",
+      options: ["NLP System", "A Dictionary", "A Translator App", "A Voice Recorder"],
+      correct: 0
+    },
+    {
+      id: 5,
+      question: "I play games millions of times to master one move. I never get tired but can be beaten by strategy. What am I?",
+      options: ["Reinforcement Learning Agent", "A Chess Grandmaster", "A Game Console", "A Simulation Program"],
+      correct: 0
+    },
+    {
+      id: 6,
+      question: "I see patterns in chaos but have no vision. I predict futures but have no crystal ball. What am I?",
+      options: ["Predictive Analytics AI", "A Fortune Teller", "A Weather Station", "A Camera"],
+      correct: 0
+    },
+    {
+      id: 7,
+      question: "I can drive cars but have no license. I navigate roads but have no feet. What am I?",
+      options: ["Autonomous Vehicle AI", "A GPS System", "A Remote Control Car", "A Traffic Light"],
+      correct: 0
+    },
+    {
+      id: 8,
+      question: "I recommend what you'll love but don't have feelings. I know your taste but we've never met. What am I?",
+      options: ["Recommendation System", "A Matchmaker", "A Shopping Cart", "A Review Website"],
+      correct: 0
+    },
+    {
+      id: 9,
+      question: "I detect fraud but carry no badge. I spot anomalies but have no intuition. What am I?",
+      options: ["Anomaly Detection AI", "A Security Guard", "A Police Officer", "A Metal Detector"],
+      correct: 0
+    },
+    {
+      id: 10,
+      question: "I compose music but hear no sound. I paint pictures but see no colors. What am I?",
+      options: ["Generative AI", "A Music Player", "An Art Gallery", "A Recording Studio"],
+      correct: 0
+    }
+  ]
+
   // 15 MCQ questions about AI
   const mcqQuestions = [
     {
@@ -107,108 +176,91 @@ const Round1 = ({ onCompleteRound1 }) => {
     }
   ]
 
-  // 5 Code debugging questions
-  const debuggingQuestions = [
-    {
-      id: 16,
-      question: "Identify the bug in this Python code:",
-      code: `def calculate_average(numbers):
-    total = 0
-    for num in numbers:
-        total += num
-    return total / len(numbers)
-
-# Test the function
-result = calculate_average([1, 2, 3, 4, 5])
-print(f"Average: {result}")`,
-      options: [
-        "No bug - code works correctly",
-        "Division by zero error when list is empty",
-        "Incorrect variable name 'num'",
-        "Missing import statement"
-      ],
-      correct: 1,
-      explanation: "The code will throw a ZeroDivisionError if an empty list is passed. It should check if the list is empty before division."
-    },
-    {
-      id: 17,
-      question: "What's wrong with this JavaScript code?",
-      code: `function findMax(arr) {
-    let max = 0;
-    for (let i = 0; i < arr.length; i++) {
-        if (arr[i] > max) {
-            max = arr[i];
-        }
-    }
-    return max;
-}
-
-console.log(findMax([-5, -2, -10, -1]));`,
-      options: [
-        "No issues - works perfectly",
-        "Returns 0 instead of -1 for negative numbers",
-        "Infinite loop possible",
-        "Syntax error in the function"
-      ],
-      correct: 1,
-      explanation: "The function initializes max to 0, so it will return 0 for arrays with all negative numbers instead of the actual maximum."
-    },
-    {
-      id: 18,
-      question: "Debug this Python list comprehension:",
-      code: `# Create a list of squares of even numbers
-numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-squares = [x**2 for x in numbers if x % 2 = 0]`,
-      options: [
-        "Correct syntax - no issues",
-        "Should use '==' instead of '=' in condition",
-        "Missing colon after 'if'",
-        "Wrong variable name 'x'"
-      ],
-      correct: 1,
-      explanation: "The condition uses assignment operator '=' instead of comparison operator '=='. It should be 'if x % 2 == 0'."
-    },
-    {
-      id: 19,
-      question: "What's the bug in this recursive function?",
-      code: `function factorial(n) {
-    if (n === 0) {
-        return 1;
-    }
-    return n * factorial(n - 1);
-}
-
-console.log(factorial(5));`,
-      options: [
-        "No bug - handles all cases correctly",
-        "Missing base case for negative numbers",
-        "Will cause stack overflow for large numbers",
-        "Both B and C"
-      ],
-      correct: 3,
-      explanation: "The function doesn't handle negative inputs (will cause infinite recursion) and lacks protection against stack overflow for large numbers."
-    },
-    {
-      id: 20,
-      question: "Identify the issue in this API call:",
-      code: `fetch('https://api.example.com/data')
-    .then(response => response.json())
-    .then(data => console.log(data))
-    .catch(error => console.log('Error:', error));`,
-      options: [
-        "No issues - proper error handling",
-        "Missing CORS headers check",
-        "Should check if response is ok before parsing JSON",
-        "Incorrect URL format"
-      ],
-      correct: 2,
-      explanation: "The code should check if response.ok is true before parsing JSON. Network errors or HTTP error statuses won't be caught by the catch block."
-    }
-  ]
-
-  // Combine all questions
-  const allQuestions = [...mcqQuestions, ...debuggingQuestions]
+  // Combine all questions (10 AI Riddles + 15 MCQ = 25 total)
+  const allQuestions = [...aiRiddles, ...mcqQuestions]
   
+  // Shuffle array using Fisher-Yates algorithm
+  const shuffleArray = (array) => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+  
+  // Shuffle questions and options on component mount
+  const [shuffledQuestions, setShuffledQuestions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  useEffect(() => {
+    // Shuffle question order
+    const shuffled = shuffleArray(allQuestions);
+    
+    // Also shuffle options within each question
+    const shuffledWithOptions = shuffled.map(question => {
+      // Create array of option indices and shuffle them
+      const optionIndices = [0, 1, 2, 3];
+      const shuffledIndices = shuffleArray(optionIndices);
+      
+      // Reorder options based on shuffled indices
+      const newOptions = shuffledIndices.map(index => question.options[index]);
+      
+      // Find where the correct answer moved to
+      const originalCorrectIndex = question.correct;
+      const newCorrectIndex = shuffledIndices.indexOf(originalCorrectIndex);
+      
+      // Create a unique ID for this question instance to prevent answer conflicts
+      const uniqueId = `${question.id}-${Date.now()}-${Math.random()}`;
+      
+      return {
+        ...question,
+        id: uniqueId, // Use unique ID to prevent answer conflicts
+        options: newOptions,
+        correct: newCorrectIndex,
+        originalId: question.id // Keep reference to original ID for tracking
+      };
+    });
+    
+    console.log('Shuffled questions:', shuffledWithOptions.length, 'Question IDs:', shuffledWithOptions.map(q => q.id));
+    
+    setShuffledQuestions(shuffledWithOptions);
+    setIsLoading(false);
+  }, []);
+  
+  // Monitor state consistency and fix issues
+  useEffect(() => {
+    // Validate current question index
+    if (shuffledQuestions.length > 0 && (currentQuestion < 0 || currentQuestion >= shuffledQuestions.length)) {
+      console.warn('Invalid currentQuestion index detected:', currentQuestion, 'Total questions:', shuffledQuestions.length);
+      setCurrentQuestion(Math.max(0, Math.min(shuffledQuestions.length - 1, currentQuestion)));
+    }
+    
+    // Validate selected answers match current questions
+    const validQuestionIds = new Set(shuffledQuestions.map(q => q.id));
+    const invalidAnswers = Object.keys(selectedAnswers).filter(id => !validQuestionIds.has(id));
+    
+    if (invalidAnswers.length > 0) {
+      console.warn('Found answers for non-existent questions:', invalidAnswers);
+      // Clean up invalid answers
+      setSelectedAnswers(prev => {
+        const cleaned = { ...prev };
+        invalidAnswers.forEach(id => delete cleaned[id]);
+        return cleaned;
+      });
+    }
+    
+    // Debug logging - only in development
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Current state:', {
+        currentQuestion,
+        totalQuestions: shuffledQuestions.length,
+        selectedAnswers: Object.keys(selectedAnswers),
+        currentQuestionId: shuffledQuestions[currentQuestion]?.id
+      });
+    }
+  }, [currentQuestion, shuffledQuestions, selectedAnswers]);
+
   // Enhanced requestFullscreen function with better browser compatibility
   const requestFullscreen = async () => {
     try {
@@ -537,29 +589,94 @@ console.log(factorial(5));`,
   }, []);
 
   const handleAnswerSelect = (questionId, answerIndex) => {
-    setSelectedAnswers(prev => ({
-      ...prev,
-      [questionId]: answerIndex
-    }))
+    // Validate inputs
+    if (questionId === undefined || answerIndex === undefined) {
+      console.warn('Invalid answer selection parameters:', { questionId, answerIndex });
+      return;
+    }
+    
+    // Validate answer index
+    if (answerIndex < 0 || answerIndex > 3) {
+      console.warn('Invalid answer index:', answerIndex);
+      return;
+    }
+    
+    // Validate that this question exists
+    const question = shuffledQuestions.find(q => q.id === questionId);
+    if (!question) {
+      console.warn('Question not found for ID:', questionId);
+      return;
+    }
+    
+    setSelectedAnswers(prev => {
+      // Create new object to avoid direct mutation
+      const newAnswers = { ...prev };
+      newAnswers[questionId] = answerIndex;
+      return newAnswers;
+    });
+    
+    // Debug logging - only in development
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Answer selected:', { questionId, answerIndex, questionText: question.question });
+    }
   }
 
   const handleSubmit = (autoSubmit = false) => {
-    let correctAnswers = 0
-    allQuestions.forEach(question => {
-      if (selectedAnswers[question.id] === question.correct) {
-        correctAnswers++
+    // Calculate statistics for submitted answers
+    const totalAnswered = Object.keys(selectedAnswers).length
+    const totalQuestions = shuffledQuestions.length
+    
+    console.log('Submit check:', { 
+      totalAnswered, 
+      totalQuestions,
+      selectedAnswersKeys: Object.keys(selectedAnswers),
+      allQuestionIds: shuffledQuestions.map(q => q.id)
+    });
+    
+    // Handle case where no answers are selected
+    if (totalAnswered === 0 && !autoSubmit) {
+      const confirmSubmit = window.confirm(
+        '⚠️ You haven\'t answered any questions.\n\n' +
+        'Are you sure you want to submit with 0 answers?\n' +
+        'This will result in a score of 0.'
+      );
+      
+      if (!confirmSubmit) {
+        return; // User cancelled submission
       }
-    })
+    }
+    
+    // Count correct answers from submitted responses only
+    let correctAnswers = 0
+    Object.keys(selectedAnswers).forEach(questionId => {
+      const question = shuffledQuestions.find(q => q.id === Number(questionId));
+      if (question && selectedAnswers[questionId] === question.correct) {
+        correctAnswers++;
+      }
+    });
+    
+    // Calculate accuracy based on answered questions
+    const accuracy = totalAnswered > 0 ? Math.round((correctAnswers / totalAnswered) * 100) : 0;
     
     setIsSubmitted(true)
     
     // Send results to backend
+    const token = localStorage.getItem('token')
     fetch(API.ROUND1_SUBMIT, {
-      answers: selectedAnswers,
-      totalQuestions: allQuestions.length,
-      correctAnswers,
-      autoSubmit: autoSubmit || cheatDetected,
-      warningCount: warningCount
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        answers: selectedAnswers,
+        totalQuestions: totalQuestions,
+        answeredQuestions: totalAnswered,
+        correctAnswers,
+        accuracy: accuracy,
+        autoSubmit: autoSubmit || cheatDetected,
+        warningCount: warningCount
+      })
     }).then(response => response.json())
       .then(data => {
         if (data.success) {
@@ -576,6 +693,11 @@ console.log(factorial(5));`,
               onCompleteRound1();
             }, 500); // Shorter delay when cheated to show warning quickly
           }
+        } else {
+          console.error('Submission failed:', data.message);
+          // Handle submission failure
+          alert(`Submission failed: ${data.message || 'Unknown error'}`);
+          setIsSubmitted(false); // Allow retry
         }
       })
       .catch(err => {
@@ -597,14 +719,30 @@ console.log(factorial(5));`,
   }
 
   const handleNext = () => {
-    if (currentQuestion < allQuestions.length - 1) {
-      setCurrentQuestion(prev => prev + 1)
+    if (currentQuestion < shuffledQuestions.length - 1) {
+      setCurrentQuestion(prev => {
+        const nextIndex = prev + 1;
+        // Safety check
+        if (nextIndex >= shuffledQuestions.length) {
+          console.warn('Attempted to navigate beyond question array bounds');
+          return prev;
+        }
+        return nextIndex;
+      });
     }
   }
 
   const handlePrevious = () => {
     if (currentQuestion > 0) {
-      setCurrentQuestion(prev => prev - 1)
+      setCurrentQuestion(prev => {
+        const prevIndex = prev - 1;
+        // Safety check
+        if (prevIndex < 0) {
+          console.warn('Attempted to navigate before question array bounds');
+          return prev;
+        }
+        return prevIndex;
+      });
     }
   }
 
@@ -680,7 +818,58 @@ console.log(factorial(5));`,
     )
   }
 
-  const currentQ = allQuestions[currentQuestion]
+  // Show loading state while questions are being shuffled
+  if (isLoading || shuffledQuestions.length === 0) {
+    return (
+      <div style={{
+        padding: '2rem',
+        maxWidth: '1200px',
+        margin: '0 auto',
+        textAlign: 'center'
+      }}>
+        <div style={{
+          backgroundColor: 'rgba(30, 58, 95, 0.6)',
+          padding: '3rem',
+          borderRadius: '12px',
+          boxShadow: '0 8px 32px rgba(30, 58, 95, 0.3)',
+          border: '1px solid rgba(100, 255, 218, 0.2)',
+          backdropFilter: 'blur(4px)'
+        }}>
+          <h1 style={{ 
+            color: '#64ffda', 
+            marginBottom: '2rem',
+            textShadow: '0 0 8px rgba(100, 255, 218, 0.3)'
+          }}>
+            Loading Questions...
+          </h1>
+          <div style={{
+            width: '50px',
+            height: '50px',
+            border: '5px solid rgba(100, 255, 218, 0.3)',
+            borderTop: '5px solid #64ffda',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+            margin: '0 auto'
+          }} />
+          <style>{`
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          `}</style>
+        </div>
+      </div>
+    )
+  }
+
+  // Safety check for current question index
+  if (currentQuestion >= shuffledQuestions.length || currentQuestion < 0) {
+    console.error('Invalid question index:', currentQuestion, 'Total questions:', shuffledQuestions.length);
+    setCurrentQuestion(Math.max(0, Math.min(shuffledQuestions.length - 1, currentQuestion)));
+    return null;
+  }
+
+  const currentQ = shuffledQuestions[currentQuestion]
 
   const isMobile = window.innerWidth <= 768
 
@@ -738,7 +927,7 @@ console.log(factorial(5));`,
             fontWeight: 'bold',
             fontSize: isMobile ? '0.9rem' : '1rem'
           }}>
-            Question {currentQuestion + 1} of {allQuestions.length}
+            Question {currentQuestion + 1} of {shuffledQuestions.length}
           </div>
           {cheatDetected && (
             <div style={{
@@ -763,7 +952,7 @@ console.log(factorial(5));`,
           overflow: 'hidden'
         }}>
           <div style={{
-            width: `${((currentQuestion + 1) / allQuestions.length) * 100}%`,
+            width: `${((currentQuestion + 1) / shuffledQuestions.length) * 100}%`,
             backgroundColor: '#64ffda',
             height: '100%',
             transition: 'width 0.3s ease'
@@ -801,7 +990,7 @@ console.log(factorial(5));`,
         <div style={{ marginBottom: '2rem' }}>
           {currentQ.options.map((option, index) => (
             <div
-              key={index}
+              key={`question-${currentQ.id}-option-${index}`} // More unique key
               onClick={() => handleAnswerSelect(currentQ.id, index)}
               style={{
                 backgroundColor: selectedAnswers[currentQ.id] === index 
@@ -878,7 +1067,7 @@ console.log(factorial(5));`,
             >
               ← Previous
             </button>
-            {currentQuestion < allQuestions.length - 1 ? (
+            {currentQuestion < shuffledQuestions.length - 1 ? (
               <button
                 onClick={handleNext}
                 style={{
@@ -898,7 +1087,6 @@ console.log(factorial(5));`,
             ) : (
               <button
                 onClick={() => handleSubmit(false)}
-                disabled={Object.keys(selectedAnswers).length === 0}
                 style={{
                   backgroundColor: Object.keys(selectedAnswers).length === 0 ? '#374151' : '#4ade80',
                   color: Object.keys(selectedAnswers).length === 0 ? '#9ca3af' : '#0a192f',
@@ -911,8 +1099,13 @@ console.log(factorial(5));`,
                   opacity: Object.keys(selectedAnswers).length === 0 ? 0.5 : 1,
                   fontSize: isMobile ? '0.9rem' : '1rem'
                 }}
+                onMouseEnter={(e) => {
+                  console.log('Button hover - Answered:', Object.keys(selectedAnswers).length, 'Total:', shuffledQuestions.length);
+                }}
               >
-                Submit Round 1
+                {Object.keys(selectedAnswers).length === 0 
+                  ? 'Select at least one answer' 
+                  : `Submit Round 1 (${Object.keys(selectedAnswers).length}/${shuffledQuestions.length} answered)`}
               </button>
             )}
           </div>
@@ -926,23 +1119,32 @@ console.log(factorial(5));`,
           flexWrap: 'wrap',
           gap: isMobile ? '0.25rem' : '0.5rem'
         }}>
-          {allQuestions.map((_, index) => (
+          {shuffledQuestions.map((question, index) => (
             <div
-              key={index}
-              onClick={() => setCurrentQuestion(index)}
+              key={`nav-dot-${question.id}-${index}`}
+              onClick={() => {
+                // Safety check for navigation
+                if (index >= 0 && index < shuffledQuestions.length) {
+                  setCurrentQuestion(index);
+                } else {
+                  console.warn('Invalid navigation index:', index);
+                }
+              }}
               style={{
                 width: isMobile ? '12px' : '20px',
                 height: isMobile ? '12px' : '20px',
                 borderRadius: '50%',
                 backgroundColor: index === currentQuestion 
                   ? '#64ffda' 
-                  : selectedAnswers[allQuestions[index].id] !== undefined
+                  : selectedAnswers[question.id] !== undefined
                   ? 'rgba(100, 255, 218, 0.5)'
                   : 'rgba(100, 255, 218, 0.1)',
                 cursor: 'pointer',
                 border: '2px solid rgba(100, 255, 218, 0.3)',
-                transition: 'all 0.2s ease'
+                transition: 'all 0.2s ease',
+                opacity: (index === currentQuestion || selectedAnswers[question.id] !== undefined) ? 1 : 0.6
               }}
+              title={`Question ${index + 1} ${selectedAnswers[question.id] !== undefined ? '(Answered)' : '(Not answered)'}`}
             ></div>
           ))}
         </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-const Home = () => {
+const Home = ({ isMobile = false }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const Home = () => {
           textShadow: '0 0 10px rgba(100, 255, 218, 0.3)',
           animation: 'glow 2s ease-in-out infinite alternate'
         }}>
-          Welcome to AI Club
+          Welcome to Artificial Intelligence Club
         </h1>
         <p style={{
           fontSize: '1.2rem',
@@ -42,8 +42,8 @@ const Home = () => {
 
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-        gap: '2rem',
+        gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))',
+        gap: isMobile ? '1.5rem' : '2rem',
         marginBottom: '3rem'
       }}>
         <div style={{
@@ -146,7 +146,7 @@ const Home = () => {
           lineHeight: '1.6',
           color: '#e2e8f0'
         }}>
-          The AI Club is dedicated to exploring the vast possibilities of Artificial Intelligence. 
+          The Artificial Intelligence Club is dedicated to exploring the vast possibilities of Artificial Intelligence. 
           We organize workshops, hackathons, guest lectures, and research projects to help students 
           understand and contribute to this rapidly evolving field. Our members work on diverse 
           projects ranging from machine learning algorithms to computer vision applications, 

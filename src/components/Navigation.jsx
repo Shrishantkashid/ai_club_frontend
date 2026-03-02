@@ -7,34 +7,46 @@ const Navigation = ({ activeSection, setActiveSection, isMobile = false }) => {
     { id: 'home', label: 'Home' },
     { id: 'office-bearers', label: 'Office Bearers' },
     { id: 'faculty', label: 'Faculty' },
-    { id: 'activities', label: 'Activities' }
+    { id: 'activities', label: 'Activities' },
+    { id: 'photo-gallery', label: 'Gallery' }
   ]
 
   if (isMobile) {
     return (
       <nav style={{
-        backgroundColor: 'rgba(10, 25, 47, 0.95)',
-        backdropFilter: 'blur(10px)',
-        padding: '0.5rem 1rem',
-        position: 'relative'
+        backgroundColor: 'rgba(10, 25, 47, 0.98)',
+        backdropFilter: 'blur(15px)',
+        padding: '0.75rem 1rem',
+        position: 'relative',
+        borderTop: '1px solid rgba(100, 255, 218, 0.15)'
       }}>
         {/* Mobile menu button */}
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           style={{
-            backgroundColor: 'transparent',
-            border: '1px solid rgba(100, 255, 218, 0.3)',
+            backgroundColor: 'rgba(100, 255, 218, 0.15)',
+            border: '1px solid rgba(100, 255, 218, 0.4)',
             color: '#64ffda',
-            padding: '0.5rem 1rem',
-            borderRadius: '6px',
+            padding: '0.6rem 1.2rem',
+            borderRadius: '8px',
             cursor: 'pointer',
             width: '100%',
             textAlign: 'center',
             fontWeight: 'bold',
-            fontSize: '1rem'
+            fontSize: '1rem',
+            transition: 'all 0.3s ease',
+            boxShadow: '0 2px 8px rgba(100, 255, 218, 0.2)'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = 'rgba(100, 255, 218, 0.25)';
+            e.target.style.boxShadow = '0 4px 12px rgba(100, 255, 218, 0.3)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = 'rgba(100, 255, 218, 0.15)';
+            e.target.style.boxShadow = '0 2px 8px rgba(100, 255, 218, 0.2)';
           }}
         >
-          {isMenuOpen ? 'Close Menu' : 'Menu'}
+          {isMenuOpen ? '✕ Close Menu' : '☰ Menu'}
         </button>
 
         {/* Mobile menu dropdown */}
@@ -45,13 +57,15 @@ const Navigation = ({ activeSection, setActiveSection, isMobile = false }) => {
             left: 0,
             right: 0,
             backgroundColor: 'rgba(10, 25, 47, 0.98)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(100, 255, 218, 0.2)',
-            borderRadius: '0 0 8px 8px',
+            backdropFilter: 'blur(15px)',
+            border: '1px solid rgba(100, 255, 218, 0.3)',
+            borderRadius: '0 0 12px 12px',
             zIndex: 1000,
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)'
+            boxShadow: '0 8px 20px rgba(0, 0, 0, 0.4)',
+            marginTop: '0.5rem',
+            overflow: 'hidden'
           }}>
-            {navItems.map((item) => (
+            {navItems.map((item, index) => (
               <button
                 key={item.id}
                 onClick={() => {
@@ -66,21 +80,25 @@ const Navigation = ({ activeSection, setActiveSection, isMobile = false }) => {
                     : 'transparent',
                   color: activeSection === item.id ? '#64ffda' : '#e2e8f0',
                   border: 'none',
-                  padding: '1rem',
-                  textAlign: 'center',
+                  borderBottom: '1px solid rgba(100, 255, 218, 0.1)',
+                  padding: '1.2rem 1rem',
+                  textAlign: 'left',
                   cursor: 'pointer',
-                  fontSize: '1rem',
+                  fontSize: '1.05rem',
                   fontWeight: activeSection === item.id ? 'bold' : 'normal',
-                  transition: 'all 0.3s ease'
+                  transition: 'all 0.3s ease',
+                  paddingLeft: '1.5rem'
                 }}
                 onMouseEnter={(e) => {
                   if (activeSection !== item.id) {
                     e.target.style.backgroundColor = 'rgba(100, 255, 218, 0.1)';
+                    e.target.style.paddingLeft = '1.8rem';
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (activeSection !== item.id) {
                     e.target.style.backgroundColor = 'transparent';
+                    e.target.style.paddingLeft = '1.5rem';
                   }
                 }}
               >
@@ -93,20 +111,19 @@ const Navigation = ({ activeSection, setActiveSection, isMobile = false }) => {
     )
   }
 
-  // Desktop navigation (unchanged)
+  // Desktop navigation
   return (
     <nav style={{
-      maxWidth: '1200px',
-      margin: '0 auto',
-      padding: '0 1rem'
+      display: 'flex',
+      alignItems: 'center'
     }}>
       <ul style={{
         listStyle: 'none',
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
         margin: '0',
         padding: '0.5rem 0',
-        gap: '2rem'
+        gap: '1rem'
       }}>
         {navItems.map((item) => (
           <li key={item.id}>
@@ -118,18 +135,21 @@ const Navigation = ({ activeSection, setActiveSection, isMobile = false }) => {
                   : 'transparent',
                 color: activeSection === item.id ? '#64ffda' : '#e2e8f0',
                 border: '1px solid rgba(100, 255, 218, 0.3)',
-                padding: '0.5rem 1.5rem',
-                borderRadius: '20px',
+                padding: '0.7rem 1.8rem',
+                borderRadius: '25px',
                 cursor: 'pointer',
                 fontWeight: activeSection === item.id ? 'bold' : 'normal',
-                fontSize: '1rem',
-                transition: 'all 0.3s ease'
+                fontSize: '1.05rem',
+                transition: 'all 0.3s ease',
+                boxShadow: activeSection === item.id ? '0 2px 12px rgba(100, 255, 218, 0.2)' : 'none',
+                whiteSpace: 'nowrap'
               }}
               onMouseEnter={(e) => {
                 if (activeSection !== item.id) {
-                  e.target.style.backgroundColor = 'rgba(100, 255, 218, 0.1)';
-                  e.target.style.transform = 'translateY(-2px)';
-                  e.target.style.boxShadow = '0 4px 12px rgba(100, 255, 218, 0.2)';
+                  e.target.style.backgroundColor = 'rgba(100, 255, 218, 0.15)';
+                  e.target.style.transform = 'translateY(-3px)';
+                  e.target.style.boxShadow = '0 6px 16px rgba(100, 255, 218, 0.3)';
+                  e.target.style.borderColor = 'rgba(100, 255, 218, 0.5)';
                 }
               }}
               onMouseLeave={(e) => {
@@ -137,6 +157,7 @@ const Navigation = ({ activeSection, setActiveSection, isMobile = false }) => {
                   e.target.style.backgroundColor = 'transparent';
                   e.target.style.transform = 'translateY(0)';
                   e.target.style.boxShadow = 'none';
+                  e.target.style.borderColor = 'rgba(100, 255, 218, 0.3)';
                 }
               }}
             >

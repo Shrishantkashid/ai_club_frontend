@@ -2,6 +2,53 @@ import React, { useState, useEffect, useRef } from 'react'
 import API from '../utils/api'
 
 const Round3 = ({ onProceedToLeaderboard }) => {
+  // Notification function for on-screen messages
+  const showNotification = (message, type = 'info') => {
+    // Remove any existing notifications
+    const existingNotification = document.getElementById('round3-notification');
+    if (existingNotification) {
+      existingNotification.remove();
+    }
+    
+    const notification = document.createElement('div');
+    notification.id = 'round3-notification';
+    
+    // Determine styles based on type
+    const bgColor = type === 'error' ? '#dc2626' : type === 'warning' ? '#f59e0b' : '#2563eb';
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: ${bgColor};
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      z-index: 10000;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      max-width: 400px;
+      word-wrap: break-word;
+    `;
+    
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.style.opacity = '0';
+        notification.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+          }
+        }, 300);
+      }
+    }, 5000);
+  };
+  
   const [gameStarted, setGameStarted] = useState(false)
   const [gameWon, setGameWon] = useState(false)
   const [startTime, setStartTime] = useState(null)
@@ -104,13 +151,166 @@ const Round3 = ({ onProceedToLeaderboard }) => {
     }
   ]
 
-  // Randomly select one of the riddle sets
+  // Fisher-Yates shuffle algorithm for true random distribution
+  const shuffleArray = (array) => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
+  // Task variations pool - each type has multiple variations with different values
+  const taskVariations = {
+    debug: [
+      {
+        title: 'Debug the Syntax',
+        description: 'Find and fix the syntax error in the code below:',
+        content: `function calculateSum(a, b {\n  return a + b;\n}`,
+        solution: ')'
+      },
+      {
+        title: 'Debug the Function',
+        description: 'Fix the missing character in this function:',
+        content: `function greet(name {\n  return 'Hello ' + name;\n}`,
+        solution: ')'
+      },
+      {
+        title: 'Debug the Loop',
+        description: 'Find the syntax error in this loop:',
+        content: `for (let i = 0; i < 10; i++ {\n  console.log(i);\n}`,
+        solution: ')'
+      },
+      {
+        title: 'Debug the Condition',
+        description: 'Fix the missing bracket in this condition:',
+        content: `if (x > 5 {\n  console.log('Greater');\n}`,
+        solution: ')'
+      },
+      {
+        title: 'Debug the Object',
+        description: 'Find the syntax error in this object:',
+        content: `const person = {\n  name: 'John'\n  age: 25\n}`,
+        solution: ','
+      }
+    ],
+    decode: [
+      {
+        title: 'Decode Encrypted Message',
+        description: 'Decode the following Caesar cipher (shift by 3):',
+        content: 'Khoor Zruog',
+        solution: 'Hello World'
+      },
+      {
+        title: 'Crack the Code',
+        description: 'Decode this message (Caesar cipher shift by 3):',
+        content: 'WkhuH lv D Vhfuhw',
+        solution: 'There Is A Secret'
+      },
+      {
+        title: 'Decrypt The Message',
+        description: 'Break the encryption (shift by 3):',
+        content: 'Mdfnh Lv IXq',
+        solution: 'Jacks Is Fun'
+      },
+      {
+        title: 'Cipher Challenge',
+        description: 'Decode using Caesar cipher (shift by 3):',
+        content: 'Frgh Lv Uhdg',
+        solution: 'Code Is Read'
+      },
+      {
+        title: 'Secret Message',
+        description: 'Decrypt this text (Caesar cipher shift by 3):',
+        content: 'Sbwkrq Lv Jrrg',
+        solution: 'Python Is Good'
+      }
+    ],
+    logic: [
+      {
+        title: 'Number Sequence',
+        description: 'Complete the sequence:',
+        content: '2, 6, 12, 20, 30, ?',
+        solution: '42'
+      },
+      {
+        title: 'Mathematical Pattern',
+        description: 'Find the next number:',
+        content: '1, 4, 9, 16, 25, ?',
+        solution: '36'
+      },
+      {
+        title: 'Series Challenge',
+        description: 'What comes next in the series?',
+        content: '3, 6, 11, 18, 27, ?',
+        solution: '38'
+      },
+      {
+        title: 'Logic Sequence',
+        description: 'Complete the pattern:',
+        content: '5, 10, 17, 26, 37, ?',
+        solution: '50'
+      },
+      {
+        title: 'Number Logic',
+        description: 'Find the missing number:',
+        content: '1, 8, 27, 64, 125, ?',
+        solution: '216'
+      }
+    ],
+    pattern: [
+      {
+        title: 'Letter Pattern',
+        description: 'Identify the next letters in this pattern:',
+        content: 'O, T, T, F, F, S, S, ?, ?',
+        solution: 'E,N'
+      },
+      {
+        title: 'Alphabet Series',
+        description: 'What comes next in this sequence?',
+        content: 'A, C, F, J, O, ?',
+        solution: 'U'
+      },
+      {
+        title: 'Pattern Puzzle',
+        description: 'Complete the sequence:',
+        content: 'Z, Y, X, W, V, ?',
+        solution: 'U'
+      },
+      {
+        title: 'Sequence Challenge',
+        description: 'Find the next letter:',
+        content: 'B, D, G, K, P, ?',
+        solution: 'V'
+      },
+      {
+        title: 'Code Pattern',
+        description: 'What are the next two letters?',
+        content: 'J, F, M, A, M, ?, ?',
+        solution: 'J,J'
+      }
+    ]
+  };
+
+  // Randomly select one of the riddle sets with guaranteed equal probability and no repetition
   const [selectedRiddleSet, setSelectedRiddleSet] = useState(null)
+  const [dynamicTasks, setDynamicTasks] = useState([])
   
   useEffect(() => {
-    // Randomly select a riddle set when component mounts
-    const randomSet = riddleSets[Math.floor(Math.random() * riddleSets.length)]
+    // Use Fisher-Yates shuffle to ensure equal probability and no repeats
+    const shuffledRiddleSets = shuffleArray(riddleSets);
+    // Select the first set from the shuffled array
+    const randomSet = shuffledRiddleSets[0];
     setSelectedRiddleSet(randomSet)
+    
+    // Generate dynamic tasks by randomly selecting variations
+    const selectedDebug = shuffleArray(taskVariations.debug)[0];
+    const selectedDecode = shuffleArray(taskVariations.decode)[0];
+    const selectedLogic = shuffleArray(taskVariations.logic)[0];
+    const selectedPattern = shuffleArray(taskVariations.pattern)[0];
+    
+    setDynamicTasks([selectedDebug, selectedDecode, selectedLogic, selectedPattern]);
   }, [])
 
   // Enhanced requestFullscreen function with better browser compatibility and user gesture support
@@ -129,22 +329,23 @@ const Round3 = ({ onProceedToLeaderboard }) => {
       } else if (element.msRequestFullscreen) { // IE/Edge
         result = element.msRequestFullscreen();
       } else {
-        console.warn('Fullscreen API not supported');
+        showNotification('Fullscreen API not supported in your browser', 'warning');
         return false;
       }
       
       // Wait for the promise to resolve
       await result;
       
-      console.log('Successfully entered fullscreen mode in Round 3');
+      // Successfully entered fullscreen - no notification needed for success
       return true;
     } catch (err) {
-      console.warn('Fullscreen request failed in Round 3:', err);
-      // Show a more helpful message to the user
+      // Show on-screen notification instead of console log
       if (err.name === 'NotAllowedError') {
-        console.warn('Fullscreen request blocked: Requires user gesture. Showing help message.');
+        showNotification('Fullscreen blocked: Requires user gesture. Please click somewhere first.', 'warning');
       } else if (err.name === 'TypeError') {
-        console.warn('Fullscreen permissions check failed. This is expected on initial load - waiting for user interaction.');
+        // Skip showing notification for permission failures during initial load
+      } else {
+        showNotification('Fullscreen request failed in Round 3: ' + err.message, 'error');
       }
       return false;
     }
@@ -545,46 +746,15 @@ const Round3 = ({ onProceedToLeaderboard }) => {
     };
   }, []);
 
-  // Task definitions
-  const tasks = [
-    {
-      type: 'debug',
-      title: 'Debug the Syntax',
-      description: 'Find and fix the syntax error in the code below:',
-      content: `function calculateSum(a, b {
-  return a + b;
-}`,
-      solution: ')'
-    },
-    {
-      type: 'decode',
-      title: 'Decode Encrypted Message',
-      description: 'Decode the following Caesar cipher (shift by 3):',
-      content: 'Khoor Zruog',
-      solution: 'Hello World'
-    },
-    {
-      type: 'logic',
-      title: 'Logic Puzzle',
-      description: 'Complete the sequence: 2, 6, 12, 20, 30, ?',
-      content: 'What is the next number in the sequence?',
-      solution: '42'
-    },
-    {
-      type: 'pattern',
-      title: 'Pattern Recognition',
-      description: 'Identify the next item in this pattern:',
-      content: 'O, T, T, F, F, S, S, ?, ?',
-      solution: 'E,N'
-    }
-  ];
+  // Task types for reference
+  const taskTypes = ['debug', 'decode', 'logic', 'pattern'];
 
   // Submit the current task
   const submitTask = () => {
-    if (currentTask >= 4) return;
+    if (currentTask >= 4 || dynamicTasks.length === 0) return;
     
-    // Validate the user's answer
-    const correct = userInput.trim().toLowerCase() === tasks[currentTask].solution.toLowerCase();
+    // Validate the user's answer using dynamic tasks
+    const correct = userInput.trim().toLowerCase() === dynamicTasks[currentTask].solution.toLowerCase();
     
     if (correct) {
       setTaskFeedback('Correct! Moving to the next challenge...');
@@ -646,7 +816,7 @@ const Round3 = ({ onProceedToLeaderboard }) => {
     const endTime = Date.now()
     const timeTaken = startTime ? (endTime - startTime) / 1000 : 0 // in seconds
     
-    // If using skip button, set game as completed
+    // Check if all tasks are completed
     const isCompleted = gameWon || taskCompleted.filter(t => t).length === 4;
     
     const score = {
@@ -871,10 +1041,10 @@ const Round3 = ({ onProceedToLeaderboard }) => {
           boxShadow: '0 0 15px rgba(239, 68, 68, 0.2)'
         }}>
           <h2 style={{ color: '#fbbf24', marginBottom: '1rem', textShadow: '0 0 5px rgba(251, 191, 36, 0.5)' }}>
-            {tasks[currentTask]?.title}
+            {dynamicTasks[currentTask]?.title || 'Loading...'}
           </h2>
           <p style={{ color: '#f8fafc', lineHeight: '1.6', marginBottom: '1rem' }}>
-            {tasks[currentTask]?.description}
+            {dynamicTasks[currentTask]?.description || ''}
           </p>
           <div style={{ 
             backgroundColor: '#1f2937', 
@@ -885,7 +1055,7 @@ const Round3 = ({ onProceedToLeaderboard }) => {
             overflowX: 'auto',
             margin: '1rem 0'
           }}>
-            <pre style={{ margin: 0, color: '#d1d5db' }}>{tasks[currentTask]?.content}</pre>
+            <pre style={{ margin: 0, color: '#d1d5db' }}>{dynamicTasks[currentTask]?.content || ''}</pre>
           </div>
         </div>
 
@@ -1010,30 +1180,6 @@ const Round3 = ({ onProceedToLeaderboard }) => {
           }}>
             Escape Key: <span style={{ color: '#fbbf24', fontSize: '1.3rem' }}>{escapeKey.join('-')}</span>
           </div>
-          
-          <button
-            onClick={() => {
-              // Skip all tasks and set game as won
-              setGameWon(true);
-              // Set all tasks as completed
-              setTaskCompleted([true, true, true, true]);
-              // Generate a random escape key for demo purposes
-              const randomKey = ['S', 'K', 'I', 'P'];
-              setEscapeKey(randomKey);
-            }}
-            style={{
-              backgroundColor: '#8b5cf6',
-              color: 'white',
-              border: 'none',
-              padding: '0.75rem 1.5rem',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontSize: '1rem',
-              fontWeight: 'bold'
-            }}
-          >
-            Skip All Tasks
-          </button>
           
           <button
             onClick={handleSubmit}

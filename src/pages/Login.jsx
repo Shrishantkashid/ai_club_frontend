@@ -73,10 +73,12 @@ const Login = ({ onLoginSuccess, onBack }) => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email: email.toLowerCase() })
       })
 
       const data = await response.json()
+
+      console.log('Login response:', response.status, data)
 
       if (response.ok) {
         // Save token to localStorage
@@ -92,7 +94,8 @@ const Login = ({ onLoginSuccess, onBack }) => {
         }
       }
     } catch (err) {
-      setError('Network error. Please try again.')
+      console.error('Login error:', err)
+      setError('Network error. Please ensure the backend server is running.')
     } finally {
       setLoading(false)
     }

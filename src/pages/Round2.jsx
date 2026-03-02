@@ -2,6 +2,53 @@ import React, { useState, useEffect, useRef } from 'react'
 import API from '../utils/api'
 
 const Round2 = ({ onCompleteRound2 }) => {
+  // Notification function for on-screen messages
+  const showNotification = (message, type = 'info') => {
+    // Remove any existing notifications
+    const existingNotification = document.getElementById('round2-notification');
+    if (existingNotification) {
+      existingNotification.remove();
+    }
+    
+    const notification = document.createElement('div');
+    notification.id = 'round2-notification';
+    
+    // Determine styles based on type
+    const bgColor = type === 'error' ? '#dc2626' : type === 'warning' ? '#f59e0b' : '#2563eb';
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: ${bgColor};
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      z-index: 10000;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      max-width: 400px;
+      word-wrap: break-word;
+    `;
+    
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.style.opacity = '0';
+        notification.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+          }
+        }, 300);
+      }
+    }, 5000);
+  };
+  
   // State for 8-puzzle
   const [puzzle, setPuzzle] = useState([])
   const [moves, setMoves] = useState(0)
@@ -55,6 +102,19 @@ const Round2 = ({ onCompleteRound2 }) => {
   const [gameWon, setGameWon] = useState(false)
   const [startTime, setStartTime] = useState(null)
   const [warningCount, setWarningCount] = useState(0)
+  const [completedActivities, setCompletedActivities] = useState([]); // Track completed activities
+
+  // Helper function to handle game win and track completed activities
+  const handleGameWin = (activity) => {
+    setGameWon(true);
+    setCompletedActivities(prev => {
+      if (!prev.includes(activity)) {
+        return [...prev, activity];
+      }
+      return prev;
+    });
+    // Don't auto-submit - let user manually submit when ready
+  };
 
   // Enhanced requestFullscreen function with better browser compatibility and user gesture support
   const requestFullscreen = async (event = null) => {
@@ -72,22 +132,23 @@ const Round2 = ({ onCompleteRound2 }) => {
       } else if (element.msRequestFullscreen) { // IE/Edge
         result = element.msRequestFullscreen();
       } else {
-        console.warn('Fullscreen API not supported');
+        showNotification('Fullscreen API not supported in your browser', 'warning');
         return false;
       }
       
       // Wait for the promise to resolve
       await result;
       
-      console.log('Successfully entered fullscreen mode in Round 2');
+      // Successfully entered fullscreen - no notification needed for success
       return true;
     } catch (err) {
-      console.warn('Fullscreen request failed in Round 2:', err);
-      // Show a more helpful message to the user
+      // Show on-screen notification instead of console log
       if (err.name === 'NotAllowedError') {
-        console.warn('Fullscreen request blocked: Requires user gesture. Showing help message.');
+        showNotification('Fullscreen blocked: Requires user gesture. Please click somewhere first.', 'warning');
       } else if (err.name === 'TypeError') {
-        console.warn('Fullscreen permissions check failed. This is expected on initial load - waiting for user interaction.');
+        // Skip showing notification for permission failures during initial load
+      } else {
+        showNotification('Fullscreen request failed in Round 2: ' + err.message, 'error');
       }
       return false;
     }
@@ -457,14 +518,42 @@ const Round2 = ({ onCompleteRound2 }) => {
     return [1, 2, 3, 4, 5, 6, 7, 8, null]
   }
 
-  // Shuffle the puzzle
-  const shufflePuzzle = (puzzle) => {
-    const shuffled = [...puzzle]
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1))
-      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+  // Count inversions in the puzzle (excluding null)
+  const countInversions = (puzzle) => {
+    let inversions = 0;
+    const tiles = puzzle.filter(tile => tile !== null);
+    
+    for (let i = 0; i < tiles.length - 1; i++) {
+      for (let j = i + 1; j < tiles.length; j++) {
+        if (tiles[i] > tiles[j]) {
+          inversions++;
+        }
+      }
     }
-    return shuffled
+    return inversions;
+  }
+
+  // Check if a puzzle configuration is solvable using inversion rule
+  const isSolvable = (puzzle) => {
+    const inversions = countInversions(puzzle);
+    // For 3x3 puzzle (odd width), solvable if inversions is even
+    return inversions % 2 === 0;
+  }
+
+  // Shuffle the puzzle until we get a solvable configuration
+  const shufflePuzzle = (puzzle) => {
+    let shuffled = [...puzzle];
+    
+    // Keep shuffling until we get a solvable puzzle
+    do {
+      // Fisher-Yates shuffle
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+    } while (!isSolvable(shuffled) || isSolved(shuffled));
+    
+    return shuffled;
   }
 
   // Check if puzzle is solved
@@ -508,11 +597,7 @@ const Round2 = ({ onCompleteRound2 }) => {
       setMoves(moves + 1)
       
       if (isSolved(newPuzzle)) {
-        setGameWon(true);
-        // Update the overall game won state
-        if (currentActivity === 'eight-puzzle') {
-          setGameWon(true);
-        }
+        handleGameWin('eight-puzzle');
       }
     }
   }
@@ -605,7 +690,7 @@ const Round2 = ({ onCompleteRound2 }) => {
       if (isWinningState(newState.rightSide)) {
         newState.gameWon = true;
         setJealousHusbandsState(newState);
-        setGameWon(true); // Update overall game state
+        handleGameWin('jealous-husbands'); // Update overall game state and track completion
       }
     } else {
       // Invalid move - highlight the rule violation
@@ -715,7 +800,7 @@ const Round2 = ({ onCompleteRound2 }) => {
         // Check win condition
         if (isHanoiWinningState(newState.poles)) {
           newState.gameWon = true;
-          setGameWon(true); // Update overall game state
+          handleGameWin('tower-of-hanoi'); // Update overall game state and track completion
         }
       } else {
         // Invalid move - highlight the rule violation
@@ -802,7 +887,7 @@ const Round2 = ({ onCompleteRound2 }) => {
     // Check win condition
     if (isWaterJugWinningState(newState.jugs, newState.targetAmount)) {
       newState.gameWon = true;
-      setGameWon(true); // Update overall game state
+      handleGameWin('water-jug'); // Update overall game state and track completion
     }
     
     setWaterJugState(newState);
@@ -821,7 +906,7 @@ const Round2 = ({ onCompleteRound2 }) => {
     // Check win condition
     if (isWaterJugWinningState(newState.jugs, newState.targetAmount)) {
       newState.gameWon = true;
-      setGameWon(true); // Update overall game state
+      handleGameWin('water-jug'); // Update overall game state and track completion
     }
     
     setWaterJugState(newState);
@@ -850,7 +935,7 @@ const Round2 = ({ onCompleteRound2 }) => {
     // Check win condition
     if (isWaterJugWinningState(newState.jugs, newState.targetAmount)) {
       newState.gameWon = true;
-      setGameWon(true); // Update overall game state
+      handleGameWin('water-jug'); // Update overall game state and track completion
     }
     
     setWaterJugState(newState);
@@ -962,7 +1047,7 @@ const Round2 = ({ onCompleteRound2 }) => {
       // Check win condition
       if (isMonkeyBananaWinningState(newState)) {
         newState.gameWon = true;
-        setGameWon(true); // Update overall game state
+        handleGameWin('monkey-banana'); // Update overall game state and track completion
       }
       
       setMonkeyBananaState(newState);
@@ -984,7 +1069,7 @@ const Round2 = ({ onCompleteRound2 }) => {
       // Check win condition
       if (isMonkeyBananaWinningState(newState)) {
         newState.gameWon = true;
-        setGameWon(true); // Update overall game state
+        handleGameWin('monkey-banana'); // Update overall game state and track completion
       }
       
       setMonkeyBananaState(newState);
@@ -1009,12 +1094,20 @@ const Round2 = ({ onCompleteRound2 }) => {
     const endTime = Date.now()
     const timeTaken = startTime ? (endTime - startTime) / 1000 : 0 // in seconds
     
+    // Check if minimum 4 activities are completed
+    const minRequiredActivities = 4;
+    if (completedActivities.length < minRequiredActivities) {
+      alert(`⚠️ Minimum ${minRequiredActivities} activities must be completed! You have completed ${completedActivities.length} activity/activities.\n\nCompleted: ${completedActivities.join(', ') || 'None'}\n\nPlease complete at least ${minRequiredActivities - completedActivities.length} more activity/activities before submitting.`);
+      return;
+    }
+    
     const score = {
       round: 2,
       moves: currentActivity === 'eight-puzzle' ? moves : currentActivity === 'jealous-husbands' ? jealousHusbandsState.moves : currentActivity === 'tower-of-hanoi' ? towerOfHanoiState.moves : currentActivity === 'water-jug' ? waterJugState.moves : monkeyBananaState.moves,
       timeTaken: timeTaken,
       completed: gameWon,
-      activityType: currentActivity
+      activityType: currentActivity,
+      completedActivities: completedActivities // Track which activities were completed
     }
     
     // Send to backend
@@ -1072,10 +1165,73 @@ const Round2 = ({ onCompleteRound2 }) => {
           <p style={{ color: '#e2e8f0', marginBottom: '2rem' }}>
             Time taken: {startTime ? Math.round((Date.now() - startTime) / 1000) : 0} seconds
           </p>
+          
+          {/* Progress indicator */}
+          <div style={{
+            backgroundColor: completedActivities.length >= 4 ? 'rgba(74, 222, 128, 0.1)' : 'rgba(251, 191, 36, 0.1)',
+            padding: '1rem',
+            borderRadius: '8px',
+            marginBottom: '1.5rem',
+            border: `2px solid ${completedActivities.length >= 4 ? '#4ade80' : '#fbbf24'}`
+          }}>
+            <p style={{ 
+              color: completedActivities.length >= 4 ? '#4ade80' : '#fbbf24',
+              fontWeight: 'bold',
+              margin: '0 0 0.5rem 0',
+              fontSize: '1.1rem'
+            }}>
+              📊 Progress: {completedActivities.length}/5 Activities Completed
+            </p>
+            {completedActivities.length < 4 ? (
+              <p style={{ 
+                color: '#f87171',
+                margin: 0,
+                fontSize: '0.95rem'
+              }}>
+                ⚠️ You need to complete {4 - completedActivities.length} more activity/activities
+              </p>
+            ) : (
+              <p style={{ 
+                color: '#4ade80',
+                margin: 0,
+                fontSize: '0.95rem'
+              }}>
+                ✅ You can now submit Round 2!
+              </p>
+            )}
+          </div>
+          
+          {/* Continue button to return to activity selection */}
           <button
-            onClick={handleSubmit}
+            onClick={() => {
+              // Reset the current game state
+              if (currentActivity === 'eight-puzzle') {
+                const initialPuzzle = shufflePuzzle(createInitialPuzzle())
+                setPuzzle(initialPuzzle)
+                setMoves(0)
+                setGameStarted(false)
+                setStartTime(null)
+              } else if (currentActivity === 'jealous-husbands') {
+                resetJealousHusbands();
+                setGameStarted(false);
+                setStartTime(null);
+              } else if (currentActivity === 'tower-of-hanoi') {
+                resetTowerOfHanoi();
+                setGameStarted(false);
+                setStartTime(null);
+              } else if (currentActivity === 'water-jug') {
+                resetWaterJug();
+                setGameStarted(false);
+                setStartTime(null);
+              } else {
+                resetMonkeyBanana();
+                setGameStarted(false);
+                setStartTime(null);
+              }
+              setGameWon(false);
+            }}
             style={{
-              backgroundColor: '#4ade80',
+              backgroundColor: '#64ffda',
               color: '#0a192f',
               border: 'none',
               padding: '1rem 2rem',
@@ -1083,18 +1239,53 @@ const Round2 = ({ onCompleteRound2 }) => {
               borderRadius: '30px',
               cursor: 'pointer',
               fontWeight: 'bold',
-              transition: 'all 0.3s ease'
+              transition: 'all 0.3s ease',
+              marginRight: '1rem'
             }}
             onMouseEnter={(e) => {
               e.target.style.transform = 'scale(1.05)';
-              e.target.style.boxShadow = '0 0 20px rgba(74, 222, 128, 0.5)';
+              e.target.style.boxShadow = '0 0 20px rgba(100, 255, 218, 0.5)';
             }}
             onMouseLeave={(e) => {
               e.target.style.transform = 'scale(1)';
               e.target.style.boxShadow = 'none';
             }}
           >
-            Submit Round 2
+            Continue to Next Activity
+          </button>
+          
+          {/* Submit button - only enabled when 4+ activities completed */}
+          <button
+            onClick={handleSubmit}
+            disabled={completedActivities.length < 4}
+            style={{
+              backgroundColor: completedActivities.length >= 4 ? '#4ade80' : '#6b7280',
+              color: '#0a192f',
+              border: 'none',
+              padding: '1rem 2rem',
+              fontSize: '1.1rem',
+              borderRadius: '30px',
+              cursor: completedActivities.length >= 4 ? 'pointer' : 'not-allowed',
+              fontWeight: 'bold',
+              transition: 'all 0.3s ease',
+              opacity: completedActivities.length >= 4 ? 1 : 0.6
+            }}
+            onMouseEnter={(e) => {
+              if (completedActivities.length >= 4) {
+                e.target.style.transform = 'scale(1.05)';
+                e.target.style.boxShadow = '0 0 20px rgba(74, 222, 128, 0.5)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (completedActivities.length >= 4) {
+                e.target.style.transform = 'scale(1)';
+                e.target.style.boxShadow = 'none';
+              }
+            }}
+          >
+            {completedActivities.length >= 4 
+              ? 'Submit Round 2 ✅' 
+              : `Submit Round 2 (${completedActivities.length}/4 Required) ⚠️`}
           </button>
         </div>
       </div>
@@ -1214,6 +1405,58 @@ const Round2 = ({ onCompleteRound2 }) => {
                 Monkey & Banana
               </button>
             </div>
+          </div>
+          
+          {/* Progress Tracker */}
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-end',
+            gap: '0.5rem'
+          }}>
+            <div style={{
+              color: completedActivities.length >= 4 ? '#4ade80' : '#fbbf24',
+              fontWeight: 'bold',
+              fontSize: '1.1rem',
+              padding: '0.75rem 1.5rem',
+              borderRadius: '8px',
+              backgroundColor: completedActivities.length >= 4 ? 'rgba(74, 222, 128, 0.1)' : 'rgba(251, 191, 36, 0.1)',
+              border: `2px solid ${completedActivities.length >= 4 ? '#4ade80' : '#fbbf24'}`,
+              minWidth: '280px'
+            }}>
+              📊 Completed: {completedActivities.length}/5 Activities
+            </div>
+            {completedActivities.length < 4 && (
+              <div style={{
+                color: '#f87171',
+                fontSize: '0.9rem',
+                fontWeight: 'bold',
+                backgroundColor: 'rgba(248, 113, 113, 0.1)',
+                padding: '0.5rem 1rem',
+                borderRadius: '6px',
+                border: '1px solid rgba(248, 113, 113, 0.3)'
+              }}>
+                ⚠️ Complete at least 4 activities before submitting Round 2
+              </div>
+            )}
+            {completedActivities.length > 0 && (
+              <div style={{
+                fontSize: '0.85rem',
+                color: '#94a3b8',
+                marginTop: '0.25rem'
+              }}>
+                ✅ Completed: {completedActivities.length > 0 ? completedActivities.map(act => {
+                  const names = {
+                    'eight-puzzle': '8-Puzzle',
+                    'jealous-husbands': 'Jealous Husbands',
+                    'tower-of-hanoi': 'Tower of Hanoi',
+                    'water-jug': 'Water Jug',
+                    'monkey-banana': 'Monkey & Banana'
+                  };
+                  return names[act] || act;
+                }).join(', ') : 'None'}
+              </div>
+            )}
           </div>
           <div style={{
             display: 'flex',
@@ -2135,35 +2378,11 @@ const Round2 = ({ onCompleteRound2 }) => {
           >
             {currentActivity === 'eight-puzzle' ? 'Reset Puzzle' : currentActivity === 'jealous-husbands' ? 'Reset Game' : currentActivity === 'tower-of-hanoi' ? 'Reset Game' : currentActivity === 'water-jug' ? 'Reset Game' : 'Reset Game'}
           </button>
-          
-          <button
-            onClick={handleSubmit}
-            style={{
-              backgroundColor: '#ef4444',
-              color: 'white',
-              border: 'none',
-              padding: '0.75rem 1.5rem',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontSize: '1rem'
-            }}
-          >
-            Submit Round 2
-          </button>
         </div>
 
         <div style={{ marginTop: '2rem', color: '#94a3b8', fontSize: '0.9rem' }}>
-          {currentActivity === 'eight-puzzle' ? (
-            <>
-              <p>Click on a tile adjacent to the empty space to move it.</p>
-              <p>Solve the puzzle by arranging tiles in numerical order.</p>
-            </>
-          ) : (
-            <>
-              <p>Click on people to add/remove them from the boat. Click "Cross River" to move the boat.</p>
-              <p>Goal: Get all six people across the river safely.</p>
-            </>
-          )}
+          <p>Complete at least 4 activities to unlock the submit button.</p>
+          <p>You can reset and retry any activity as many times as needed.</p>
         </div>
       </div>
     </div>
