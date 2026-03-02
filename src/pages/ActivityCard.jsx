@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 const ActivityCard = ({ onStartContest }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [isLocked, setIsLocked] = useState(false); // Set to false to unlock the activity
+  const [isLocked, setIsLocked] = useState(true); // Set to false to unlock the activity
 
   useEffect(() => {
     setIsVisible(true);

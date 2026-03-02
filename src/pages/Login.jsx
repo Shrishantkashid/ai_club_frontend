@@ -5,6 +5,7 @@ const Login = ({ onLoginSuccess, onBack }) => {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [registrationLink, setRegistrationLink] = useState(null)
 
   // Prevent text selection in Login page
   React.useEffect(() => {
@@ -60,7 +61,7 @@ const Login = ({ onLoginSuccess, onBack }) => {
     }
     
     if (!email.toLowerCase().endsWith('@saividya.ac.in')) {
-      setError('Only @saividya.ac.in email addresses are allowed')
+      setError('Only college email IDs are allowed (team leaders email id who registered for this event)')
       setLoading(false)
       return
     }
@@ -82,7 +83,13 @@ const Login = ({ onLoginSuccess, onBack }) => {
         localStorage.setItem('token', data.token)
         onLoginSuccess(data.user)
       } else {
-        setError(data.message || 'Login failed')
+        if (data.registrationLink && data.registrationText) {
+          setError(data.message);
+          setRegistrationLink({ url: data.registrationLink, text: data.registrationText });
+        } else {
+          setError(data.message || 'Login failed');
+          setRegistrationLink(null);
+        }
       }
     } catch (err) {
       setError('Network error. Please try again.')
@@ -169,16 +176,25 @@ const Login = ({ onLoginSuccess, onBack }) => {
             />
           </div>
           
-          {error && (
+          {(error || registrationLink) && (
             <div style={{
               color: '#f87171',
               marginBottom: '1rem',
               padding: '0.5rem',
               backgroundColor: 'rgba(248, 113, 113, 0.1)',
               borderRadius: '4px',
-              fontSize: isMobile ? '0.9rem' : '1rem'
+              fontSize: isMobile ? '0.9rem' : '1rem',
+              lineHeight: '1.5'
             }}>
               {error}
+              {registrationLink && (
+                <span>
+                  {' '}
+                  <a href={registrationLink.url} target="_blank" rel="noopener noreferrer" style={{color: '#64ffda', textDecoration: 'underline'}}>
+                    {registrationLink.text}
+                  </a>
+                </span>
+              )}
             </div>
           )}
           

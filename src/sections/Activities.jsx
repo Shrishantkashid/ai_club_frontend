@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 const Activities = ({ navigateToContest, setShowContest, setContestState }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [isLocked, setIsLocked] = useState(false); // Set to false to unlock the main contest
+  const [isLocked, setIsLocked] = useState(true); // Set to false to unlock the main contest
   const [testQuizLocked, setTestQuizLocked] = useState(false); // Unlock the test quiz by default
 
   useEffect(() => {
