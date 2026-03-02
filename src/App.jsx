@@ -12,6 +12,7 @@ import Round1 from './pages/Round1'
 import Round2 from './pages/Round2'
 import Round3 from './pages/Round3'
 import Leaderboard from './pages/Leaderboard'
+import clubLogo from './assets/logo/WhatsApp Image 2026-02-07 at 10.10.11 AM.jpeg'
 
 function App() {
   const [activeSection, setActiveSection] = useState('home')
@@ -297,7 +298,7 @@ function App() {
             flexShrink: 0
           }}>
             <img 
-              src="./src/assets/logo/WhatsApp Image 2026-02-07 at 10.10.11 AM.jpeg" 
+              src={clubLogo} 
               alt="AI Club Logo"
               style={{ 
                 height: isMobile ? '40px' : '70px',
