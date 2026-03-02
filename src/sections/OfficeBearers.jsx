@@ -63,6 +63,15 @@ const OfficeBearers = () => {
     },
     {
       id: 6,
+      name: "Shashank M",
+      position: "joint-Treasurer",
+      department: "Computer Science & Engineering",
+      year: "Third Year",
+      image: image4,
+      bio: "Handling financial matters and resource management. Interested in AI ethics and policy. Manages club budget and sponsorships."
+    },
+    {
+      id: 7,
       name: "Yashwanth Gowda H",
       position: "Social Media Lead",
       department: "Computer Science & Engineering",
@@ -71,7 +80,7 @@ const OfficeBearers = () => {
       bio: "The social media Lead Mangesh the clubs online presence across all platforms.They create and promote events activites publish content to achievements and they engage with the audience and maintain a brand image."
     },
     {
-      id: 7,
+      id: 8,
       name: "Rakshitha J K",
       position: "Documentation Lead",
       department: "Computer Science & Engineering",
@@ -80,9 +89,27 @@ const OfficeBearers = () => {
       bio: "The documentation lag prepare and maintain record of all club activities and events. They compile reports presentation and archives for internal and offical use. They ensure accuracy consistency and timely submission of all documentation."
     },
     {
-      id: 8,
+      id: 9,
       name: "Shreekara Bhat A P",
       position: "Membership Coordinator",
+      department: "Computer Science & Engineering",
+      year: "Second Year",
+      image: image6,
+      bio: "The membership coordinator is responsible for recruiting new members and maintaining members records. They engage memebers encourage effective communication within the club."
+    },
+    {
+      id: 10,
+      name: "",
+      position: "Video Editing",
+      department: "Computer Science & Engineering",
+      year: "Second Year",
+      image: image6,
+      bio: "The membership coordinator is responsible for recruiting new members and maintaining members records. They engage memebers encourage effective communication within the club."
+    },
+    {
+      id: 11,
+      name: "",
+      position: "Photographer",
       department: "Computer Science & Engineering",
       year: "Second Year",
       image: image6,
