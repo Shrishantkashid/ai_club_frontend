@@ -15,7 +15,7 @@ const Activities = ({ navigateToContest, setShowContest, setContestState, isMobi
     e.preventDefault();
     
     // Check if password is correct (you can change this to your desired password)
-    if (password === 'AI_CLUB_2026') {
+    if (password === 'Yash') {
       setIsLocked(false);
       setShowPasswordModal(false);
       setPassword('');
