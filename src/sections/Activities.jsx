@@ -15,7 +15,7 @@ const Activities = ({ navigateToContest, setShowContest, setContestState, isMobi
     e.preventDefault();
     
     // Check if password is correct (you can change this to your desired password)
-    if (password === 'Yash') {
+    if (password === 'SVIT@2008') {
       setIsLocked(false);
       setShowPasswordModal(false);
       setPassword('');
