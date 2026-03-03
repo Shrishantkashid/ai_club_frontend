@@ -3,10 +3,28 @@ import React, { useState, useEffect } from 'react'
 const Activities = ({ navigateToContest, setShowContest, setContestState, isMobile = false }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isLocked, setIsLocked] = useState(true); // Set to false to unlock the main contest
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   useEffect(() => {
     setIsVisible(true);
   }, []);
+
+  const handlePasswordSubmit = (e) => {
+    e.preventDefault();
+    
+    // Check if password is correct (you can change this to your desired password)
+    if (password === 'AI_CLUB_2026') {
+      setIsLocked(false);
+      setShowPasswordModal(false);
+      setPassword('');
+      setPasswordError('');
+    } else {
+      setPasswordError('Incorrect password. Please try again.');
+      setPassword('');
+    }
+  };
 
   return (
     <div style={{
@@ -52,39 +70,133 @@ const Activities = ({ navigateToContest, setShowContest, setContestState, isMobi
               } else if (!isLocked) {
                 // Fallback to direct navigation
                 window.location.hash = '#/contest';
+              } else {
+                // Show password modal
+                setShowPasswordModal(true);
               }
             }}
-            disabled={isLocked}
             style={{
-              backgroundColor: isLocked ? '#6b7280' : '#4ade80',
-              color: isLocked ? '#9ca3af' : '#0a192f',
+              backgroundColor: isLocked ? '#8b5cf6' : '#4ade80',
+              color: 'white',
               border: 'none',
               padding: '0.75rem 1.5rem',
               borderRadius: '30px',
-              cursor: isLocked ? 'not-allowed' : 'pointer',
+              cursor: 'pointer',
               fontWeight: 'bold',
-              transition: 'all 0.3s ease',
-              opacity: isLocked ? 0.6 : 1
+              transition: 'all 0.3s ease'
             }}
             onMouseEnter={(e) => {
-              if (!isLocked) {
-                e.target.style.transform = 'scale(1.05)';
-                e.target.style.boxShadow = '0 0 20px rgba(74, 222, 128, 0.5)';
-              }
+              e.target.style.transform = 'scale(1.05)';
+              e.target.style.boxShadow = `0 0 20px ${isLocked ? 'rgba(139, 92, 246, 0.5)' : 'rgba(74, 222, 128, 0.5)'}`;
             }}
             onMouseLeave={(e) => {
-              if (!isLocked) {
-                e.target.style.transform = 'scale(1)';
-                e.target.style.boxShadow = 'none';
-              }
+              e.target.style.transform = 'scale(1)';
+              e.target.style.boxShadow = 'none';
             }}
           >
-            {isLocked ? 'Locked' : 'Start Contest'}
+            {isLocked ? 'Unlock with Password' : 'Start Contest'}
           </button>
         </div>
-        
-
       </div>
+
+      {/* Password Modal */}
+      {showPasswordModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            backgroundColor: 'rgba(30, 58, 95, 0.9)',
+            padding: '2rem',
+            borderRadius: '12px',
+            border: '1px solid rgba(100, 255, 218, 0.3)',
+            maxWidth: '400px',
+            width: '90%',
+            textAlign: 'center'
+          }}>
+            <h3 style={{ color: '#64ffda', marginBottom: '1rem' }}>
+             🔐 Enter Password to Unlock
+            </h3>
+            <p style={{ color: '#e2e8f0', marginBottom: '1.5rem' }}>
+              Please enter the password to access the AI Escape Arena
+            </p>
+            
+            <form onSubmit={handlePasswordSubmit}>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter password..."
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  borderRadius: '8px',
+                  border: '2px solid rgba(100, 255, 218, 0.3)',
+                  backgroundColor: 'rgba(10, 25, 47, 0.8)',
+                  color: '#e2e8f0',
+                  marginBottom: '1rem',
+                  fontSize: '1rem'
+                }}
+                autoFocus
+              />
+              
+              {passwordError && (
+                <div style={{
+                  color: '#ef4444',
+                  marginBottom: '1rem',
+                  fontSize: '0.9rem'
+                }}>
+                  {passwordError}
+                </div>
+              )}
+              
+              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowPasswordModal(false);
+                    setPassword('');
+                    setPasswordError('');
+                  }}
+                  style={{
+                    backgroundColor: '#6b7280',
+                    color: 'white',
+                    border: 'none',
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  style={{
+                    backgroundColor: '#4ade80',
+                    color: '#0a192f',
+                    border: 'none',
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  Unlock
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
