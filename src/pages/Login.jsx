@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import API from '../utils/api'
 
-const Login = ({ onLoginSuccess, onBack }) => {
+const Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -81,9 +81,15 @@ const Login = ({ onLoginSuccess, onBack }) => {
       console.log('Login response:', response.status, data)
 
       if (response.ok) {
-        // Save token to localStorage
-        localStorage.setItem('token', data.token)
-        onLoginSuccess(data.user)
+        // Check if contest is completed for this user
+        if (data.contestCompleted) {
+          console.log('Contest completed - showing leaderboard with ranking');
+          onContestCompleted(data);
+        } else {
+          // Save token to localStorage
+          localStorage.setItem('token', data.token)
+          onLoginSuccess(data.user)
+        }
       } else {
         if (data.registrationLink && data.registrationText) {
           setError(data.message);

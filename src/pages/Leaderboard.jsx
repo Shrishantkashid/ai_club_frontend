@@ -5,16 +5,59 @@ const Leaderboard = ({ onBackToHome }) => {
   const [leaderboard, setLeaderboard] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [stats, setStats] = useState({ totalParticipants: 0, avgScore: 0, topScore: 0 })
+  const [userRank, setUserRank] = useState(null)
+
+  // Check if we have pre-loaded data from contest completion
+  React.useEffect(() => {
+    const contestData = localStorage.getItem('contestCompletedData');
+    if (contestData) {
+      try {
+        const data = JSON.parse(contestData);
+        console.log('Using pre-loaded contest completed data:', data);
+        
+        // Set leaderboard data from contest completion
+        setLeaderboard(data.leaderboard || []);
+        setStats({
+          totalParticipants: data.totalParticipants || 0,
+          avgScore: Math.round((data.leaderboard || []).reduce((sum, entry) => sum + entry.totalPoints, 0) / (data.leaderboard?.length || 1)),
+          topScore: data.leaderboard?.[0]?.totalPoints || 0
+        });
+        setUserRank(data.userRank || null);
+        setLoading(false);
+        
+        // Clear the temporary data
+        localStorage.removeItem('contestCompletedData');
+      } catch (err) {
+        console.error('Error parsing contest completed data:', err);
+        localStorage.removeItem('contestCompletedData');
+      }
+    }
+  }, []);
 
   // Fetch leaderboard data
   useEffect(() => {
     const fetchLeaderboard = async () => {
+      // Don't fetch if we already have pre-loaded data
+      if (leaderboard.length > 0 && userRank) {
+        return;
+      }
+      
       try {
         const response = await fetch(API.LEADERBOARD)
         const data = await response.json()
         
         if (response.ok) {
           setLeaderboard(data.leaderboard)
+          // Calculate stats
+          if (data.leaderboard && data.leaderboard.length > 0) {
+            const totalPoints = data.leaderboard.reduce((sum, entry) => sum + entry.totalPoints, 0)
+            setStats({
+              totalParticipants: data.totalParticipants || data.leaderboard.length,
+              avgScore: Math.round(totalPoints / data.leaderboard.length),
+              topScore: data.leaderboard[0]?.totalPoints || 0
+            })
+          }
         } else {
           setError(data.message || 'Failed to fetch leaderboard')
         }
@@ -122,14 +165,64 @@ const Leaderboard = ({ onBackToHome }) => {
           flexWrap: 'wrap',
           gap: '1rem'
         }}>
-          <h1 style={{ 
-            color: '#64ffda', 
-            margin: 0,
-            textShadow: '0 0 8px rgba(100, 255, 218, 0.3)',
-            fontSize: isMobile ? '1.3rem' : '1.5rem'
-          }}>
-            🏆 Detailed Leaderboard
-          </h1>
+          <div>
+            <h1 style={{ 
+              color: '#64ffda', 
+              margin: 0,
+              textShadow: '0 0 8px rgba(100, 255, 218, 0.3)',
+              fontSize: isMobile ? '1.3rem' : '1.5rem'
+            }}>
+              🏆 Mind vs Machines - Leaderboard
+            </h1>
+            <p style={{ 
+              color: '#94a3b8', 
+              margin: '0.5rem 0 0 0',
+              fontSize: isMobile ? '0.8rem' : '0.9rem'
+            }}>
+              Track your progress through all rounds of the AI challenge
+            </p>
+            {userRank && (
+              <div style={{ 
+                marginTop: '1rem',
+                padding: '1rem',
+                backgroundColor: 'rgba(74, 222, 128, 0.1)',
+                borderRadius: '8px',
+                border: '1px solid rgba(74, 222, 128, 0.3)'
+              }}>
+                <p style={{ 
+                  margin: 0, 
+                  color: '#4ade80', 
+                  fontWeight: 'bold',
+                  fontSize: isMobile ? '0.9rem' : '1rem'
+                }}>
+                  🎉 Your Rank: #{userRank} | Total Points: {leaderboard[userRank - 1]?.totalPoints || 0}
+                </p>
+              </div>
+            )}
+          </div>
+          {!isMobile && (
+            <div style={{ 
+              display: 'flex', 
+              gap: '2rem',
+              backgroundColor: 'rgba(10, 25, 47, 0.5)',
+              padding: '1rem',
+              borderRadius: '8px',
+              border: '1px solid rgba(100, 255, 218, 0.1)'
+            }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ color: '#64ffda', fontSize: '1.5rem', fontWeight: 'bold' }}>{stats.totalParticipants}</div>
+                <div style={{ color: '#94a3b8', fontSize: '0.75rem' }}>Participants</div>
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ color: '#fbbf24', fontSize: '1.5rem', fontWeight: 'bold' }}>{stats.topScore}</div>
+                <div style={{ color: '#94a3b8', fontSize: '0.75rem' }}>Top Score</div>
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ color: '#f97316', fontSize: '1.5rem', fontWeight: 'bold' }}>{stats.avgScore}</div>
+                <div style={{ color: '#94a3b8', fontSize: '0.75rem' }}>Avg Score</div>
+              </div>
+            </div>
+          )}
           <button
             onClick={onBackToHome}
             style={{
@@ -220,7 +313,12 @@ const Leaderboard = ({ onBackToHome }) => {
                       fontWeight: 'bold', 
                       color: '#64ffda' 
                     }}>
-                      {entry.totalPoints} pts
+                    <div style={{ fontWeight: 'bold', color: '#64ffda' }}>
+                      Total: {entry.totalPoints} pts
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
+                      R1: {entry.round1Score} | R2: {entry.round2Score} | R3: {entry.round3Score}
+                    </div>
                     </span>
                   </div>
                   <div style={{ 
@@ -233,7 +331,7 @@ const Leaderboard = ({ onBackToHome }) => {
                     <div>R2: {entry.round2Score}</div>
                     <div>R3: {entry.round3Score}</div>
                     <div>Acc: {entry.accuracy}%</div>
-                    <div>Time: {Math.round(entry.timeTaken)}s</div>
+                    <div>Time: {Math.floor(entry.timeTaken / 60)}m {Math.round(entry.timeTaken % 60)}s</div>
                   </div>
                 </div>
               ))}
@@ -245,18 +343,18 @@ const Leaderboard = ({ onBackToHome }) => {
               borderCollapse: 'collapse',
               color: '#e2e8f0'
             }}>
-              <thead style={{ position: 'sticky', top: 0, backgroundColor: 'rgba(10, 25, 47, 0.9)' }}>
+              <thead style={{ position: 'sticky', top: 0, backgroundColor: 'rgba(10, 25, 47, 0.95)', zIndex: 10 }}>
                 <tr style={{
                   borderBottom: '2px solid rgba(100, 255, 218, 0.3)'
                 }}>
                   <th style={{ padding: '1rem', textAlign: 'left' }}>Rank</th>
-                  <th style={{ padding: '1rem', textAlign: 'left' }}>Email</th>
-                  <th style={{ padding: '1rem', textAlign: 'center' }}>Round 1</th>
-                  <th style={{ padding: '1rem', textAlign: 'center' }}>Round 2</th>
-                  <th style={{ padding: '1rem', textAlign: 'center' }}>Round 3</th>
-                  <th style={{ padding: '1rem', textAlign: 'center' }}>Total Points</th>
+                  <th style={{ padding: '1rem', textAlign: 'left' }}>Participant</th>
+                  <th style={{ padding: '1rem', textAlign: 'center', backgroundColor: 'rgba(59, 130, 246, 0.1)' }}>Round 1<br/><small style={{color: '#94a3b8'}}>Quiz</small></th>
+                  <th style={{ padding: '1rem', textAlign: 'center', backgroundColor: 'rgba(139, 92, 246, 0.1)' }}>Round 2<br/><small style={{color: '#94a3b8'}}>Activities</small></th>
+                  <th style={{ padding: '1rem', textAlign: 'center', backgroundColor: 'rgba(236, 72, 153, 0.1)' }}>Round 3<br/><small style={{color: '#94a3b8'}}>Escape Key</small></th>
+                  <th style={{ padding: '1rem', textAlign: 'center', backgroundColor: 'rgba(100, 255, 218, 0.1)' }}>Total Points</th>
                   <th style={{ padding: '1rem', textAlign: 'center' }}>Accuracy</th>
-                  <th style={{ padding: '1rem', textAlign: 'center' }}>Time</th>
+                  <th style={{ padding: '1rem', textAlign: 'center' }}>Time Taken</th>
                 </tr>
               </thead>
               <tbody>
@@ -291,25 +389,62 @@ const Leaderboard = ({ onBackToHome }) => {
                       </span>
                     </td>
                     <td style={{ padding: '1rem' }}>
-                      {entry.email.split('@')[0]}
+                      <span style={{ fontWeight: 'bold', color: '#e2e8f0' }}>
+                        {entry.email.split('@')[0]}
+                      </span>
+                      <span style={{ display: 'block', fontSize: '0.75rem', color: '#94a3b8' }}>
+                        {entry.email}
+                      </span>
                     </td>
                     <td style={{ padding: '1rem', textAlign: 'center' }}>
-                      {entry.round1Score}
+                      <span style={{ 
+                        display: 'inline-block',
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        color: '#60a5fa',
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '12px',
+                        fontWeight: 'bold',
+                        fontSize: '0.9rem'
+                      }}>
+                        {entry.round1Score}
+                      </span>
                     </td>
                     <td style={{ padding: '1rem', textAlign: 'center' }}>
-                      {entry.round2Score}
+                      <span style={{ 
+                        display: 'inline-block',
+                        backgroundColor: 'rgba(139, 92, 246, 0.2)',
+                        color: '#a78bfa',
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '12px',
+                        fontWeight: 'bold',
+                        fontSize: '0.9rem'
+                      }}>
+                        {entry.round2Score}
+                      </span>
                     </td>
                     <td style={{ padding: '1rem', textAlign: 'center' }}>
-                      {entry.round3Score}
+                      <span style={{ 
+                        display: 'inline-block',
+                        backgroundColor: 'rgba(236, 72, 153, 0.2)',
+                        color: '#f472b6',
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '12px',
+                        fontWeight: 'bold',
+                        fontSize: '0.9rem'
+                      }}>
+                        {entry.round3Score}
+                      </span>
                     </td>
                     <td style={{ padding: '1rem', textAlign: 'center', fontWeight: 'bold', color: '#64ffda' }}>
                       {entry.totalPoints}
                     </td>
                     <td style={{ padding: '1rem', textAlign: 'center' }}>
-                      {entry.accuracy}%
+                      <div style={{ fontWeight: 'bold', color: '#64ffda' }}>{entry.accuracy}%</div>
                     </td>
                     <td style={{ padding: '1rem', textAlign: 'center' }}>
-                      {Math.round(entry.timeTaken)}s
+                      <div style={{ fontSize: '0.9rem', color: '#e2e8f0' }}>
+                        {Math.floor(entry.timeTaken / 60)}m {Math.round(entry.timeTaken % 60)}s
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -326,7 +461,7 @@ const Leaderboard = ({ onBackToHome }) => {
           padding: '1rem',
           borderTop: '1px solid rgba(100, 255, 218, 0.1)'
         }}>
-          Leaderboard updates every 15 seconds • Rankings based on total points and time
+          🤖 Mind vs Machines Challenge • Leaderboard updates every 15 seconds • Rankings based on total points (time is tiebreaker)
         </div>
       </div>
     </div>

@@ -107,6 +107,13 @@ function App() {
                 // Optionally show an error message to the user
               }
             }}
+            onContestCompleted={(data) => {
+              // User has already completed the contest - show leaderboard with ranking
+              console.log('Contest completed data:', data);
+              // Store leaderboard data temporarily
+              localStorage.setItem('contestCompletedData', JSON.stringify(data));
+              setContestState('leaderboard');
+            }}
             onBack={() => setContestState('instructions')}
           />
         case 'round1':
