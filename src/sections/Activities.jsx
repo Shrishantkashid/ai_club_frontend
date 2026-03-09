@@ -99,6 +99,81 @@ const Activities = ({ navigateToContest, setShowContest, setContestState, isMobi
         </div>
       </div>
 
+      {/* 2nd Semester Contest Card - Always Visible */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))',
+        gap: isMobile ? '1.5rem' : '2rem',
+        marginBottom: '2rem'
+      }}>
+        <div style={{
+          backgroundColor: 'rgba(30, 58, 95, 0.6)',
+          padding: '2rem',
+          borderRadius: '12px',
+          boxShadow: '0 8px 32px rgba(30, 58, 95, 0.3)',
+          border: '1px solid rgba(100, 255, 218, 0.2)',
+          backdropFilter: 'blur(4px)',
+          textAlign: 'center',
+          borderColor: '#fbbf24'
+        }}>
+          <h2 style={{ color: '#fbbf24', marginBottom: '1rem' }}>
+            🎯 2nd Semester Contest - C Programming Challenge
+          </h2>
+          <p style={{ color: '#e2e8f0', marginBottom: '1.5rem', lineHeight: '1.5' }}>
+            Exclusive contest for 2nd semester students! Test your C programming skills, 
+            solve puzzles, and compete for the top spot!
+          </p>
+          <ul style={{
+            color: '#94a3b8',
+            marginBottom: '1.5rem',
+            textAlign: 'left',
+            paddingLeft: isMobile ? '1rem' : '2rem',
+            lineHeight: '1.8',
+            fontSize: '0.95rem'
+          }}>
+            <li>✅ Round 1: C Programming MCQs</li>
+            <li>✅ Round 2: Problem Solving Activities (8-Puzzle, Tower of Hanoi & more)</li>
+            <li>✅ Round 3: Logic & Reasoning Challenges</li>
+            <li>✅ Real-time Leaderboard with Time Tracking</li>
+          </ul>
+          <button
+            onClick={() => {
+              window.location.hash = '#/contest/sem2-login';
+            }}
+            style={{
+              backgroundColor: '#fbbf24',
+              color: '#0a192f',
+              border: 'none',
+              padding: '0.75rem 2rem',
+              borderRadius: '30px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '1rem',
+              transition: 'all 0.3s ease',
+              boxShadow: '0 4px 16px rgba(251, 191, 36, 0.4)'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.transform = 'scale(1.05)';
+              e.target.style.boxShadow = '0 6px 24px rgba(251, 191, 36, 0.6)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = 'scale(1)';
+              e.target.style.boxShadow = '0 4px 16px rgba(251, 191, 36, 0.4)';
+            }}
+          >
+            Start 2nd Sem Contest →
+          </button>
+          <p style={{
+            color: '#64ffda',
+            fontSize: '0.85rem',
+            marginTop: '1rem',
+            fontStyle: 'italic'
+          }}>
+            💡 Login with your name and semester - Auto-generates email & password
+          </p>
+        </div>
+      </div>
+
       {/* Password Modal */}
       {showPasswordModal && (
         <div style={{

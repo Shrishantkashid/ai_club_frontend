@@ -133,6 +133,64 @@ const Home = ({ isMobile = false }) => {
         transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
         transitionDelay: '0.4s'
       }}>
+        {/* 2nd Semester Contest Banner */}
+        <div style={{
+          backgroundColor: 'rgba(251, 191, 36, 0.1)',
+          border: '2px solid #fbbf24',
+          borderRadius: '12px',
+          padding: '2rem',
+          textAlign: 'center',
+          marginBottom: '2rem',
+          boxShadow: '0 8px 32px rgba(251, 191, 36, 0.3)',
+          opacity: isVisible ? 1 : 0,
+          transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+          transition: 'opacity 0.6s ease, transform 0.6s ease',
+          transitionDelay: '0.3s'
+        }}>
+          <h2 style={{
+            color: '#fbbf24',
+            fontSize: '1.8rem',
+            marginBottom: '1rem',
+            textShadow: '0 0 10px rgba(251, 191, 36, 0.5)'
+          }}>
+            🎯 2nd Semester C Programming Contest
+          </h2>
+          <p style={{
+            color: '#e2e8f0',
+            fontSize: '1.05rem',
+            marginBottom: '1.5rem'
+          }}>
+            Exclusive contest for 2nd semester students! Test your C programming knowledge!
+          </p>
+          <button
+            onClick={() => {
+              window.location.hash = '#/contest/sem2-login';
+            }}
+            style={{
+              backgroundColor: '#fbbf24',
+              color: '#0a192f',
+              border: 'none',
+              padding: '0.75rem 2rem',
+              borderRadius: '30px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '1rem',
+              transition: 'all 0.3s ease',
+              boxShadow: '0 4px 20px rgba(251, 191, 36, 0.5)'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.transform = 'scale(1.05)';
+              e.target.style.boxShadow = '0 6px 30px rgba(251, 191, 36, 0.7)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = 'scale(1)';
+              e.target.style.boxShadow = '0 4px 20px rgba(251, 191, 36, 0.5)';
+            }}
+          >
+            Start Contest →
+          </button>
+        </div>
+
         <h2 style={{ 
           color: '#64ffda', 
           marginBottom: '1rem',

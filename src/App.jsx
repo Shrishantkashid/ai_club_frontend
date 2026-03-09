@@ -12,6 +12,13 @@ import Round1 from './pages/Round1'
 import Round2 from './pages/Round2'
 import Round3 from './pages/Round3'
 import Leaderboard from './pages/Leaderboard'
+// 2nd Sem Contest Components
+import Sem2Login from './pages/Sem2Login'
+import Sem2Round1 from './pages/Sem2Round1'
+import Sem2Round2 from './pages/Sem2Round2'
+import Sem2Round3 from './pages/Sem2Round3'
+import Sem2Leaderboard from './pages/Sem2Leaderboard'
+import AdminDashboard from './pages/AdminDashboard'
 import clubLogo from './assets/logo/WhatsApp Image 2026-02-07 at 10.10.11 AM.jpeg'
 
 function App() {
@@ -96,34 +103,70 @@ function App() {
             onLoginSuccess={(user) => {
               try {
                 setCurrentUser(user)
-                
-                // The server already verified this user hasn't attempted
-                // Store user info locally
                 localStorage.setItem('currentUser', JSON.stringify(user));
-                
                 setContestState('round1')
               } catch (error) {
                 console.error('Error during login success handling:', error);
-                // Optionally show an error message to the user
               }
             }}
             onContestCompleted={(data) => {
-              // User has already completed the contest - show leaderboard with ranking
               console.log('Contest completed data:', data);
-              // Store leaderboard data temporarily
               localStorage.setItem('contestCompletedData', JSON.stringify(data));
               setContestState('leaderboard');
             }}
             onBack={() => setContestState('instructions')}
           />
+        
+        // 2nd Semester Contest Routes
+        case 'sem2-login':
+          return <Sem2Login 
+            onLoginSuccess={(user) => {
+              setCurrentUser(user)
+              localStorage.setItem('currentUser', JSON.stringify(user));
+              setContestState('sem2-round1')
+            }}
+            onContestCompleted={(data) => {
+              localStorage.setItem('contestCompletedData', JSON.stringify(data));
+              setContestState('sem2-leaderboard');
+            }}
+            onBack={() => setContestState('activity-card')}
+          />
+        case 'sem2-round1':
+          return <Sem2Round1 onCompleteRound1={() => setContestState('sem2-round2')} />
+        case 'sem2-round2':
+          return <Sem2Round2 onCompleteRound2={() => setContestState('sem2-round3')} />
+        case 'sem2-round3':
+          return <Sem2Round3 
+            onProceedToLeaderboard={() => setContestState('sem2-leaderboard')} 
+            onRestartContest={() => {
+              // Reset to login page
+              setShowContest(false);
+              setActiveSection('home');
+              window.location.hash = '';
+            }} 
+          />
+        case 'sem2-leaderboard':
+          return <Sem2Leaderboard onBackToHome={() => {
+            setShowContest(false);
+            setActiveSection('home');
+            window.location.hash = '';
+          }} />
+        
+        // Admin Routes
+        case 'admin-login':
+          return <AdminDashboard onBack={() => {
+            setShowContest(false);
+            setActiveSection('home');
+            window.location.hash = '';
+          }} />
+        
+        // Original Contest Routes
         case 'round1':
           return <Round1 onCompleteRound1={() => setContestState('round2')} />
         case 'round2':
           return <Round2 onCompleteRound2={() => setContestState('round3')} />
         case 'round3':
-          return <Round3 onProceedToLeaderboard={() => {
-            setContestState('leaderboard')
-          }} />
+          return <Round3 onProceedToLeaderboard={() => setContestState('leaderboard')} />
         case 'leaderboard':
           return <Leaderboard onBackToHome={() => {
             setShowContest(false);
