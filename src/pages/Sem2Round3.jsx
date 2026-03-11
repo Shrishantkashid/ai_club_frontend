@@ -68,10 +68,30 @@ const Sem2Round3 = ({ onProceedToLeaderboard, onRestartContest }) => {
     setStartTime(new Date())
   }, [])
 
-  const handleTaskSubmit = () => {
+  const handleTaskSubmit = async () => {
     const currentTaskData = tasks[currentTask]
     
     if (userInput.trim().toUpperCase() === currentTaskData.solution.toUpperCase()) {
+      // Submit task answer to backend
+      try {
+        const token = localStorage.getItem('token')
+        await fetch(API.SEM2_ROUND3_TASK_SUBMIT, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            taskType: currentTaskData.type,
+            taskNumber: currentTask,
+            userAnswer: userInput,
+            isCorrect: true
+          })
+        })
+      } catch (error) {
+        console.error('Task submit error:', error)
+      }
+      
       // Correct - show riddle
       setShowRiddle(true)
       setFeedback('Correct! Now solve the riddle.')
@@ -143,7 +163,8 @@ const Sem2Round3 = ({ onProceedToLeaderboard, onRestartContest }) => {
         body: JSON.stringify({
           endTime,
           escapeKey: escapeKey.join(''),
-          totalTime: timeTaken
+          totalTime: timeTaken,
+          isFinalSubmission: true
         })
       })
       

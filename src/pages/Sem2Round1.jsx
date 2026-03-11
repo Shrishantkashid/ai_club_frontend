@@ -547,8 +547,8 @@ const Sem2Round1 = ({ onCompleteRound1 }) => {
           };
         });
         
-        // Use fallback URL for cheat submission too
-        const submitUrl = API.SEM2_SUBMIT_ROUND1 || `${FALLBACK_API_URL}/api/contest/sem2/round1/submit`;
+        // Use the correct API endpoint from constants
+        const submitUrl = API.SEM2_ROUND1_SUBMIT || `${FALLBACK_API_URL}/api/contest/sem2/round1/submit`;
         
         await fetch(submitUrl, {
           method: 'POST',
@@ -576,7 +576,7 @@ const Sem2Round1 = ({ onCompleteRound1 }) => {
       const currentUser = JSON.parse(localStorage.getItem('currentUser'));
       
       // Verify API endpoint is available
-      const submitUrl = API.SEM2_SUBMIT_ROUND1 || `${FALLBACK_API_URL}/api/contest/sem2/round1/submit`;
+      const submitUrl = API.SEM2_ROUND1_SUBMIT || `${FALLBACK_API_URL}/api/contest/sem2/round1/submit`;
       
       console.log('Submitting to:', submitUrl); // Debug log (temporary)
       

@@ -106,7 +106,7 @@ const Sem2Round2 = ({ onCompleteRound2 }) => {
   const [activityScores, setActivityScores] = useState({}); // Track scores for each activity { activityName: { moves, timeTaken } }
 
   // Helper function to handle game win and track completed activities
-  const handleGameWin = (activity, moves, timeTaken) => {
+  const handleGameWin = async (activity, moves, timeTaken) => {
     setGameWon(true);
     setCompletedActivities(prev => {
       if (!prev.includes(activity)) {
@@ -119,6 +119,27 @@ const Sem2Round2 = ({ onCompleteRound2 }) => {
       ...prev,
       [activity]: { moves, timeTaken }
     }));
+    
+    // Submit the completed activity to the backend
+    try {
+      const token = localStorage.getItem('token');
+      await fetch(API.SEM2_ROUND2_ACTIVITY_SUBMIT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          activityName: activity,
+          moves: moves,
+          timeTaken: timeTaken,
+          completed: true
+        })
+      });
+    } catch (error) {
+      console.error('Error submitting individual activity:', error);
+    }
+    
     // Don't auto-submit - let user manually submit when ready
   };
 
@@ -1121,7 +1142,8 @@ Please complete at least ${minRequiredActivities - completedActivities.length} m
       timeTaken: totalTime / 1000, // Total time in seconds
       completed: true,
       activityScores: activityScores, // Include individual activity scores
-      completedActivities: completedActivities // Track which activities were completed
+      completedActivities: completedActivities, // Track which activities were completed
+      isFinalSubmission: true // Flag to indicate this is the final Round 2 submission
     }
     
     // Send to backend

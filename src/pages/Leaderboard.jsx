@@ -263,7 +263,7 @@ const Leaderboard = ({ onBackToHome }) => {
             }}>
               {leaderboard.map((entry, index) => (
                 <div 
-                  key={`${entry.userId}-${index}`}
+                  key={`${entry.fullName}-${index}`}
                   style={{
                     backgroundColor: index < 3 ? 'rgba(74, 222, 128, 0.1)' : 'rgba(10, 25, 47, 0.3)',
                     padding: '0.75rem',
@@ -274,8 +274,7 @@ const Leaderboard = ({ onBackToHome }) => {
                   <div style={{ 
                     display: 'flex', 
                     justifyContent: 'space-between', 
-                    alignItems: 'center',
-                    marginBottom: '0.5rem'
+                    alignItems: 'center'
                   }}>
                     <div style={{ 
                       display: 'flex', 
@@ -306,38 +305,21 @@ const Leaderboard = ({ onBackToHome }) => {
                         fontWeight: 'bold',
                         color: '#64ffda'
                       }}>
-                        {entry.email.split('@')[0]}
+                        {entry.fullName}
                       </span>
                     </div>
                     <span style={{ 
                       fontWeight: 'bold', 
                       color: '#64ffda' 
                     }}>
-                    <div style={{ fontWeight: 'bold', color: '#64ffda' }}>
-                      Total: {entry.totalPoints} pts
-                    </div>
-                    <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
-                      R1: {entry.round1Score} | R2: {entry.round2Score} | R3: {entry.round3Score}
-                    </div>
+                      {entry.totalPoints} pts
                     </span>
-                  </div>
-                  <div style={{ 
-                    display: 'grid', 
-                    gridTemplateColumns: 'repeat(3, 1fr)', 
-                    gap: '0.5rem',
-                    fontSize: '0.8rem'
-                  }}>
-                    <div>R1: {entry.round1Score}</div>
-                    <div>R2: {entry.round2Score}</div>
-                    <div>R3: {entry.round3Score}</div>
-                    <div>Acc: {entry.accuracy}%</div>
-                    <div>Time: {Math.floor(entry.timeTaken / 60)}m {Math.round(entry.timeTaken % 60)}s</div>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            // Desktop view - full table
+            // Desktop view - simple table with only name and score
             <table style={{
               width: '100%',
               borderCollapse: 'collapse',
@@ -349,18 +331,13 @@ const Leaderboard = ({ onBackToHome }) => {
                 }}>
                   <th style={{ padding: '1rem', textAlign: 'left' }}>Rank</th>
                   <th style={{ padding: '1rem', textAlign: 'left' }}>Participant</th>
-                  <th style={{ padding: '1rem', textAlign: 'center', backgroundColor: 'rgba(59, 130, 246, 0.1)' }}>Round 1<br/><small style={{color: '#94a3b8'}}>Quiz</small></th>
-                  <th style={{ padding: '1rem', textAlign: 'center', backgroundColor: 'rgba(139, 92, 246, 0.1)' }}>Round 2<br/><small style={{color: '#94a3b8'}}>Activities</small></th>
-                  <th style={{ padding: '1rem', textAlign: 'center', backgroundColor: 'rgba(236, 72, 153, 0.1)' }}>Round 3<br/><small style={{color: '#94a3b8'}}>Escape Key</small></th>
-                  <th style={{ padding: '1rem', textAlign: 'center', backgroundColor: 'rgba(100, 255, 218, 0.1)' }}>Total Points</th>
-                  <th style={{ padding: '1rem', textAlign: 'center' }}>Accuracy</th>
-                  <th style={{ padding: '1rem', textAlign: 'center' }}>Time Taken</th>
+                  <th style={{ padding: '1rem', textAlign: 'right' }}>Total Score</th>
                 </tr>
               </thead>
               <tbody>
                 {leaderboard.map((entry, index) => (
                   <tr 
-                    key={`${entry.userId}-${index}`}
+                    key={`${entry.fullName}-${index}`}
                     style={{
                       borderBottom: '1px solid rgba(100, 255, 218, 0.1)',
                       backgroundColor: index < 3 ? 'rgba(74, 222, 128, 0.1)' : 'transparent'
@@ -390,61 +367,11 @@ const Leaderboard = ({ onBackToHome }) => {
                     </td>
                     <td style={{ padding: '1rem' }}>
                       <span style={{ fontWeight: 'bold', color: '#e2e8f0' }}>
-                        {entry.email.split('@')[0]}
-                      </span>
-                      <span style={{ display: 'block', fontSize: '0.75rem', color: '#94a3b8' }}>
-                        {entry.email}
+                        {entry.fullName}
                       </span>
                     </td>
-                    <td style={{ padding: '1rem', textAlign: 'center' }}>
-                      <span style={{ 
-                        display: 'inline-block',
-                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                        color: '#60a5fa',
-                        padding: '0.25rem 0.75rem',
-                        borderRadius: '12px',
-                        fontWeight: 'bold',
-                        fontSize: '0.9rem'
-                      }}>
-                        {entry.round1Score}
-                      </span>
-                    </td>
-                    <td style={{ padding: '1rem', textAlign: 'center' }}>
-                      <span style={{ 
-                        display: 'inline-block',
-                        backgroundColor: 'rgba(139, 92, 246, 0.2)',
-                        color: '#a78bfa',
-                        padding: '0.25rem 0.75rem',
-                        borderRadius: '12px',
-                        fontWeight: 'bold',
-                        fontSize: '0.9rem'
-                      }}>
-                        {entry.round2Score}
-                      </span>
-                    </td>
-                    <td style={{ padding: '1rem', textAlign: 'center' }}>
-                      <span style={{ 
-                        display: 'inline-block',
-                        backgroundColor: 'rgba(236, 72, 153, 0.2)',
-                        color: '#f472b6',
-                        padding: '0.25rem 0.75rem',
-                        borderRadius: '12px',
-                        fontWeight: 'bold',
-                        fontSize: '0.9rem'
-                      }}>
-                        {entry.round3Score}
-                      </span>
-                    </td>
-                    <td style={{ padding: '1rem', textAlign: 'center', fontWeight: 'bold', color: '#64ffda' }}>
+                    <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 'bold', color: '#64ffda' }}>
                       {entry.totalPoints}
-                    </td>
-                    <td style={{ padding: '1rem', textAlign: 'center' }}>
-                      <div style={{ fontWeight: 'bold', color: '#64ffda' }}>{entry.accuracy}%</div>
-                    </td>
-                    <td style={{ padding: '1rem', textAlign: 'center' }}>
-                      <div style={{ fontSize: '0.9rem', color: '#e2e8f0' }}>
-                        {Math.floor(entry.timeTaken / 60)}m {Math.round(entry.timeTaken % 60)}s
-                      </div>
                     </td>
                   </tr>
                 ))}
