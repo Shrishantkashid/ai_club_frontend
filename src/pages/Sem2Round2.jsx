@@ -603,7 +603,7 @@ const Sem2Round2 = ({ onCompleteRound2 }) => {
       setMoves(moves + 1)
       
       if (isSolved(newPuzzle)) {
-        handleGameWin('eight-puzzle', moves + 1, Date.now() - activityStartTime);
+        handleGameWin('eight-puzzle', moves + 1, Date.now() - startTime);
       }
     }
   }
@@ -696,7 +696,7 @@ const Sem2Round2 = ({ onCompleteRound2 }) => {
       if (isWinningState(newState.rightSide)) {
         newState.gameWon = true;
         setJealousHusbandsState(newState);
-        handleGameWin('jealous-husbands', newState.moves, Date.now() - activityStartTime); // Update overall game state and track completion
+        handleGameWin('jealous-husbands', newState.moves, Date.now() - startTime); // Update overall game state and track completion
       }
     } else {
       // Invalid move - highlight the rule violation
@@ -806,7 +806,7 @@ const Sem2Round2 = ({ onCompleteRound2 }) => {
         // Check win condition
         if (isHanoiWinningState(newState.poles)) {
           newState.gameWon = true;
-          handleGameWin('tower-of-hanoi', newState.moves, Date.now() - activityStartTime); // Update overall game state and track completion
+          handleGameWin('tower-of-hanoi', newState.moves, Date.now() - startTime); // Update overall game state and track completion
         }
       } else {
         // Invalid move - highlight the rule violation
@@ -893,7 +893,7 @@ const Sem2Round2 = ({ onCompleteRound2 }) => {
     // Check win condition
     if (isWaterJugWinningState(newState.jugs, newState.targetAmount)) {
       newState.gameWon = true;
-      handleGameWin('water-jug', newState.moves, Date.now() - activityStartTime); // Update overall game state and track completion
+      handleGameWin('water-jug', newState.moves, Date.now() - startTime); // Update overall game state and track completion
     }
     
     setWaterJugState(newState);
@@ -912,7 +912,7 @@ const Sem2Round2 = ({ onCompleteRound2 }) => {
     // Check win condition
     if (isWaterJugWinningState(newState.jugs, newState.targetAmount)) {
       newState.gameWon = true;
-      handleGameWin('water-jug', newState.moves, Date.now() - activityStartTime); // Update overall game state and track completion
+      handleGameWin('water-jug', newState.moves, Date.now() - startTime); // Update overall game state and track completion
     }
     
     setWaterJugState(newState);
@@ -941,7 +941,7 @@ const Sem2Round2 = ({ onCompleteRound2 }) => {
     // Check win condition
     if (isWaterJugWinningState(newState.jugs, newState.targetAmount)) {
       newState.gameWon = true;
-      handleGameWin('water-jug', newState.moves, Date.now() - activityStartTime); // Update overall game state and track completion
+      handleGameWin('water-jug', newState.moves, Date.now() - startTime); // Update overall game state and track completion
     }
     
     setWaterJugState(newState);
@@ -1053,7 +1053,7 @@ const Sem2Round2 = ({ onCompleteRound2 }) => {
       // Check win condition
       if (isMonkeyBananaWinningState(newState)) {
         newState.gameWon = true;
-        handleGameWin('monkey-banana', newState.moves, Date.now() - activityStartTime); // Update overall game state and track completion
+        handleGameWin('monkey-banana', newState.moves, Date.now() - startTime); // Update overall game state and track completion
       }
       
       setMonkeyBananaState(newState);
@@ -1075,7 +1075,7 @@ const Sem2Round2 = ({ onCompleteRound2 }) => {
       // Check win condition
       if (isMonkeyBananaWinningState(newState)) {
         newState.gameWon = true;
-        handleGameWin('monkey-banana', newState.moves, Date.now() - activityStartTime); // Update overall game state and track completion
+        handleGameWin('monkey-banana', newState.moves, Date.now() - startTime); // Update overall game state and track completion
       }
       
       setMonkeyBananaState(newState);
@@ -1103,7 +1103,11 @@ const Sem2Round2 = ({ onCompleteRound2 }) => {
     // Check if minimum 4 activities are completed
     const minRequiredActivities = 3;
     if (completedActivities.length < minRequiredActivities) {
-      alert(`⚠️ Minimum ${minRequiredActivities} activities must be completed! You have completed ${completedActivities.length} activity/activities.\n\nCompleted: ${completedActivities.join(', ') || 'None'}\n\nPlease complete at least ${minRequiredActivities - completedActivities.length} more activity/activities before submitting.`);
+      alert(`⚠️ Minimum ${minRequiredActivities} activities must be completed! You have completed ${completedActivities.length} activity/activities.
+
+Completed: ${completedActivities.join(', ') || 'None'}
+
+Please complete at least ${minRequiredActivities - completedActivities.length} more activity/activities before submitting.`);
       return;
     }
     

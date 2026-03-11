@@ -80,6 +80,29 @@ const Sem2Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
           })
         })
 
+        // Check if response is OK before parsing JSON
+        if (!response.ok) {
+          // Try to parse error response
+          let errorData;
+          try {
+            errorData = await response.json();
+          } catch (parseErr) {
+            // If response is not JSON, create a generic error
+            errorData = { message: `Server error (${response.status}): Unable to parse response` };
+          }
+          setError(errorData.message || 'Registration failed')
+          setLoading(false)
+          return
+        }
+
+        // For successful response, check if it's actually JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          setError('Server returned unexpected response format. Please contact administrator.');
+          setLoading(false)
+          return;
+        }
+
         const data = await response.json()
 
         console.log('Sem2 Register response:', response.status, data)
@@ -105,7 +128,11 @@ const Sem2Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
         }
       } catch (err) {
         console.error('Registration error:', err)
-        setError('Network error. Please ensure the backend server is running.')
+        if (err.name === 'SyntaxError' && err.message.includes('Unexpected token')) {
+          setError('Server communication error. The backend might not be running or returned an unexpected response. Please ensure the backend server is running correctly.')
+        } else {
+          setError('Network error. Please ensure the backend server is running.')
+        }
       } finally {
         setLoading(false)
       }
@@ -135,6 +162,37 @@ const Sem2Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
             isLoginAttempt: true  // Login mode
           })
         })
+
+        // Check if response is OK before parsing JSON
+        if (!response.ok) {
+          // Try to parse error response
+          let errorData;
+          try {
+            errorData = await response.json();
+          } catch (parseErr) {
+            // If response is not JSON, create a generic error
+            errorData = { message: `Server error (${response.status}): Unable to parse response` };
+          }
+          // Handle different error types
+          if (errorData.needsRegistration) {
+            // No account found - guide user to register
+            setError(`⚠️ No account found! Please register first before attempting the contest.`)
+          } else if (errorData.emailExists && !errorData.message.includes('already have an account')) {
+            setError(`Account found! But there was an issue. Please contact support if this persists.`)
+          } else {
+            setError(errorData.message || 'Login failed. Check your name and semester.')
+          }
+          setLoading(false)
+          return
+        }
+
+        // For successful response, check if it's actually JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          setError('Server returned unexpected response format. Please contact administrator.')
+          setLoading(false)
+          return;
+        }
 
         const data = await response.json()
 
@@ -168,7 +226,11 @@ const Sem2Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
         }
       } catch (err) {
         console.error('Login error:', err)
-        setError('Network error. Please ensure the backend server is running.')
+        if (err.name === 'SyntaxError' && err.message.includes('Unexpected token')) {
+          setError('Server communication error. The backend might not be running or returned an unexpected response. Please ensure the backend server is running correctly.')
+        } else {
+          setError('Network error. Please ensure the backend server is running.')
+        }
       } finally {
         setLoading(false)
       }

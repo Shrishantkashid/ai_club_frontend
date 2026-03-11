@@ -329,8 +329,7 @@ function App() {
         display: showContest ? 'none' : 'block', // Hide navigation during contest
         padding: isMobile ? '0.5rem 0' : '0.75rem 0',
         width: '100vw', // Set to full viewport width
-        marginLeft: '0',
-        paddingLeft: '0'
+        marginLeft: '0'
       }}>
         <div style={{
           maxWidth: '1200px',
@@ -338,8 +337,7 @@ function App() {
           display: 'flex',
           alignItems: 'center',
           width: '100%',
-          paddingLeft: isMobile ? '1rem' : '3rem', // Reduced padding on mobile
-          paddingRight: isMobile ? '1rem' : '3rem'  // Reduced padding on mobile
+          padding: isMobile ? '0 1rem' : '0 3rem'  // Consolidated padding to avoid conflict with paddingLeft
         }}>
           <div style={{
             display: 'flex',
@@ -384,8 +382,7 @@ function App() {
           </div>
           <div style={{ 
             flexGrow: 1, // Allow this middle space to grow and push navigation left
-            marginLeft: '2rem', // Add some space between logo and navigation
-            marginRight: '2rem' // Add some space between navigation and right edge
+            margin: '0 2rem' // Consolidated margin to avoid conflict
           }}></div>
           <div>
             {!showContest && <Navigation activeSection={activeSection} setActiveSection={setActiveSection} isMobile={isMobile} />}
