@@ -177,8 +177,15 @@ const Sem2Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
           if (errorData.needsRegistration) {
             // No account found - guide user to register
             setError(`⚠️ No account found! Please register first before attempting the contest.`)
-          } else if (errorData.emailExists && !errorData.message.includes('already have an account')) {
-            setError(`Account found! But there was an issue. Please contact support if this persists.`)
+          } else if (errorData.emailExists) {
+            // Account exists but name doesn't match
+            if (errorData.message && errorData.message.includes('exact same name')) {
+              setError(errorData.message)
+            } else if (errorData.message && errorData.message.includes('already have an account')) {
+              setError(errorData.message + ' Use the Login tab instead.')
+            } else {
+              setError(`⚠️ Account found with email ${errorData.existingEmail} for Semester ${errorData.existingSemester}, but the name doesn't match. Please check your name spelling or contact support.`)
+            }
           } else {
             setError(errorData.message || 'Login failed. Check your name and semester.')
           }
@@ -218,8 +225,15 @@ const Sem2Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
           if (data.needsRegistration) {
             // No account found - guide user to register
             setError(`⚠️ No account found! Please register first before attempting the contest.`)
-          } else if (data.emailExists && !data.message.includes('already have an account')) {
-            setError(`Account found! But there was an issue. Please contact support if this persists.`)
+          } else if (data.emailExists) {
+            // Account exists but name doesn't match
+            if (data.message && data.message.includes('exact same name')) {
+              setError(data.message)
+            } else if (data.message && data.message.includes('already have an account')) {
+              setError(data.message + ' Use the Login tab instead.')
+            } else {
+              setError(`⚠️ Account found with email ${data.existingEmail} for Semester ${data.existingSemester}, but the name doesn't match. Please check your name spelling or contact support.`)
+            }
           } else {
             setError(data.message || 'Login failed. Check your name and semester.')
           }
