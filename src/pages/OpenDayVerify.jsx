@@ -11,6 +11,8 @@ const OpenDayVerify = () => {
     const [image, setImage] = useState(null);
     const [message, setMessage] = useState('');
     const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const webcamRef = useRef(null);
 
     useEffect(() => {
@@ -61,7 +63,7 @@ const OpenDayVerify = () => {
             const response = await fetch(`${API_BASE_URL}/api/open-day/verify`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token, usn, finalPhoto: image })
+                body: JSON.stringify({ token, usn, email, password, finalPhoto: image })
             });
             const result = await response.json();
             if (response.ok) {
@@ -153,8 +155,46 @@ const OpenDayVerify = () => {
                             </div>
                         </div>
 
-                        <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
-                            Please align your face for the final verification snapshot.
+                        {/* Login Verification */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
+                            <input
+                                required
+                                type="email"
+                                placeholder="Verify Email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                style={{
+                                    background: 'rgba(10, 25, 47, 0.8)',
+                                    border: '1px solid rgba(100, 255, 218, 0.2)',
+                                    padding: '0.8rem',
+                                    borderRadius: '8px',
+                                    color: '#e2e8f0',
+                                    outline: 'none',
+                                    width: '100%',
+                                    boxSizing: 'border-box'
+                                }}
+                            />
+                            <input
+                                required
+                                type="password"
+                                placeholder="Session Password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                style={{
+                                    background: 'rgba(10, 25, 47, 0.8)',
+                                    border: '1px solid rgba(100, 255, 218, 0.2)',
+                                    padding: '0.8rem',
+                                    borderRadius: '8px',
+                                    color: '#e2e8f0',
+                                    outline: 'none',
+                                    width: '100%',
+                                    boxSizing: 'border-box'
+                                }}
+                            />
+                        </div>
+
+                        <p style={{ color: '#94a3b8', fontSize: '0.8rem', marginBottom: '1.5rem' }}>
+                            Align your face and enter credentials to finalize.
                         </p>
                         
                         <div style={{ position: 'relative', borderRadius: '20px', overflow: 'hidden', border: '2px solid rgba(100, 255, 218, 0.3)', marginBottom: '2rem', background: '#000' }}>
@@ -199,16 +239,16 @@ const OpenDayVerify = () => {
 
                         <motion.button
                             onClick={handleVerify}
-                            disabled={!image}
-                            whileHover={image ? { scale: 1.05, background: '#64ffda', color: '#0a192f' } : {}}
+                            disabled={!image || !email || !password}
+                            whileHover={(image && email && password) ? { scale: 1.05, background: '#64ffda', color: '#0a192f' } : {}}
                             style={{
-                                background: image ? 'rgba(100, 255, 218, 0.1)' : 'rgba(255, 255, 255, 0.05)',
-                                color: image ? '#64ffda' : 'rgba(255, 255, 255, 0.2)',
-                                border: `1px solid ${image ? '#64ffda' : 'transparent'}`,
+                                background: (image && email && password) ? 'rgba(100, 255, 218, 0.1)' : 'rgba(255, 255, 255, 0.05)',
+                                color: (image && email && password) ? '#64ffda' : 'rgba(255, 255, 255, 0.2)',
+                                border: `1px solid ${(image && email && password) ? '#64ffda' : 'transparent'}`,
                                 padding: '1.2rem 2.5rem',
                                 borderRadius: '40px',
                                 fontWeight: 'bold',
-                                cursor: image ? 'pointer' : 'not-allowed',
+                                cursor: (image && email && password) ? 'pointer' : 'not-allowed',
                                 width: '100%',
                                 fontSize: '1rem',
                                 textTransform: 'uppercase',

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import Webcam from 'react-webcam';
 
 const OpenDayEntry = ({ onRegister }) => {
-    const [formData, setFormData] = useState({ name: '', usn: '', email: '' });
+    const [formData, setFormData] = useState({ name: '', usn: '', email: '', password: '' });
     const [image, setImage] = useState(null);
     const [loading, setLoading] = useState(false);
     const webcamRef = useRef(null);
@@ -144,6 +144,21 @@ const OpenDayEntry = ({ onRegister }) => {
                         placeholder="College Email"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        style={{
+                            background: 'rgba(10, 25, 47, 0.8)',
+                            border: '1px solid rgba(100, 255, 218, 0.2)',
+                            padding: '0.8rem',
+                            borderRadius: '8px',
+                            color: '#e2e8f0',
+                            outline: 'none'
+                        }}
+                    />
+                    <input
+                        required
+                        type="password"
+                        placeholder="Create Session Password"
+                        value={formData.password}
+                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                         style={{
                             background: 'rgba(10, 25, 47, 0.8)',
                             border: '1px solid rgba(100, 255, 218, 0.2)',
