@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
+import { motion } from 'framer-motion'
 import nithinImage from '../assets/Nithin.jpg'
 import image1 from '../assets/WhatsApp Image 2026-02-23 at 7.34.24 PM.jpeg'
 import image2 from '../assets/WhatsApp Image 2026-02-24 at 10.16.53 PM.jpeg'
@@ -9,11 +10,24 @@ import image6 from '../assets/WhatsApp Image 2026-03-01 at 3.30.55 PM.jpeg'
 import image7 from '../assets/WhatsApp Image 2026-03-01 at 3.30.57 PM.jpeg'
 
 const OfficeBearers = ({ isMobile = false }) => {
-  const [isVisible, setIsVisible] = useState(false);
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  }
 
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
+  const cardVariants = {
+    hidden: { y: 30, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { duration: 0.5, ease: "easeOut" }
+    }
+  }
 
   const bearers = [
     {
@@ -133,32 +147,33 @@ const OfficeBearers = ({ isMobile = false }) => {
         Office Bearers
       </h1>
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))',
-        gap: isMobile ? '1.5rem' : '2rem'
-      }}>
+      <motion.div 
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+        style={{
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: isMobile ? '1.5rem' : '2rem'
+        }}
+      >
         {bearers.map((bearer, index) => (
-          <div key={bearer.id} style={{
-            backgroundColor: 'rgba(30, 58, 95, 0.6)',
-            borderRadius: '12px',
-            boxShadow: '0 8px 32px rgba(30, 58, 95, 0.3)',
-            overflow: 'hidden',
-            transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-            border: '1px solid rgba(100, 255, 218, 0.2)',
-            backdropFilter: 'blur(4px)',
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-            transitionDelay: `${index * 0.1}s`
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-10px) scale(1.02)';
-            e.currentTarget.style.boxShadow = '0 12px 40px rgba(30, 58, 95, 0.5), 0 0 20px rgba(100, 255, 218, 0.2)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0) scale(1)';
-            e.currentTarget.style.boxShadow = '0 8px 32px rgba(30, 58, 95, 0.3)';
-          }}
+          <motion.div 
+            key={bearer.id} 
+            variants={cardVariants}
+            whileHover={{ 
+              y: -10, 
+              scale: 1.02,
+              boxShadow: '0 12px 40px rgba(30, 58, 95, 0.5), 0 0 20px rgba(100, 255, 218, 0.2)'
+            }}
+            style={{
+              backgroundColor: 'rgba(30, 58, 95, 0.6)',
+              borderRadius: '12px',
+              boxShadow: '0 8px 32px rgba(30, 58, 95, 0.3)',
+              overflow: 'hidden',
+              border: '1px solid rgba(100, 255, 218, 0.2)',
+              backdropFilter: 'blur(4px)'
+            }}
           >
             <div style={{
               height: '200px',
@@ -224,9 +239,9 @@ const OfficeBearers = ({ isMobile = false }) => {
                 {bearer.bio}
               </p>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   )
 }

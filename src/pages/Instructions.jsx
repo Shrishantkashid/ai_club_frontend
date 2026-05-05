@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
+import { motion } from 'framer-motion'
 
 const Instructions = ({ onProceed }) => {
-  const [isVisible, setIsVisible] = useState(false);
-
   useEffect(() => {
-    setIsVisible(true);
     
     // Prevent text selection in Instructions page
     const preventTextSelection = (e) => {
@@ -47,26 +45,33 @@ const Instructions = ({ onProceed }) => {
   }, []);
 
   return (
-    <div style={{
-      padding: '1rem',
-      maxWidth: '1000px',
-      margin: '0 auto',
-      height: '100%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }}>
-      <div style={{
-        backgroundColor: 'rgba(30, 58, 95, 0.6)',
-        padding: '1.5rem',
-        borderRadius: '12px',
-        boxShadow: '0 8px 32px rgba(30, 58, 95, 0.3)',
-        border: '1px solid rgba(100, 255, 218, 0.2)',
-        backdropFilter: 'blur(4px)',
-        textAlign: 'center',
-        maxWidth: '600px',
-        width: '100%'
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      style={{
+        padding: '1rem',
+        maxWidth: '1000px',
+        margin: '0 auto',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
       }}>
+      <motion.div 
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        style={{
+          backgroundColor: 'rgba(30, 58, 95, 0.6)',
+          padding: '1.5rem',
+          borderRadius: '12px',
+          boxShadow: '0 8px 32px rgba(30, 58, 95, 0.3)',
+          border: '1px solid rgba(100, 255, 218, 0.2)',
+          backdropFilter: 'blur(4px)',
+          textAlign: 'center',
+          maxWidth: '600px',
+          width: '100%'
+        }}>
         <h1 style={{
           color: '#64ffda',
           marginBottom: '1.5rem',
@@ -76,13 +81,17 @@ const Instructions = ({ onProceed }) => {
           📋 Contest Instructions
         </h1>
         
-        <div style={{
-          backgroundColor: 'rgba(10, 25, 47, 0.5)',
-          padding: '1rem',
-          borderRadius: '8px',
-          marginBottom: '1.5rem',
-          textAlign: 'left'
-        }}>
+        <motion.div 
+          initial={{ x: -20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.4 }}
+          style={{
+            backgroundColor: 'rgba(10, 25, 47, 0.5)',
+            padding: '1rem',
+            borderRadius: '8px',
+            marginBottom: '1.5rem',
+            textAlign: 'left'
+          }}>
           <h2 style={{ 
             color: '#64ffda', 
             marginBottom: '0.75rem',
@@ -103,15 +112,19 @@ const Instructions = ({ onProceed }) => {
             <li><strong>Time Management:</strong> Complete all rounds in one continuous session</li>
             <li><strong>Fair Play:</strong> Any suspicious activity will be monitored and may lead to disqualification</li>
           </ul>
-        </div>
+        </motion.div>
 
-        <div style={{
-          backgroundColor: 'rgba(10, 25, 47, 0.5)',
-          padding: '1rem',
-          borderRadius: '8px',
-          marginBottom: '1.5rem',
-          textAlign: 'left'
-        }}>
+        <motion.div 
+          initial={{ x: 20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          style={{
+            backgroundColor: 'rgba(10, 25, 47, 0.5)',
+            padding: '1rem',
+            borderRadius: '8px',
+            marginBottom: '1.5rem',
+            textAlign: 'left'
+          }}>
           <h2 style={{ 
             color: '#64ffda', 
             marginBottom: '0.75rem',
@@ -131,9 +144,11 @@ const Instructions = ({ onProceed }) => {
             <li><strong>Round 3:</strong> Advanced AI scenario-based questions</li>
             <li><strong>Leaderboard:</strong> Real-time ranking based on accuracy and completion time</li>
           </ol>
-        </div>
+        </motion.div>
 
-        <button
+        <motion.button
+          whileHover={{ scale: 1.05, boxShadow: '0 0 25px rgba(74, 222, 128, 0.6)' }}
+          whileTap={{ scale: 0.95 }}
           onClick={onProceed}
           style={{
             backgroundColor: '#4ade80',
@@ -144,22 +159,13 @@ const Instructions = ({ onProceed }) => {
             cursor: 'pointer',
             fontWeight: 'bold',
             fontSize: '1.1rem',
-            transition: 'all 0.3s ease',
             boxShadow: '0 4px 15px rgba(74, 222, 128, 0.3)'
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.transform = 'scale(1.05)';
-            e.target.style.boxShadow = '0 0 25px rgba(74, 222, 128, 0.6)';
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.transform = 'scale(1)';
-            e.target.style.boxShadow = '0 4px 15px rgba(74, 222, 128, 0.3)';
           }}
         >
           I Understand - Proceed to Login →
-        </button>
-      </div>
-    </div>
+        </motion.button>
+      </motion.div>
+    </motion.div>
   )
 }
 

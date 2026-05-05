@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import API from '../utils/api'
 
 const Round1 = ({ onCompleteRound1 }) => {
@@ -754,14 +755,17 @@ const Round1 = ({ onCompleteRound1 }) => {
         margin: '0 auto',
         textAlign: 'center'
       }}>
-        <div style={{
-          backgroundColor: 'rgba(30, 58, 95, 0.6)',
-          padding: '2rem',
-          borderRadius: '12px',
-          boxShadow: '0 8px 32px rgba(30, 58, 95, 0.3)',
-          border: '1px solid rgba(100, 255, 218, 0.2)',
-          backdropFilter: 'blur(4px)'
-        }}>
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          style={{
+            backgroundColor: 'rgba(30, 58, 95, 0.6)',
+            padding: '2rem',
+            borderRadius: '12px',
+            boxShadow: '0 8px 32px rgba(30, 58, 95, 0.3)',
+            border: '1px solid rgba(100, 255, 218, 0.2)',
+            backdropFilter: 'blur(4px)'
+          }}>
           <h1 style={{ 
             color: '#64ffda', 
             marginBottom: '1rem',
@@ -770,7 +774,10 @@ const Round1 = ({ onCompleteRound1 }) => {
             {cheatDetected ? '⚠️ Contest Terminated' : 'Round 1 Complete!'}
           </h1>
           {cheatDetected ? (
-            <div>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
               <p style={{ color: '#f87171', fontSize: '1.2rem', marginBottom: '1rem' }}>
                 Contest terminated due to suspicious activity.
               </p>
@@ -782,9 +789,12 @@ const Round1 = ({ onCompleteRound1 }) => {
                 <br />
                 <strong>Please contact the administrator if this was an error.</strong>
               </p>
-            </div>
+            </motion.div>
           ) : (
-            <div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
               <p style={{ color: '#4ade80', fontSize: '1.2rem', marginBottom: '1rem' }}>
                 Proceeding to Round 2...
               </p>
@@ -795,25 +805,22 @@ const Round1 = ({ onCompleteRound1 }) => {
                 gap: '0.5rem',
                 color: '#64ffda'
               }}>
-                <div style={{
-                  width: '20px',
-                  height: '20px',
-                  border: '2px solid #64ffda',
-                  borderRightColor: 'transparent',
-                  borderRadius: '50%',
-                  animation: 'spin 1s linear infinite'
-                }}></div>
-                <span>Loading next round...</span>
+                <motion.div 
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  style={{
+                    width: '20px',
+                    height: '20px',
+                    border: '2px solid rgba(100, 255, 218, 0.3)',
+                    borderTop: '2px solid #64ffda',
+                    borderRadius: '50%'
+                  }}
+                />
+                <span>Loading Round 2...</span>
               </div>
-              <style>{`
-                @keyframes spin {
-                  0% { transform: rotate(0deg); }
-                  100% { transform: rotate(360deg); }
-                }
-              `}</style>
-            </div>
+            </motion.div>
           )}
-        </div>
+        </motion.div>
       </div>
     )
   }
@@ -827,14 +834,17 @@ const Round1 = ({ onCompleteRound1 }) => {
         margin: '0 auto',
         textAlign: 'center'
       }}>
-        <div style={{
-          backgroundColor: 'rgba(30, 58, 95, 0.6)',
-          padding: '3rem',
-          borderRadius: '12px',
-          boxShadow: '0 8px 32px rgba(30, 58, 95, 0.3)',
-          border: '1px solid rgba(100, 255, 218, 0.2)',
-          backdropFilter: 'blur(4px)'
-        }}>
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          style={{
+            backgroundColor: 'rgba(30, 58, 95, 0.6)',
+            padding: '3rem',
+            borderRadius: '12px',
+            boxShadow: '0 8px 32px rgba(30, 58, 95, 0.3)',
+            border: '1px solid rgba(100, 255, 218, 0.2)',
+            backdropFilter: 'blur(4px)'
+          }}>
           <h1 style={{ 
             color: '#64ffda', 
             marginBottom: '2rem',
@@ -842,22 +852,19 @@ const Round1 = ({ onCompleteRound1 }) => {
           }}>
             Loading Questions...
           </h1>
-          <div style={{
-            width: '50px',
-            height: '50px',
-            border: '5px solid rgba(100, 255, 218, 0.3)',
-            borderTop: '5px solid #64ffda',
-            borderRadius: '50%',
-            animation: 'spin 1s linear infinite',
-            margin: '0 auto'
-          }} />
-          <style>{`
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-          `}</style>
-        </div>
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            style={{
+              width: '50px',
+              height: '50px',
+              border: '5px solid rgba(100, 255, 218, 0.3)',
+              borderTop: '5px solid #64ffda',
+              borderRadius: '50%',
+              margin: '0 auto'
+            }} 
+          />
+        </motion.div>
       </div>
     )
   }
@@ -874,37 +881,44 @@ const Round1 = ({ onCompleteRound1 }) => {
   const isMobile = window.innerWidth <= 768
 
   return (
-    <div style={{
-      padding: isMobile ? '0.5rem' : '1rem',
-      maxWidth: '1000px',
-      margin: '0 auto'
-    }}>
-    {/* Security indicator */}
-    <div style={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginBottom: '1rem',
-      padding: isMobile ? '0.5rem' : '0.5rem',
-      backgroundColor: 'rgba(239, 68, 68, 0.2)',
-      borderRadius: '8px',
-      border: '1px solid rgba(239, 68, 68, 0.3)'
-    }}>
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.5rem',
-        color: '#f87171',
-        fontWeight: 'bold',
-        fontSize: isMobile ? '0.8rem' : '1rem'
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      style={{
+        padding: isMobile ? '0.5rem' : '1rem',
+        maxWidth: '1000px',
+        margin: '0 auto'
       }}>
-        <span>🔒</span>
-        <span>Secure Exam Mode Active</span>
-        {!isMobile && (
-          <span style={{ fontSize: '0.8rem', fontWeight: 'normal' }}>(Do not exit fullscreen or switch tabs)</span>
-        )}
-      </div>
-    </div>
+      {/* Security indicator */}
+      <motion.div 
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginBottom: '1rem',
+          padding: isMobile ? '0.5rem' : '0.5rem',
+          backgroundColor: 'rgba(239, 68, 68, 0.2)',
+          borderRadius: '8px',
+          border: '1px solid rgba(239, 68, 68, 0.3)'
+        }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          color: '#f87171',
+          fontWeight: 'bold',
+          fontSize: isMobile ? '0.8rem' : '1rem'
+        }}>
+          <span>🔒</span>
+          <span>Secure Exam Mode Active</span>
+          {!isMobile && (
+            <span style={{ fontSize: '0.8rem', fontWeight: 'normal' }}>(Do not exit fullscreen or switch tabs)</span>
+          )}
+        </div>
+      </motion.div>
+
       <div style={{
         backgroundColor: 'rgba(30, 58, 95, 0.6)',
         padding: isMobile ? '1rem' : '1.5rem',
@@ -930,16 +944,19 @@ const Round1 = ({ onCompleteRound1 }) => {
             Question {currentQuestion + 1} of {shuffledQuestions.length}
           </div>
           {cheatDetected && (
-            <div style={{
-              backgroundColor: '#f87171',
-              color: '#0a192f',
-              padding: isMobile ? '0.25rem 0.5rem' : '0.5rem 1rem',
-              borderRadius: '20px',
-              fontWeight: 'bold',
-              fontSize: isMobile ? '0.8rem' : '1rem'
-            }}>
+            <motion.div 
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              style={{
+                backgroundColor: '#f87171',
+                color: '#0a192f',
+                padding: isMobile ? '0.25rem 0.5rem' : '0.5rem 1rem',
+                borderRadius: '20px',
+                fontWeight: 'bold',
+                fontSize: isMobile ? '0.8rem' : '1rem'
+              }}>
               ⚠️ Suspicious Activity Detected
-            </div>
+            </motion.div>
           )}
         </div>
 
@@ -951,92 +968,99 @@ const Round1 = ({ onCompleteRound1 }) => {
           marginBottom: '1.5rem',
           overflow: 'hidden'
         }}>
-          <div style={{
-            width: `${((currentQuestion + 1) / shuffledQuestions.length) * 100}%`,
-            backgroundColor: '#64ffda',
-            height: '100%',
-            transition: 'width 0.3s ease'
-          }}></div>
+          <motion.div 
+            initial={{ width: 0 }}
+            animate={{ width: `${((currentQuestion + 1) / shuffledQuestions.length) * 100}%` }}
+            transition={{ duration: 0.3 }}
+            style={{
+              backgroundColor: '#64ffda',
+              height: '100%'
+            }} 
+          />
         </div>
 
-        {/* Question */}
-        <div style={{ marginBottom: '2rem' }}>
-          <h2 style={{ 
-            color: '#64ffda', 
-            marginBottom: '1rem',
-            fontSize: isMobile ? '1.1rem' : '1.3rem'
-          }}>
-            {currentQ.question}
-          </h2>
-          
-          {/* Code snippet for debugging questions */}
-          {currentQ.code && (
-            <div style={{
-              backgroundColor: 'rgba(0, 0, 0, 0.3)',
-              padding: isMobile ? '0.5rem' : '1rem',
-              borderRadius: '8px',
-              fontFamily: 'monospace',
-              fontSize: isMobile ? '0.7rem' : '0.9rem',
-              marginBottom: '1rem',
-              border: '1px solid rgba(100, 255, 218, 0.2)',
-              overflowX: 'auto'
-            }}>
-              <pre style={{ margin: 0, color: '#e2e8f0' }}>{currentQ.code}</pre>
-            </div>
-          )}
-        </div>
-
-        {/* Options */}
-        <div style={{ marginBottom: '2rem' }}>
-          {currentQ.options.map((option, index) => (
-            <div
-              key={`question-${currentQ.id}-option-${index}`} // More unique key
-              onClick={() => handleAnswerSelect(currentQ.id, index)}
-              style={{
-                backgroundColor: selectedAnswers[currentQ.id] === index 
-                  ? 'rgba(100, 255, 218, 0.3)' 
-                  : 'rgba(10, 25, 47, 0.5)',
-                border: `2px solid ${selectedAnswers[currentQ.id] === index ? '#64ffda' : 'rgba(100, 255, 218, 0.2)'}`,
-                padding: isMobile ? '0.75rem' : '1rem',
-                borderRadius: '8px',
-                marginBottom: '0.75rem',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                color: '#e2e8f0',
-                fontSize: isMobile ? '0.9rem' : '1rem'
-              }}
-              onMouseEnter={(e) => {
-                if (selectedAnswers[currentQ.id] !== index) {
-                  e.target.style.backgroundColor = 'rgba(100, 255, 218, 0.1)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (selectedAnswers[currentQ.id] !== index) {
-                  e.target.style.backgroundColor = 'rgba(10, 25, 47, 0.5)';
-                }
-              }}
+        {/* Question Area */}
+        <div style={{ position: 'relative' }}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentQuestion}
+              initial={{ x: 20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -20, opacity: 0 }}
+              transition={{ duration: 0.3 }}
             >
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <div style={{
-                  width: isMobile ? '20px' : '24px',
-                  height: isMobile ? '20px' : '24px',
-                  borderRadius: '50%',
-                  border: '2px solid #64ffda',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginRight: '1rem',
-                  backgroundColor: selectedAnswers[currentQ.id] === index ? '#64ffda' : 'transparent',
-                  color: selectedAnswers[currentQ.id] === index ? '#0a192f' : '#64ffda',
-                  fontWeight: 'bold',
-                  fontSize: isMobile ? '0.7rem' : '0.8rem'
+              {/* Question */}
+              <div style={{ marginBottom: '2rem' }}>
+                <h2 style={{ 
+                  color: '#64ffda', 
+                  marginBottom: '1rem',
+                  fontSize: isMobile ? '1.1rem' : '1.3rem'
                 }}>
-                  {String.fromCharCode(65 + index)}
-                </div>
-                <span>{option}</span>
+                  {currentQ.question}
+                </h2>
+                
+                {/* Code snippet for debugging questions */}
+                {currentQ.code && (
+                  <div style={{
+                    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                    padding: isMobile ? '0.5rem' : '1rem',
+                    borderRadius: '8px',
+                    fontFamily: 'monospace',
+                    fontSize: isMobile ? '0.7rem' : '0.9rem',
+                    marginBottom: '1rem',
+                    border: '1px solid rgba(100, 255, 218, 0.2)',
+                    overflowX: 'auto'
+                  }}>
+                    <pre style={{ margin: 0, color: '#e2e8f0' }}>{currentQ.code}</pre>
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+
+              {/* Options */}
+              <div style={{ marginBottom: '2rem' }}>
+                {currentQ.options.map((option, index) => (
+                  <motion.div
+                    key={`question-${currentQ.id}-option-${index}`}
+                    whileHover={{ scale: 1.01, backgroundColor: 'rgba(100, 255, 218, 0.1)' }}
+                    whileTap={{ scale: 0.99 }}
+                    onClick={() => handleAnswerSelect(currentQ.id, index)}
+                    style={{
+                      backgroundColor: selectedAnswers[currentQ.id] === index 
+                        ? 'rgba(100, 255, 218, 0.3)' 
+                        : 'rgba(10, 25, 47, 0.5)',
+                      border: `2px solid ${selectedAnswers[currentQ.id] === index ? '#64ffda' : 'rgba(100, 255, 218, 0.2)'}`,
+                      padding: isMobile ? '0.75rem' : '1rem',
+                      borderRadius: '8px',
+                      marginBottom: '0.75rem',
+                      cursor: 'pointer',
+                      color: '#e2e8f0',
+                      fontSize: isMobile ? '0.9rem' : '1rem'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div style={{
+                        width: isMobile ? '20px' : '24px',
+                        height: isMobile ? '20px' : '24px',
+                        borderRadius: '50%',
+                        border: '2px solid #64ffda',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginRight: '1rem',
+                        backgroundColor: selectedAnswers[currentQ.id] === index ? '#64ffda' : 'transparent',
+                        color: selectedAnswers[currentQ.id] === index ? '#0a192f' : '#64ffda',
+                        fontWeight: 'bold',
+                        fontSize: isMobile ? '0.7rem' : '0.8rem'
+                      }}>
+                        {String.fromCharCode(65 + index)}
+                      </div>
+                      <span>{option}</span>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </AnimatePresence>
         </div>
 
         {/* Navigation buttons */}
@@ -1085,7 +1109,9 @@ const Round1 = ({ onCompleteRound1 }) => {
                 Next →
               </button>
             ) : (
-              <button
+              <motion.button
+                whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(74, 222, 128, 0.4)' }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => handleSubmit(false)}
                 style={{
                   backgroundColor: Object.keys(selectedAnswers).length === 0 ? '#374151' : '#4ade80',
@@ -1095,18 +1121,14 @@ const Round1 = ({ onCompleteRound1 }) => {
                   borderRadius: '30px',
                   cursor: Object.keys(selectedAnswers).length === 0 ? 'not-allowed' : 'pointer',
                   fontWeight: 'bold',
-                  transition: 'all 0.3s ease',
                   opacity: Object.keys(selectedAnswers).length === 0 ? 0.5 : 1,
                   fontSize: isMobile ? '0.9rem' : '1rem'
-                }}
-                onMouseEnter={(e) => {
-                  console.log('Button hover - Answered:', Object.keys(selectedAnswers).length, 'Total:', shuffledQuestions.length);
                 }}
               >
                 {Object.keys(selectedAnswers).length === 0 
                   ? 'Select at least one answer' 
                   : `Submit Round 1 (${Object.keys(selectedAnswers).length}/${shuffledQuestions.length} answered)`}
-              </button>
+              </motion.button>
             )}
           </div>
         </div>
@@ -1120,14 +1142,12 @@ const Round1 = ({ onCompleteRound1 }) => {
           gap: isMobile ? '0.25rem' : '0.5rem'
         }}>
           {shuffledQuestions.map((question, index) => (
-            <div
+            <motion.div
               key={`nav-dot-${question.id}-${index}`}
+              whileHover={{ scale: 1.2 }}
               onClick={() => {
-                // Safety check for navigation
                 if (index >= 0 && index < shuffledQuestions.length) {
                   setCurrentQuestion(index);
-                } else {
-                  console.warn('Invalid navigation index:', index);
                 }
               }}
               style={{
@@ -1145,11 +1165,11 @@ const Round1 = ({ onCompleteRound1 }) => {
                 opacity: (index === currentQuestion || selectedAnswers[question.id] !== undefined) ? 1 : 0.6
               }}
               title={`Question ${index + 1} ${selectedAnswers[question.id] !== undefined ? '(Answered)' : '(Not answered)'}`}
-            ></div>
+            />
           ))}
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 

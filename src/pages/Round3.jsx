@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import API from '../utils/api'
 
 const Round3 = ({ onProceedToLeaderboard }) => {
@@ -1059,109 +1060,135 @@ const Round3 = ({ onProceedToLeaderboard }) => {
           </div>
         </div>
 
-        {!showRiddle ? (
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '1rem',
-            marginBottom: '2rem'
-          }}>
-            <input
-              type="text"
-              value={userInput}
-              onChange={(e) => setUserInput(e.target.value)}
-              placeholder="Enter your solution..."
+        <AnimatePresence mode="wait">
+          {!showRiddle ? (
+            <motion.div 
+              key="task-input"
+              initial={{ x: 20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -20, opacity: 0 }}
               style={{
-                padding: '0.75rem 1rem',
-                fontSize: '1rem',
-                borderRadius: '8px',
-                border: '2px solid #64ffda',
-                backgroundColor: 'rgba(10, 25, 47, 0.8)',
-                color: '#e2e8f0',
-                width: '300px',
-                outline: 'none'
-              }}
-            />
-            <button
-              onClick={submitTask}
-              style={{
-                backgroundColor: '#64ffda',
-                color: '#0a192f',
-                border: 'none',
-                padding: '0.75rem 1.5rem',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                fontSize: '1rem',
-                fontWeight: 'bold'
-              }}
-            >
-              Submit Solution
-            </button>
-            {taskFeedback && (
-              <div style={{
-                color: taskFeedback.includes('Correct') ? '#4ade80' : '#f87171',
-                fontWeight: 'bold',
-                marginTop: '1rem'
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '1rem',
+                marginBottom: '2rem'
               }}>
-                {taskFeedback}
-              </div>
-            )}
-          </div>
-        ) : (
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '1rem',
-            marginBottom: '2rem'
-          }}>
-            <h3 style={{ color: '#fbbf24', marginBottom: '1rem' }}>RIDDLE CHALLENGE</h3>
-            <p style={{ color: '#e2e8f0', fontSize: '1.1rem', maxWidth: '600px' }}>
-              {selectedRiddleSet?.riddles[currentTask]?.question}
-            </p>
-            <input
-              type="text"
-              value={riddleAnswer}
-              onChange={(e) => setRiddleAnswer(e.target.value)}
-              placeholder="Enter your riddle answer..."
+              <input
+                type="text"
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                placeholder="Enter your solution..."
+                style={{
+                  padding: '0.75rem 1rem',
+                  fontSize: '1rem',
+                  borderRadius: '8px',
+                  border: '2px solid #64ffda',
+                  backgroundColor: 'rgba(10, 25, 47, 0.8)',
+                  color: '#e2e8f0',
+                  width: '300px',
+                  outline: 'none'
+                }}
+              />
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={submitTask}
+                style={{
+                  backgroundColor: '#64ffda',
+                  color: '#0a192f',
+                  border: 'none',
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  fontWeight: 'bold'
+                }}
+              >
+                Submit Solution
+              </motion.button>
+              {taskFeedback && (
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  style={{
+                    color: taskFeedback.includes('Correct') ? '#4ade80' : '#f87171',
+                    fontWeight: 'bold',
+                    marginTop: '1rem'
+                  }}>
+                  {taskFeedback}
+                </motion.div>
+              )}
+            </motion.div>
+          ) : (
+            <motion.div 
+              key="riddle-input"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -20, opacity: 0 }}
               style={{
-                padding: '0.75rem 1rem',
-                fontSize: '1rem',
-                borderRadius: '8px',
-                border: '2px solid #64ffda',
-                backgroundColor: 'rgba(10, 25, 47, 0.8)',
-                color: '#e2e8f0',
-                width: '300px',
-                outline: 'none'
-              }}
-            />
-            <button
-              onClick={submitRiddle}
-              style={{
-                backgroundColor: '#fbbf24',
-                color: '#0a192f',
-                border: 'none',
-                padding: '0.75rem 1.5rem',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                fontSize: '1rem',
-                fontWeight: 'bold'
-              }}
-            >
-              Solve Riddle
-            </button>
-            {feedback && (
-              <div style={{
-                color: feedback.includes('Correct') ? '#4ade80' : '#f87171',
-                fontWeight: 'bold',
-                marginTop: '1rem'
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '1rem',
+                marginBottom: '2rem',
+                padding: '2rem',
+                backgroundColor: 'rgba(251, 191, 36, 0.05)',
+                borderRadius: '12px',
+                border: '1px solid rgba(251, 191, 36, 0.2)'
               }}>
-                {feedback}
-              </div>
-            )}
-          </div>
-        )}
+              <h3 style={{ color: '#fbbf24', marginBottom: '1rem' }}>RIDDLE CHALLENGE</h3>
+              <p style={{ color: '#e2e8f0', fontSize: '1.1rem', maxWidth: '600px', fontStyle: 'italic' }}>
+                "{selectedRiddleSet?.riddles[currentTask]?.question}"
+              </p>
+              <input
+                type="text"
+                value={riddleAnswer}
+                onChange={(e) => setRiddleAnswer(e.target.value)}
+                placeholder="Enter your riddle answer..."
+                style={{
+                  padding: '0.75rem 1rem',
+                  fontSize: '1rem',
+                  borderRadius: '8px',
+                  border: '2px solid #fbbf24',
+                  backgroundColor: 'rgba(10, 25, 47, 0.8)',
+                  color: '#e2e8f0',
+                  width: '300px',
+                  outline: 'none'
+                }}
+              />
+              <motion.button
+                whileHover={{ scale: 1.05, boxShadow: '0 0 15px rgba(251, 191, 36, 0.4)' }}
+                whileTap={{ scale: 0.95 }}
+                onClick={submitRiddle}
+                style={{
+                  backgroundColor: '#fbbf24',
+                  color: '#0a192f',
+                  border: 'none',
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  fontWeight: 'bold'
+                }}
+              >
+                Solve Riddle
+              </motion.button>
+              {feedback && (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  style={{
+                    color: feedback.includes('Correct') ? '#4ade80' : '#f87171',
+                    fontWeight: 'bold',
+                    marginTop: '1rem'
+                  }}>
+                  {feedback}
+                </motion.div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <div style={{
           display: 'flex',

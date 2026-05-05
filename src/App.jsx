@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import Navigation from './components/Navigation'
 import Home from './sections/Home'
 import OfficeBearers from './sections/OfficeBearers'
@@ -19,13 +20,18 @@ import Sem2Round2 from './pages/Sem2Round2'
 import Sem2Round3 from './pages/Sem2Round3'
 import Sem2Leaderboard from './pages/Sem2Leaderboard'
 import AdminDashboard from './pages/AdminDashboard'
+import SectionWrapper from './components/SectionWrapper'
 import clubLogo from './assets/logo/WhatsApp Image 2026-02-07 at 10.10.11 AM.jpeg'
+import OpenDayActivity from './pages/OpenDayActivity'
+import OpenDayVerify from './pages/OpenDayVerify'
 
 function App() {
   const [activeSection, setActiveSection] = useState('home')
   const [contestState, setContestState] = useState('activity-card') // activity-card, instructions, login, round1, round2, round3, leaderboard
   const [currentUser, setCurrentUser] = useState(null)
   const [showContest, setShowContest] = useState(false)
+  const [showOpenDay, setShowOpenDay] = useState(false)
+  const [openDayState, setOpenDayState] = useState('main') // main, verify
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
 
   // Handle mobile detection with improved breakpoints
@@ -53,8 +59,17 @@ function App() {
       } else if (hash.startsWith('contest/')) {
         setShowContest(true)
         setContestState(hash.split('/')[1])
+      } else if (hash === 'open-day') {
+        setShowOpenDay(true)
+        setOpenDayState('main')
+        setShowContest(false)
+      } else if (hash.startsWith('open-day/verify')) {
+        setShowOpenDay(true)
+        setOpenDayState('verify')
+        setShowContest(false)
       } else {
         setShowContest(false)
+        setShowOpenDay(false)
       }
     }
 
@@ -178,20 +193,30 @@ function App() {
           return <ActivityCard onStartContest={() => setContestState('instructions')} />
       }
     }
+
+    if (showOpenDay) {
+      if (openDayState === 'verify') {
+        return <OpenDayVerify />
+      }
+      return <OpenDayActivity onBackToHome={() => {
+        setShowOpenDay(false)
+        window.location.hash = ''
+      }} />
+    }
     
     switch (activeSection) {
       case 'home':
-        return <Home isMobile={isMobile} />
+        return <SectionWrapper key="home"><Home isMobile={isMobile} /></SectionWrapper>
       case 'office-bearers':
-        return <OfficeBearers isMobile={isMobile} />
+        return <SectionWrapper key="office-bearers"><OfficeBearers isMobile={isMobile} /></SectionWrapper>
       case 'faculty':
-        return <Faculty isMobile={isMobile} />
+        return <SectionWrapper key="faculty"><Faculty isMobile={isMobile} /></SectionWrapper>
       case 'activities':
-        return <Activities navigateToContest={navigateToContest} setShowContest={setShowContest} setContestState={setContestState} isMobile={isMobile} />
+        return <SectionWrapper key="activities"><Activities navigateToContest={navigateToContest} setShowContest={setShowContest} setContestState={setContestState} isMobile={isMobile} /></SectionWrapper>
       case 'photo-gallery':
-        return <PhotoGallery isMobile={isMobile} />
+        return <SectionWrapper key="photo-gallery"><PhotoGallery isMobile={isMobile} /></SectionWrapper>
       default:
-        return <Home />
+        return <SectionWrapper key="home-default"><Home /></SectionWrapper>
     }
   }
 
@@ -233,104 +258,93 @@ function App() {
           opacity: 0.7
         }}></div>
         
-        {/* Floating particles */}
+        {/* Floating particles with motion */}
         {[...Array(20)].map((_, i) => (
-          <div
+          <motion.div
             key={i}
+            initial={{ 
+              top: `${Math.random() * 100}%`, 
+              left: `${Math.random() * 100}%`,
+              opacity: 0 
+            }}
+            animate={{ 
+              top: [`${Math.random() * 100}%`, `${Math.random() * 100}%`],
+              left: [`${Math.random() * 100}%`, `${Math.random() * 100}%`],
+              opacity: [0.1, 0.4, 0.1]
+            }}
+            transition={{ 
+              duration: Math.random() * 20 + 20, 
+              repeat: Infinity,
+              ease: "linear" 
+            }}
             style={{
               position: 'absolute',
               width: `${Math.random() * 3 + 1}px`,
               height: `${Math.random() * 3 + 1}px`,
-              backgroundColor: `rgba(100, 255, 218, ${Math.random() * 0.4 + 0.1})`,
+              backgroundColor: `rgba(100, 255, 218, 0.5)`,
               borderRadius: '50%',
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              animation: `float${i % 3} ${Math.random() * 10 + 10}s infinite linear`
             }}
           />
         ))}
         
         {/* Floating shapes for AI feel */}
-        <div style={{
-          position: 'absolute',
-          width: '300px',
-          height: '300px',
-          borderRadius: '40% 30% 50% 40%',
-          background: 'radial-gradient(circle, rgba(36, 112, 161, 0.1) 0%, transparent 70%)',
-          top: '10%',
-          left: '5%',
-          animation: 'float 20s infinite linear',
-          filter: 'blur(25px)'
-        }}></div>
-        <div style={{
-          position: 'absolute',
-          width: '200px',
-          height: '200px',
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(74, 132, 198, 0.08) 0%, transparent 70%)',
-          bottom: '15%',
-          right: '10%',
-          animation: 'floatReverse 25s infinite linear',
-          filter: 'blur(20px)'
-        }}></div>
-        <div style={{
-          position: 'absolute',
-          width: '250px',
-          height: '250px',
-          borderRadius: '30% 50% 40% 60%',
-          background: 'radial-gradient(circle, rgba(100, 255, 218, 0.05) 0%, transparent 70%)',
-          top: '40%',
-          right: '20%',
-          animation: 'floatAlt 18s infinite linear',
-          filter: 'blur(20px)'
-        }}></div>
-        
-        <style>{`
-          @keyframes float {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            25% { transform: translate(20px, 30px) rotate(90deg); }
-            50% { transform: translate(0, 60px) rotate(180deg); }
-            75% { transform: translate(-20px, 30px) rotate(270deg); }
-            100% { transform: translate(0, 0) rotate(360deg); }
-          }
-          @keyframes floatReverse {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(-20px, -30px) rotate(360deg); }
-          }
-          @keyframes floatAlt {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(-10px, 15px) scale(1.1); }
-            100% { transform: translate(0, 0) scale(1); }
-          }
-          @keyframes float0 { 0% { transform: translateY(0px); } 100% { transform: translateY(-100vh); } }
-          @keyframes float1 { 0% { transform: translate(0, 0); } 100% { transform: translate(100px, -100vh); } }
-          @keyframes float2 { 0% { transform: translate(0, 0); } 100% { transform: translate(-100px, -100vh); } }
-          
-          /* Mobile-specific animations */
-          @media (max-width: 768px) {
-            @keyframes float {
-              0% { transform: translate(0, 0) rotate(0deg) scale(0.7); }
-              25% { transform: translate(10px, 15px) rotate(90deg) scale(0.7); }
-              50% { transform: translate(0, 30px) rotate(180deg) scale(0.7); }
-              75% { transform: translate(-10px, 15px) rotate(270deg) scale(0.7); }
-              100% { transform: translate(0, 0) rotate(360deg) scale(0.7); }
-            }
-          }
-        `}</style>
+        <motion.div 
+          animate={{ 
+            rotate: 360,
+            scale: [1, 1.1, 1],
+            x: [0, 20, 0],
+            y: [0, 30, 0]
+          }}
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          style={{
+            position: 'absolute',
+            width: '400px',
+            height: '400px',
+            borderRadius: '40% 30% 50% 40%',
+            background: 'radial-gradient(circle, rgba(36, 112, 161, 0.15) 0%, transparent 70%)',
+            top: '5%',
+            left: '2%',
+            filter: 'blur(40px)'
+          }}
+        ></motion.div>
+        <motion.div 
+          animate={{ 
+            rotate: -360,
+            scale: [1, 1.2, 1],
+            x: [0, -30, 0],
+            y: [0, -20, 0]
+          }}
+          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+          style={{
+            position: 'absolute',
+            width: '350px',
+            height: '350px',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(100, 255, 218, 0.1) 0%, transparent 70%)',
+            bottom: '10%',
+            right: '5%',
+            filter: 'blur(50px)'
+          }}
+        ></motion.div>
       </div>
       
-      <header style={{
-        backgroundColor: 'rgba(10, 25, 47, 0.95)', // Semi-transparent dark blue
-        backdropFilter: 'blur(15px)',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
-        position: 'relative',
-        zIndex: 100,
-        borderBottom: '1px solid rgba(100, 255, 218, 0.2)',
-        display: showContest ? 'none' : 'block', // Hide navigation during contest
-        padding: isMobile ? '0.5rem 0' : '0.75rem 0',
-        width: '100vw', // Set to full viewport width
-        marginLeft: '0'
-      }}>
+      <motion.header 
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        style={{
+          backgroundColor: 'rgba(10, 25, 47, 0.95)', // Semi-transparent dark blue
+          backdropFilter: 'blur(15px)',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+          position: 'relative',
+          zIndex: 100,
+          borderBottom: '1px solid rgba(100, 255, 218, 0.2)',
+          display: (showContest || showOpenDay) ? 'none' : 'block', // Hide navigation during contest or open day
+          padding: isMobile ? '0.5rem 0' : '0.75rem 0',
+          width: '100vw', // Set to full viewport width
+          marginLeft: '0'
+        }}
+      >
         <div style={{
           maxWidth: '1200px',
           margin: '0 auto',
@@ -388,7 +402,7 @@ function App() {
             {!showContest && <Navigation activeSection={activeSection} setActiveSection={setActiveSection} isMobile={isMobile} />}
           </div>
         </div>
-      </header>
+      </motion.header>
       
       <main style={{
         position: 'relative',
@@ -433,7 +447,9 @@ function App() {
             </button>
           </div>
         )}
-        {renderSection()}
+        <AnimatePresence mode="wait">
+          {renderSection()}
+        </AnimatePresence>
       </main>
       
       <footer style={{
@@ -443,7 +459,7 @@ function App() {
         textAlign: 'center',
         padding: isMobile ? '0.75rem 0.5rem' : '1rem',
         borderTop: '1px solid #1e3a5f',
-        display: showContest ? 'none' : 'block', // Hide footer during contest
+        display: (showContest || showOpenDay) ? 'none' : 'block', // Hide footer during contest or open day
         fontSize: isMobile ? '0.65rem' : '0.8rem',
         width: '100%'
       }}>

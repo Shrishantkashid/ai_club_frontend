@@ -7,9 +7,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "framer-motion": "^12.38.0",
+    "lucide-react": "^1.14.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-tsparticles": "^2.12.2",
+    "react-webcam": "^7.2.0",
     "tsparticles": "^3.9.1"
   },
   "devDependencies": {

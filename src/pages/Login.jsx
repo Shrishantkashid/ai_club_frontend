@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { motion } from 'framer-motion'
 import API from '../utils/api'
 
 const Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
@@ -110,25 +111,34 @@ const Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
   const isMobile = window.innerWidth <= 768
 
   return (
-    <div style={{
-      padding: isMobile ? '1rem' : '2rem',
-      maxWidth: '1200px',
-      margin: '0 auto',
-      textAlign: 'center',
-      position: 'relative'
-    }}>
-      <div style={{
-        backgroundColor: 'rgba(30, 58, 95, 0.6)',
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      style={{
         padding: isMobile ? '1rem' : '2rem',
-        borderRadius: '12px',
-        boxShadow: '0 8px 32px rgba(30, 58, 95, 0.3)',
-        border: '1px solid rgba(100, 255, 218, 0.2)',
-        backdropFilter: 'blur(4px)',
-        maxWidth: isMobile ? '100%' : '500px',
+        maxWidth: '1200px',
         margin: '0 auto',
+        textAlign: 'center',
         position: 'relative'
       }}>
-        <button
+      <motion.div 
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        style={{
+          backgroundColor: 'rgba(30, 58, 95, 0.6)',
+          padding: isMobile ? '1rem' : '2rem',
+          borderRadius: '12px',
+          boxShadow: '0 8px 32px rgba(30, 58, 95, 0.3)',
+          border: '1px solid rgba(100, 255, 218, 0.2)',
+          backdropFilter: 'blur(4px)',
+          maxWidth: isMobile ? '100%' : '500px',
+          margin: '0 auto',
+          position: 'relative'
+        }}>
+        <motion.button
+          whileHover={{ scale: 1.05, backgroundColor: 'rgba(100, 255, 218, 0.1)' }}
+          whileTap={{ scale: 0.95 }}
           onClick={onBack}
           style={{
             position: 'absolute',
@@ -141,18 +151,11 @@ const Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
             borderRadius: '6px',
             cursor: 'pointer',
             fontWeight: 'bold',
-            fontSize: isMobile ? '0.8rem' : '0.9rem',
-            transition: 'all 0.3s ease'
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.backgroundColor = 'rgba(100, 255, 218, 0.1)';
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.backgroundColor = 'transparent';
+            fontSize: isMobile ? '0.8rem' : '0.9rem'
           }}
         >
           ← Back
-        </button>
+        </motion.button>
 
         <h1 style={{ 
           color: '#64ffda', 
@@ -166,7 +169,10 @@ const Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
         
         <form onSubmit={handleLogin}>
           <div style={{ marginBottom: '1.5rem' }}>
-            <input
+            <motion.input
+              initial={{ x: -10, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.4 }}
               type="email"
               placeholder="Enter your @saividya.ac.in email"
               value={email}
@@ -186,15 +192,19 @@ const Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
           </div>
           
           {(error || registrationLink) && (
-            <div style={{
-              color: '#f87171',
-              marginBottom: '1rem',
-              padding: '0.5rem',
-              backgroundColor: 'rgba(248, 113, 113, 0.1)',
-              borderRadius: '4px',
-              fontSize: isMobile ? '0.9rem' : '1rem',
-              lineHeight: '1.5'
-            }}>
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              style={{
+                color: '#f87171',
+                marginBottom: '1rem',
+                padding: '0.5rem',
+                backgroundColor: 'rgba(248, 113, 113, 0.1)',
+                borderRadius: '4px',
+                fontSize: isMobile ? '0.9rem' : '1rem',
+                lineHeight: '1.5',
+                overflow: 'hidden'
+              }}>
               {error}
               {registrationLink && (
                 <span>
@@ -204,10 +214,12 @@ const Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
                   </a>
                 </span>
               )}
-            </div>
+            </motion.div>
           )}
           
-          <button
+          <motion.button
+            whileHover={!loading ? { scale: 1.02, boxShadow: '0 0 20px rgba(74, 222, 128, 0.4)' } : {}}
+            whileTap={!loading ? { scale: 0.98 } : {}}
             type="submit"
             disabled={loading}
             style={{
@@ -220,11 +232,11 @@ const Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
               cursor: loading ? 'not-allowed' : 'pointer',
               fontWeight: 'bold',
               width: '100%',
-              transition: 'all 0.3s ease'
+              transition: 'background-color 0.3s ease'
             }}
           >
             {loading ? 'Logging in...' : 'Login'}
-          </button>
+          </motion.button>
         </form>
         
         <p style={{ 
@@ -234,8 +246,8 @@ const Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
         }}>
           Only @saividya.ac.in email addresses are accepted
         </p>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   )
 }
 

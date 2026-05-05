@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import API from '../utils/api'
 
 const Sem2Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
@@ -254,25 +255,35 @@ const Sem2Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
   const isMobile = window.innerWidth <= 768
 
   return (
-    <div style={{
-      padding: isMobile ? '1rem' : '2rem',
-      maxWidth: '1200px',
-      margin: '0 auto',
-      textAlign: 'center',
-      position: 'relative'
-    }}>
-      <div style={{
-        backgroundColor: 'rgba(30, 58, 95, 0.6)',
-        padding: isMobile ? '1.5rem' : '2rem',
-        borderRadius: '12px',
-        boxShadow: '0 8px 32px rgba(30, 58, 95, 0.3)',
-        border: '1px solid rgba(100, 255, 218, 0.2)',
-        backdropFilter: 'blur(4px)',
-        maxWidth: isMobile ? '100%' : '600px',
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      style={{
+        padding: isMobile ? '1rem' : '2rem',
+        maxWidth: '1200px',
         margin: '0 auto',
+        textAlign: 'center',
         position: 'relative'
       }}>
-        <button
+      <motion.div 
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        style={{
+          backgroundColor: 'rgba(30, 58, 95, 0.6)',
+          padding: isMobile ? '1.5rem' : '2rem',
+          borderRadius: '12px',
+          boxShadow: '0 8px 32px rgba(30, 58, 95, 0.3)',
+          border: '1px solid rgba(100, 255, 218, 0.2)',
+          backdropFilter: 'blur(4px)',
+          maxWidth: isMobile ? '100%' : '600px',
+          margin: '0 auto',
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+        <motion.button
+          whileHover={{ scale: 1.05, backgroundColor: 'rgba(100, 255, 218, 0.1)' }}
+          whileTap={{ scale: 0.95 }}
           onClick={onBack}
           style={{
             position: 'absolute',
@@ -285,18 +296,11 @@ const Sem2Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
             borderRadius: '6px',
             cursor: 'pointer',
             fontWeight: 'bold',
-            fontSize: isMobile ? '0.8rem' : '0.9rem',
-            transition: 'all 0.3s ease'
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.backgroundColor = 'rgba(100, 255, 218, 0.1)'
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.backgroundColor = 'transparent'
+            fontSize: isMobile ? '0.8rem' : '0.9rem'
           }}
         >
           ← Back
-        </button>
+        </motion.button>
 
         {/* Toggle between Login and Register */}
         <div style={{
@@ -305,8 +309,22 @@ const Sem2Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
           borderRadius: '30px',
           padding: '0.25rem',
           marginBottom: '2rem',
-          marginTop: '1rem'
+          marginTop: '1rem',
+          position: 'relative'
         }}>
+          <motion.div 
+            layout
+            style={{
+              position: 'absolute',
+              top: '0.25rem',
+              left: isRegisterMode ? '0.25rem' : '50%',
+              width: 'calc(50% - 0.25rem)',
+              height: 'calc(100% - 0.5rem)',
+              backgroundColor: '#4ade80',
+              borderRadius: '25px',
+              zIndex: 1
+            }}
+          />
           <button
             onClick={() => setIsRegisterMode(true)}
             style={{
@@ -314,12 +332,13 @@ const Sem2Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
               padding: '0.75rem',
               borderRadius: '25px',
               border: 'none',
-              backgroundColor: isRegisterMode ? '#4ade80' : 'transparent',
+              backgroundColor: 'transparent',
               color: isRegisterMode ? '#0a192f' : '#64ffda',
               fontWeight: 'bold',
               fontSize: isMobile ? '0.9rem' : '1rem',
               cursor: 'pointer',
-              transition: 'all 0.3s ease'
+              zIndex: 2,
+              transition: 'color 0.3s ease'
             }}
           >
             Register
@@ -331,12 +350,13 @@ const Sem2Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
               padding: '0.75rem',
               borderRadius: '25px',
               border: 'none',
-              backgroundColor: !isRegisterMode ? '#4ade80' : 'transparent',
+              backgroundColor: 'transparent',
               color: !isRegisterMode ? '#0a192f' : '#64ffda',
               fontWeight: 'bold',
               fontSize: isMobile ? '0.9rem' : '1rem',
               cursor: 'pointer',
-              transition: 'all 0.3s ease'
+              zIndex: 2,
+              transition: 'color 0.3s ease'
             }}
           >
             Login
@@ -353,255 +373,276 @@ const Sem2Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
         </h1>
         
         <form onSubmit={handleLogin}>
-          {isRegisterMode ? (
-            /* Registration Form */
-            <>
-              {/* Warning for existing users */}
-              <div style={{
-                marginBottom: '1.5rem',
-                padding: '0.75rem',
-                backgroundColor: 'rgba(251, 191, 36, 0.1)',
-                border: '1px solid rgba(251, 191, 36, 0.3)',
-                borderRadius: '6px',
-                color: '#fbbf24',
-                fontSize: isMobile ? '0.85rem' : '0.9rem',
-                lineHeight: '1.5'
-              }}>
-                ⚠️ <strong>Already registered?</strong> Do NOT create a new account. Switch to the Login tab instead.
-              </div>
-
-              {/* Semester Selection */}
-              <div style={{ marginBottom: '1.5rem', textAlign: 'left' }}>
-                <label style={{
-                  display: 'block',
-                  color: '#64ffda',
-                  marginBottom: '0.5rem',
-                  fontSize: isMobile ? '0.9rem' : '1rem',
-                  fontWeight: 'bold'
-                }}>
-                  Select Semester:
-                </label>
-                <select
-                  value={semester}
-                  onChange={(e) => setSemester(Number(e.target.value))}
-                  required
-                  style={{
-                    width: '100%',
-                    padding: isMobile ? '0.75rem' : '1rem',
-                    borderRadius: '8px',
-                    border: '1px solid rgba(100, 255, 218, 0.3)',
-                    backgroundColor: 'rgba(10, 25, 47, 0.8)',
-                    color: '#e2e8f0',
-                    fontSize: isMobile ? '1rem' : '1.1rem',
-                    boxSizing: 'border-box',
-                    cursor: 'pointer'
-                  }}
-                >
-                  <option value={2}>2nd Semester (.25cs)</option>
-                  <option value={4}>4th Semester (.24cs)</option>
-                  <option value={6}>6th Semester (.23cs)</option>
-                </select>
-              </div>
-
-              {/* Full Name Input */}
-              <div style={{ marginBottom: '1.5rem', textAlign: 'left' }}>
-                <label style={{
-                  display: 'block',
-                  color: '#64ffda',
-                  marginBottom: '0.5rem',
-                  fontSize: isMobile ? '0.9rem' : '1rem',
-                  fontWeight: 'bold'
-                }}>
-                  Full Name (as per college record):
-                </label>
-                <input
-                  type="text"
-                  placeholder="Enter your full name"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  required
-                  style={{
-                    width: '100%',
-                    padding: isMobile ? '0.75rem' : '1rem',
-                    borderRadius: '8px',
-                    border: '1px solid rgba(100, 255, 218, 0.3)',
-                    backgroundColor: 'rgba(10, 25, 47, 0.8)',
-                    color: '#e2e8f0',
-                    fontSize: isMobile ? '1rem' : '1.1rem',
-                    boxSizing: 'border-box'
-                  }}
-                />
-              </div>
-
-              {/* Generated Email Display */}
-              {generatedEmail && (
-                <div style={{ marginBottom: '1.5rem', textAlign: 'left' }}>
-                  <label style={{
-                    display: 'block',
-                    color: '#64ffda',
-                    marginBottom: '0.5rem',
-                    fontSize: isMobile ? '0.9rem' : '1rem',
-                    fontWeight: 'bold'
-                  }}>
-                    Your College Email (Auto-generated):
-                  </label>
-                  <input
-                    type="text"
-                    value={generatedEmail}
-                    readOnly
-                    style={{
-                      width: '100%',
-                      padding: isMobile ? '0.75rem' : '1rem',
-                      borderRadius: '8px',
-                      border: '1px solid rgba(100, 255, 218, 0.3)',
-                      backgroundColor: 'rgba(10, 25, 47, 0.5)',
-                      color: '#94a3b8',
-                      fontSize: isMobile ? '0.9rem' : '1rem',
-                      boxSizing: 'border-box',
-                      cursor: 'not-allowed'
-                    }}
-                  />
-                </div>
-              )}
-
-              {/* Generated Password Display */}
-              {generatedPassword && (
-                <div style={{ marginBottom: '1.5rem', textAlign: 'left' }}>
-                  <label style={{
-                    display: 'block',
-                    color: '#64ffda',
-                    marginBottom: '0.5rem',
-                    fontSize: isMobile ? '0.9rem' : '1rem',
-                    fontWeight: 'bold'
-                  }}>
-                    Your Password (Auto-generated):
-                  </label>
-                  <input
-                    type="text"
-                    value={generatedPassword}
-                    readOnly
-                    style={{
-                      width: '100%',
-                      padding: isMobile ? '0.75rem' : '1rem',
-                      borderRadius: '8px',
-                      border: '1px solid rgba(100, 255, 218, 0.3)',
-                      backgroundColor: 'rgba(10, 25, 47, 0.5)',
-                      color: '#fbbf24',
-                      fontSize: isMobile ? '0.9rem' : '1rem',
-                      boxSizing: 'border-box',
-                      cursor: 'not-allowed',
-                      fontFamily: 'monospace'
-                    }}
-                  />
-                  <p style={{
-                    color: '#94a3b8',
-                    fontSize: isMobile ? '0.8rem' : '0.9rem',
-                    marginTop: '0.5rem'
-                  }}>
-                    💡 Password format: First 4 letters of your name + "2026"
-                  </p>
-                </div>
-              )}
-            </>
-          ) : (
-            /* Login Form - Simple Name + Semester */
-            <>
-              {/* Full Name Input */}
-              <div style={{ marginBottom: '1.5rem', textAlign: 'left' }}>
-                <label style={{
-                  display: 'block',
-                  color: '#64ffda',
-                  marginBottom: '0.5rem',
-                  fontSize: isMobile ? '0.9rem' : '1rem',
-                  fontWeight: 'bold'
-                }}>
-                  Full Name (as per college record):
-                </label>
-                <input
-                  type="text"
-                  placeholder="Enter your full name"
-                  value={email}  // Reusing email state for name input
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  style={{
-                    width: '100%',
-                    padding: isMobile ? '0.75rem' : '1rem',
-                    borderRadius: '8px',
-                    border: '1px solid rgba(100, 255, 218, 0.3)',
-                    backgroundColor: 'rgba(10, 25, 47, 0.8)',
-                    color: '#e2e8f0',
-                    fontSize: isMobile ? '1rem' : '1.1rem',
-                    boxSizing: 'border-box'
-                  }}
-                />
-              </div>
-
-              {/* Semester Selection */}
-              <div style={{ marginBottom: '1.5rem', textAlign: 'left' }}>
-                <label style={{
-                  display: 'block',
-                  color: '#64ffda',
-                  marginBottom: '0.5rem',
-                  fontSize: isMobile ? '0.9rem' : '1rem',
-                  fontWeight: 'bold'
-                }}>
-                  Select Semester:
-                </label>
-                <select
-                  value={semester}
-                  onChange={(e) => setSemester(Number(e.target.value))}
-                  required
-                  style={{
-                    width: '100%',
-                    padding: isMobile ? '0.75rem' : '1rem',
-                    borderRadius: '8px',
-                    border: '1px solid rgba(100, 255, 218, 0.3)',
-                    backgroundColor: 'rgba(10, 25, 47, 0.8)',
-                    color: '#e2e8f0',
-                    fontSize: isMobile ? '1rem' : '1.1rem',
-                    boxSizing: 'border-box',
-                    cursor: 'pointer'
-                  }}
-                >
-                  <option value={2}>2nd Semester (.25cs)</option>
-                  <option value={4}>4th Semester (.24cs)</option>
-                  <option value={6}>6th Semester (.23cs)</option>
-                </select>
-              </div>
-
-              {/* Info Box */}
-              <div style={{
-                padding: '0.75rem',
-                backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                borderRadius: '6px',
-                border: '1px solid rgba(59, 130, 246, 0.3)',
-                marginBottom: '1rem'
-              }}>
-                <p style={{
-                  color: '#60a5fa',
-                  fontSize: isMobile ? '0.8rem' : '0.85rem',
-                  margin: 0,
+          <AnimatePresence mode="wait">
+            {isRegisterMode ? (
+              <motion.div 
+                key="register"
+                initial={{ x: 20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -20, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                {/* Warning for existing users */}
+                <div style={{
+                  marginBottom: '1.5rem',
+                  padding: '0.75rem',
+                  backgroundColor: 'rgba(251, 191, 36, 0.1)',
+                  border: '1px solid rgba(251, 191, 36, 0.3)',
+                  borderRadius: '6px',
+                  color: '#fbbf24',
+                  fontSize: isMobile ? '0.85rem' : '0.9rem',
                   lineHeight: '1.5'
                 }}>
-                  💡 Already registered? Enter your name and semester to login!<br/>
-                  <strong>New user?</strong> Switch to Register tab first.
-                </p>
-              </div>
-            </>
-          )}
+                  ⚠️ <strong>Already registered?</strong> Do NOT create a new account. Switch to the Login tab instead.
+                </div>
+
+                {/* Semester Selection */}
+                <div style={{ marginBottom: '1.5rem', textAlign: 'left' }}>
+                  <label style={{
+                    display: 'block',
+                    color: '#64ffda',
+                    marginBottom: '0.5rem',
+                    fontSize: isMobile ? '0.9rem' : '1rem',
+                    fontWeight: 'bold'
+                  }}>
+                    Select Semester:
+                  </label>
+                  <select
+                    value={semester}
+                    onChange={(e) => setSemester(Number(e.target.value))}
+                    required
+                    style={{
+                      width: '100%',
+                      padding: isMobile ? '0.75rem' : '1rem',
+                      borderRadius: '8px',
+                      border: '1px solid rgba(100, 255, 218, 0.3)',
+                      backgroundColor: 'rgba(10, 25, 47, 0.8)',
+                      color: '#e2e8f0',
+                      fontSize: isMobile ? '1rem' : '1.1rem',
+                      boxSizing: 'border-box',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <option value={2}>2nd Semester (.25cs)</option>
+                    <option value={4}>4th Semester (.24cs)</option>
+                    <option value={6}>6th Semester (.23cs)</option>
+                  </select>
+                </div>
+
+                {/* Full Name Input */}
+                <div style={{ marginBottom: '1.5rem', textAlign: 'left' }}>
+                  <label style={{
+                    display: 'block',
+                    color: '#64ffda',
+                    marginBottom: '0.5rem',
+                    fontSize: isMobile ? '0.9rem' : '1rem',
+                    fontWeight: 'bold'
+                  }}>
+                    Full Name (as per college record):
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter your full name"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required
+                    style={{
+                      width: '100%',
+                      padding: isMobile ? '0.75rem' : '1rem',
+                      borderRadius: '8px',
+                      border: '1px solid rgba(100, 255, 218, 0.3)',
+                      backgroundColor: 'rgba(10, 25, 47, 0.8)',
+                      color: '#e2e8f0',
+                      fontSize: isMobile ? '1rem' : '1.1rem',
+                      boxSizing: 'border-box'
+                    }}
+                  />
+                </div>
+
+                {/* Generated Email Display */}
+                {generatedEmail && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    style={{ marginBottom: '1.5rem', textAlign: 'left' }}>
+                    <label style={{
+                      display: 'block',
+                      color: '#64ffda',
+                      marginBottom: '0.5rem',
+                      fontSize: isMobile ? '0.9rem' : '1rem',
+                      fontWeight: 'bold'
+                    }}>
+                      Your College Email (Auto-generated):
+                    </label>
+                    <input
+                      type="text"
+                      value={generatedEmail}
+                      readOnly
+                      style={{
+                        width: '100%',
+                        padding: isMobile ? '0.75rem' : '1rem',
+                        borderRadius: '8px',
+                        border: '1px solid rgba(100, 255, 218, 0.3)',
+                        backgroundColor: 'rgba(10, 25, 47, 0.5)',
+                        color: '#94a3b8',
+                        fontSize: isMobile ? '0.9rem' : '1rem',
+                        boxSizing: 'border-box',
+                        cursor: 'not-allowed'
+                      }}
+                    />
+                  </motion.div>
+                )}
+
+                {/* Generated Password Display */}
+                {generatedPassword && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    style={{ marginBottom: '1.5rem', textAlign: 'left' }}>
+                    <label style={{
+                      display: 'block',
+                      color: '#64ffda',
+                      marginBottom: '0.5rem',
+                      fontSize: isMobile ? '0.9rem' : '1rem',
+                      fontWeight: 'bold'
+                    }}>
+                      Your Password (Auto-generated):
+                    </label>
+                    <input
+                      type="text"
+                      value={generatedPassword}
+                      readOnly
+                      style={{
+                        width: '100%',
+                        padding: isMobile ? '0.75rem' : '1rem',
+                        borderRadius: '8px',
+                        border: '1px solid rgba(100, 255, 218, 0.3)',
+                        backgroundColor: 'rgba(10, 25, 47, 0.5)',
+                        color: '#fbbf24',
+                        fontSize: isMobile ? '0.9rem' : '1rem',
+                        boxSizing: 'border-box',
+                        cursor: 'not-allowed',
+                        fontFamily: 'monospace'
+                      }}
+                    />
+                    <p style={{
+                      color: '#94a3b8',
+                      fontSize: isMobile ? '0.8rem' : '0.9rem',
+                      marginTop: '0.5rem'
+                    }}>
+                      💡 Password format: First 4 letters of your name + "2026"
+                    </p>
+                  </motion.div>
+                )}
+              </motion.div>
+            ) : (
+              <motion.div 
+                key="login"
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: 20, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                {/* Full Name Input */}
+                <div style={{ marginBottom: '1.5rem', textAlign: 'left' }}>
+                  <label style={{
+                    display: 'block',
+                    color: '#64ffda',
+                    marginBottom: '0.5rem',
+                    fontSize: isMobile ? '0.9rem' : '1rem',
+                    fontWeight: 'bold'
+                  }}>
+                    Full Name (as per college record):
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter your full name"
+                    value={email}  // Reusing email state for name input
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    style={{
+                      width: '100%',
+                      padding: isMobile ? '0.75rem' : '1rem',
+                      borderRadius: '8px',
+                      border: '1px solid rgba(100, 255, 218, 0.3)',
+                      backgroundColor: 'rgba(10, 25, 47, 0.8)',
+                      color: '#e2e8f0',
+                      fontSize: isMobile ? '1rem' : '1.1rem',
+                      boxSizing: 'border-box'
+                    }}
+                  />
+                </div>
+
+                {/* Semester Selection */}
+                <div style={{ marginBottom: '1.5rem', textAlign: 'left' }}>
+                  <label style={{
+                    display: 'block',
+                    color: '#64ffda',
+                    marginBottom: '0.5rem',
+                    fontSize: isMobile ? '0.9rem' : '1rem',
+                    fontWeight: 'bold'
+                  }}>
+                    Select Semester:
+                  </label>
+                  <select
+                    value={semester}
+                    onChange={(e) => setSemester(Number(e.target.value))}
+                    required
+                    style={{
+                      width: '100%',
+                      padding: isMobile ? '0.75rem' : '1rem',
+                      borderRadius: '8px',
+                      border: '1px solid rgba(100, 255, 218, 0.3)',
+                      backgroundColor: 'rgba(10, 25, 47, 0.8)',
+                      color: '#e2e8f0',
+                      fontSize: isMobile ? '1rem' : '1.1rem',
+                      boxSizing: 'border-box',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <option value={2}>2nd Semester (.25cs)</option>
+                    <option value={4}>4th Semester (.24cs)</option>
+                    <option value={6}>6th Semester (.23cs)</option>
+                  </select>
+                </div>
+
+                {/* Info Box */}
+                <div style={{
+                  padding: '0.75rem',
+                  backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                  borderRadius: '6px',
+                  border: '1px solid rgba(59, 130, 246, 0.3)',
+                  marginBottom: '1rem'
+                }}>
+                  <p style={{
+                    color: '#60a5fa',
+                    fontSize: isMobile ? '0.8rem' : '0.85rem',
+                    margin: 0,
+                    lineHeight: '1.5'
+                  }}>
+                    💡 Already registered? Enter your name and semester to login!<br/>
+                    <strong>New user?</strong> Switch to Register tab first.
+                  </p>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
           
           {/* Error Message */}
           {error && (
-            <div style={{
-              color: '#f87171',
-              marginBottom: '1rem',
-              padding: '1rem',
-              backgroundColor: 'rgba(248, 113, 113, 0.1)',
-              borderRadius: '6px',
-              fontSize: isMobile ? '0.85rem' : '0.95rem',
-              lineHeight: '1.6',
-              border: '1px solid rgba(248, 113, 113, 0.3)'
-            }}>
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              style={{
+                color: '#f87171',
+                marginBottom: '1rem',
+                padding: '1rem',
+                backgroundColor: 'rgba(248, 113, 113, 0.1)',
+                borderRadius: '6px',
+                fontSize: isMobile ? '0.85rem' : '0.95rem',
+                lineHeight: '1.6',
+                border: '1px solid rgba(248, 113, 113, 0.3)'
+              }}>
               {error.includes('Account already exists') || error.includes('switch to Login') ? (
                 <div>
                   <strong style={{ display: 'block', marginBottom: '0.5rem', fontSize: isMobile ? '0.9rem' : '1rem' }}>
@@ -665,10 +706,12 @@ const Sem2Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
               ) : (
                 error
               )}
-            </div>
+            </motion.div>
           )}
           
-          <button
+          <motion.button
+            whileHover={!(loading || (isRegisterMode && !generatedEmail)) ? { scale: 1.02, boxShadow: '0 0 20px rgba(74, 222, 128, 0.4)' } : {}}
+            whileTap={!(loading || (isRegisterMode && !generatedEmail)) ? { scale: 0.98 } : {}}
             type="submit"
             disabled={loading || (isRegisterMode && !generatedEmail)}
             style={{
@@ -681,23 +724,27 @@ const Sem2Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
               cursor: loading || (isRegisterMode && !generatedEmail) ? 'not-allowed' : 'pointer',
               fontWeight: 'bold',
               width: '100%',
-              transition: 'all 0.3s ease'
+              transition: 'background-color 0.3s ease'
             }}
           >
             {loading ? 'Processing...' : (isRegisterMode ? 'Register & Start Contest' : 'Login to Contest')}
-          </button>
+          </motion.button>
         </form>
         
         {/* Already have an account reminder (shown in Register mode) */}
         {isRegisterMode && (
-          <div style={{ 
-            marginTop: '1rem',
-            padding: '0.75rem',
-            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-            borderRadius: '6px',
-            border: '1px solid rgba(59, 130, 246, 0.3)',
-            textAlign: 'center'
-          }}>
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            style={{ 
+              marginTop: '1rem',
+              padding: '0.75rem',
+              backgroundColor: 'rgba(59, 130, 246, 0.1)',
+              borderRadius: '6px',
+              border: '1px solid rgba(59, 130, 246, 0.3)',
+              textAlign: 'center'
+            }}>
             <p style={{ 
               color: '#60a5fa', 
               fontSize: isMobile ? '0.8rem' : '0.85rem',
@@ -725,16 +772,20 @@ const Sem2Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
                 ⚠️ One account per student - Do NOT register multiple times
               </span>
             </p>
-          </div>
+          </motion.div>
         )}
 
-        <div style={{ 
-          marginTop: '1.5rem',
-          padding: '1rem',
-          backgroundColor: 'rgba(100, 255, 218, 0.1)',
-          borderRadius: '8px',
-          border: '1px solid rgba(100, 255, 218, 0.2)'
-        }}>
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7 }}
+          style={{ 
+            marginTop: '1.5rem',
+            padding: '1rem',
+            backgroundColor: 'rgba(100, 255, 218, 0.1)',
+            borderRadius: '8px',
+            border: '1px solid rgba(100, 255, 218, 0.2)'
+          }}>
           <p style={{ 
             color: '#64ffda', 
             fontSize: isMobile ? '0.85rem' : '0.9rem',
@@ -756,9 +807,9 @@ const Sem2Login = ({ onLoginSuccess, onBack, onContestCompleted }) => {
             <li>If you have same name as another student, number will be added (e.g., Ravi12026)</li>
             <li>This email will be used for the leaderboard and certificate</li>
           </ul>
-        </div>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   )
 }
 

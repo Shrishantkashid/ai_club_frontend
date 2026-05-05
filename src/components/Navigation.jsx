@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const Navigation = ({ activeSection, setActiveSection, isMobile = false }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -21,7 +22,8 @@ const Navigation = ({ activeSection, setActiveSection, isMobile = false }) => {
         borderTop: '1px solid rgba(100, 255, 218, 0.15)'
       }}>
         {/* Mobile menu button */}
-        <button
+        <motion.button
+          whileTap={{ scale: 0.95 }}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           style={{
             backgroundColor: 'rgba(100, 255, 218, 0.15)',
@@ -34,79 +36,66 @@ const Navigation = ({ activeSection, setActiveSection, isMobile = false }) => {
             textAlign: 'center',
             fontWeight: 'bold',
             fontSize: '1rem',
-            transition: 'all 0.3s ease',
             boxShadow: '0 2px 8px rgba(100, 255, 218, 0.2)'
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.backgroundColor = 'rgba(100, 255, 218, 0.25)';
-            e.target.style.boxShadow = '0 4px 12px rgba(100, 255, 218, 0.3)';
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.backgroundColor = 'rgba(100, 255, 218, 0.15)';
-            e.target.style.boxShadow = '0 2px 8px rgba(100, 255, 218, 0.2)';
           }}
         >
           {isMenuOpen ? '✕ Close Menu' : '☰ Menu'}
-        </button>
+        </motion.button>
 
         {/* Mobile menu dropdown */}
-        {isMenuOpen && (
-          <div style={{
-            position: 'absolute',
-            top: '100%',
-            left: 0,
-            right: 0,
-            backgroundColor: 'rgba(10, 25, 47, 0.98)',
-            backdropFilter: 'blur(15px)',
-            border: '1px solid rgba(100, 255, 218, 0.3)',
-            borderRadius: '0 0 12px 12px',
-            zIndex: 1000,
-            boxShadow: '0 8px 20px rgba(0, 0, 0, 0.4)',
-            marginTop: '0.5rem',
-            overflow: 'hidden'
-          }}>
-            {navItems.map((item, index) => (
-              <button
-                key={item.id}
-                onClick={() => {
-                  setActiveSection(item.id)
-                  setIsMenuOpen(false)
-                }}
-                style={{
-                  display: 'block',
-                  width: '100%',
-                  backgroundColor: activeSection === item.id 
-                    ? 'rgba(100, 255, 218, 0.2)' 
-                    : 'transparent',
-                  color: activeSection === item.id ? '#64ffda' : '#e2e8f0',
-                  border: 'none',
-                  borderBottom: '1px solid rgba(100, 255, 218, 0.1)',
-                  padding: '1.2rem 1rem',
-                  textAlign: 'left',
-                  cursor: 'pointer',
-                  fontSize: '1.05rem',
-                  fontWeight: activeSection === item.id ? 'bold' : 'normal',
-                  transition: 'all 0.3s ease',
-                  paddingLeft: '1.5rem'
-                }}
-                onMouseEnter={(e) => {
-                  if (activeSection !== item.id) {
-                    e.target.style.backgroundColor = 'rgba(100, 255, 218, 0.1)';
-                    e.target.style.paddingLeft = '1.8rem';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (activeSection !== item.id) {
-                    e.target.style.backgroundColor = 'transparent';
-                    e.target.style.paddingLeft = '1.5rem';
-                  }
-                }}
-              >
-                {item.label}
-              </button>
-            ))}
-          </div>
-        )}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div 
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              style={{
+                position: 'absolute',
+                top: '100%',
+                left: 0,
+                right: 0,
+                backgroundColor: 'rgba(10, 25, 47, 0.98)',
+                backdropFilter: 'blur(15px)',
+                border: '1px solid rgba(100, 255, 218, 0.3)',
+                borderRadius: '0 0 12px 12px',
+                zIndex: 1000,
+                boxShadow: '0 8px 20px rgba(0, 0, 0, 0.4)',
+                marginTop: '0.5rem',
+                overflow: 'hidden'
+              }}
+            >
+              {navItems.map((item, index) => (
+                <motion.button
+                  key={item.id}
+                  whileTap={{ backgroundColor: 'rgba(100, 255, 218, 0.25)' }}
+                  onClick={() => {
+                    setActiveSection(item.id)
+                    setIsMenuOpen(false)
+                  }}
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    backgroundColor: activeSection === item.id 
+                      ? 'rgba(100, 255, 218, 0.2)' 
+                      : 'transparent',
+                    color: activeSection === item.id ? '#64ffda' : '#e2e8f0',
+                    border: 'none',
+                    borderBottom: '1px solid rgba(100, 255, 218, 0.1)',
+                    padding: '1.2rem 1.5rem',
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    fontSize: '1.05rem',
+                    fontWeight: activeSection === item.id ? 'bold' : 'normal',
+                    transition: 'padding-left 0.3s ease'
+                  }}
+                >
+                  {item.label}
+                </motion.button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
     )
   }
@@ -126,8 +115,15 @@ const Navigation = ({ activeSection, setActiveSection, isMobile = false }) => {
         gap: '1rem'
       }}>
         {navItems.map((item) => (
-          <li key={item.id}>
-            <button
+          <li key={item.id} style={{ position: 'relative' }}>
+            <motion.button
+              whileHover={{ 
+                y: -3,
+                backgroundColor: activeSection === item.id ? 'rgba(100, 255, 218, 0.25)' : 'rgba(100, 255, 218, 0.15)',
+                boxShadow: '0 6px 16px rgba(100, 255, 218, 0.3)',
+                borderColor: 'rgba(100, 255, 218, 0.5)'
+              }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setActiveSection(item.id)}
               style={{
                 backgroundColor: activeSection === item.id 
@@ -140,29 +136,29 @@ const Navigation = ({ activeSection, setActiveSection, isMobile = false }) => {
                 cursor: 'pointer',
                 fontWeight: activeSection === item.id ? 'bold' : 'normal',
                 fontSize: '1.05rem',
-                transition: 'all 0.3s ease',
                 boxShadow: activeSection === item.id ? '0 2px 12px rgba(100, 255, 218, 0.2)' : 'none',
-                whiteSpace: 'nowrap'
-              }}
-              onMouseEnter={(e) => {
-                if (activeSection !== item.id) {
-                  e.target.style.backgroundColor = 'rgba(100, 255, 218, 0.15)';
-                  e.target.style.transform = 'translateY(-3px)';
-                  e.target.style.boxShadow = '0 6px 16px rgba(100, 255, 218, 0.3)';
-                  e.target.style.borderColor = 'rgba(100, 255, 218, 0.5)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (activeSection !== item.id) {
-                  e.target.style.backgroundColor = 'transparent';
-                  e.target.style.transform = 'translateY(0)';
-                  e.target.style.boxShadow = 'none';
-                  e.target.style.borderColor = 'rgba(100, 255, 218, 0.3)';
-                }
+                whiteSpace: 'nowrap',
+                position: 'relative',
+                zIndex: 1
               }}
             >
               {item.label}
-            </button>
+              {activeSection === item.id && (
+                <motion.div
+                  layoutId="activeTab"
+                  style={{
+                    position: 'absolute',
+                    bottom: '-2px',
+                    left: '20%',
+                    right: '20%',
+                    height: '2px',
+                    backgroundColor: '#64ffda',
+                    borderRadius: '2px',
+                    boxShadow: '0 0 8px #64ffda'
+                  }}
+                />
+              )}
+            </motion.button>
           </li>
         ))}
       </ul>

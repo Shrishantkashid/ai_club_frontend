@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
+import { motion } from 'framer-motion'
 import sowmya from "../assets/teachers/sowmya.jpg"
 import pavithra from "../assets/teachers/pavithra.jpeg"
 import jayaprada from "../assets/teachers/jayaprada.jpeg"
@@ -6,11 +7,24 @@ import manjunath from "../assets/teachers/STAFF830.jpg"
 import shashikumar from "../assets/teachers/shashikumar.jpg"
 import shantakumar from "../assets/teachers/shantakumar.jpg"
 const Faculty = ({ isMobile = false }) => {
-  const [isVisible, setIsVisible] = useState(false);
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  }
 
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
+  const cardVariants = {
+    hidden: { y: 30, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { duration: 0.5, ease: "easeOut" }
+    }
+  }
 
   const facultyMembers = [
     {
@@ -79,32 +93,33 @@ const Faculty = ({ isMobile = false }) => {
         Faculty Members
       </h1>
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))',
-        gap: isMobile ? '1.5rem' : '2rem'
-      }}>
+      <motion.div 
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+        style={{
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: isMobile ? '1.5rem' : '2rem'
+        }}
+      >
         {facultyMembers.map((faculty, index) => (
-          <div key={faculty.id} style={{
-            backgroundColor: 'rgba(30, 58, 95, 0.6)',
-            borderRadius: '12px',
-            boxShadow: '0 8px 32px rgba(30, 58, 95, 0.3)',
-            overflow: 'hidden',
-            transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-            border: '1px solid rgba(100, 255, 218, 0.2)',
-            backdropFilter: 'blur(4px)',
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-            transitionDelay: `${index * 0.1}s`
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-10px) scale(1.02)';
-            e.currentTarget.style.boxShadow = '0 12px 40px rgba(30, 58, 95, 0.5), 0 0 20px rgba(100, 255, 218, 0.2)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0) scale(1)';
-            e.currentTarget.style.boxShadow = '0 8px 32px rgba(30, 58, 95, 0.3)';
-          }}
+          <motion.div 
+            key={faculty.id} 
+            variants={cardVariants}
+            whileHover={{ 
+              y: -10, 
+              scale: 1.02,
+              boxShadow: '0 12px 40px rgba(30, 58, 95, 0.5), 0 0 20px rgba(100, 255, 218, 0.2)'
+            }}
+            style={{
+              backgroundColor: 'rgba(30, 58, 95, 0.6)',
+              borderRadius: '12px',
+              boxShadow: '0 8px 32px rgba(30, 58, 95, 0.3)',
+              overflow: 'hidden',
+              border: '1px solid rgba(100, 255, 218, 0.2)',
+              backdropFilter: 'blur(4px)'
+            }}
           >
             <div style={{
               height: '300px',
@@ -163,22 +178,24 @@ const Faculty = ({ isMobile = false }) => {
                 {faculty.specialization}
               </p>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
-      <div style={{
-        backgroundColor: 'rgba(30, 58, 95, 0.6)',
-        padding: '2rem',
-        borderRadius: '12px',
-        boxShadow: '0 8px 32px rgba(30, 58, 95, 0.3)',
-        marginTop: '3rem',
-        border: '1px solid rgba(100, 255, 218, 0.2)',
-        backdropFilter: 'blur(4px)',
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-        transitionDelay: '0.6s'
-      }}>
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8 }}
+        style={{
+          backgroundColor: 'rgba(30, 58, 95, 0.6)',
+          padding: '2rem',
+          borderRadius: '12px',
+          boxShadow: '0 8px 32px rgba(30, 58, 95, 0.3)',
+          marginTop: '3rem',
+          border: '1px solid rgba(100, 255, 218, 0.2)',
+          backdropFilter: 'blur(4px)'
+        }}
+      >
         <h2 style={{ 
           color: '#64ffda', 
           marginBottom: '1rem',
@@ -196,7 +213,7 @@ const Faculty = ({ isMobile = false }) => {
           explore cutting-edge AI research and development. They support various club activities 
           including research projects, competitions, and industry collaborations.
         </p>
-      </div>
+      </motion.div>
     </div>
   )
 }

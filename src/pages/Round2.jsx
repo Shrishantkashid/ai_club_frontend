@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import API from '../utils/api'
 
 const Round2 = ({ onCompleteRound2 }) => {
@@ -103,6 +104,8 @@ const Round2 = ({ onCompleteRound2 }) => {
   const [startTime, setStartTime] = useState(null)
   const [warningCount, setWarningCount] = useState(0)
   const [completedActivities, setCompletedActivities] = useState([]); // Track completed activities
+
+  const isMobile = window.innerWidth <= 768
 
   // Helper function to handle game win and track completed activities
   const handleGameWin = (activity) => {
@@ -1293,12 +1296,15 @@ const Round2 = ({ onCompleteRound2 }) => {
   }
 
   return (
-    <div style={{
-      padding: '2rem',
-      maxWidth: '1200px',
-      margin: '0 auto',
-      textAlign: 'center'
-    }}>
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      style={{
+        padding: '2rem',
+        maxWidth: '1200px',
+        margin: '0 auto',
+        textAlign: 'center'
+      }}>
       <div style={{
         backgroundColor: 'rgba(30, 58, 95, 0.6)',
         padding: '2rem',
@@ -1496,37 +1502,40 @@ const Round2 = ({ onCompleteRound2 }) => {
         {currentActivity === 'eight-puzzle' ? (
           <div>
             <h2 style={{ color: '#64ffda', marginBottom: '1rem' }}>8-Puzzle Challenge</h2>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: '1rem',
-              maxWidth: '400px',
-              margin: '0 auto 2rem'
-            }}>
-              {puzzle.map((tile, index) => (
-                <div
-                  key={index}
-                  onClick={() => tile && moveTile(index)}
-                  style={{
-                    aspectRatio: '1',
-                    backgroundColor: tile ? '#1e40af' : '#374151',
-                    color: '#e2e8f0',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '2rem',
-                    fontWeight: 'bold',
-                    borderRadius: '8px',
-                    cursor: tile ? 'pointer' : 'default',
-                    border: '2px solid rgba(100, 255, 218, 0.3)',
-                    transition: 'all 0.2s ease',
-                    opacity: tile ? 1 : 0.7
-                  }}
-                >
-                  {tile}
-                </div>
-              ))}
-            </div>
+            <LayoutGroup>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: '1rem',
+                maxWidth: '400px',
+                margin: '0 auto 2rem'
+              }}>
+                {puzzle.map((tile, index) => (
+                  <motion.div
+                    key={tile === null ? 'empty' : tile}
+                    layout
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    onClick={() => tile && moveTile(index)}
+                    style={{
+                      aspectRatio: '1',
+                      backgroundColor: tile ? '#1e40af' : '#374151',
+                      color: '#e2e8f0',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '2rem',
+                      fontWeight: 'bold',
+                      borderRadius: '8px',
+                      cursor: tile ? 'pointer' : 'default',
+                      border: '2px solid rgba(100, 255, 218, 0.3)',
+                      opacity: tile ? 1 : 0.7
+                    }}
+                  >
+                    {tile}
+                  </motion.div>
+                ))}
+              </div>
+            </LayoutGroup>
           </div>
         ) : currentActivity === 'jealous-husbands' ? (
           <div>
@@ -1628,11 +1637,12 @@ const Round2 = ({ onCompleteRound2 }) => {
                   marginBottom: '1rem'
                 }}>
                   {/* Boat */}
-                  <div
+                  <motion.div
+                    animate={{ x: jealousHusbandsState.boatPosition === 'left' ? 0 : 150 }}
+                    transition={{ type: "spring", stiffness: 100, damping: 20 }}
                     style={{
                       position: 'absolute',
                       bottom: '5px',
-                      [jealousHusbandsState.boatPosition]: '10px',
                       width: '40px',
                       height: '20px',
                       backgroundColor: '#8b5cf6',
@@ -1648,11 +1658,17 @@ const Round2 = ({ onCompleteRound2 }) => {
                     {jealousHusbandsState.boatOccupants.length > 0 && (
                       <div style={{ display: 'flex', gap: '2px' }}>
                         {jealousHusbandsState.boatOccupants.map((person, i) => (
-                          <span key={i}>{person[0]}</span>
+                          <motion.span 
+                            key={i}
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                          >
+                            {person[0]}
+                          </motion.span>
                         ))}
                       </div>
                     )}
-                  </div>
+                  </motion.div>
                 </div>
                 <button
                   onClick={crossRiver}
@@ -1782,26 +1798,33 @@ const Round2 = ({ onCompleteRound2 }) => {
                     borderRadius: '4px',
                     backgroundColor: 'rgba(30, 58, 95, 0.3)'
                   }}>
-                    {pole.map((diskSize, diskIndex) => (
-                      <div
-                        key={diskIndex}
-                        style={{
-                          width: `${diskSize * 30}px`,
-                          height: '20px',
-                          backgroundColor: '#1e40af',
-                          border: '1px solid #64ffda',
-                          borderRadius: '4px',
-                          marginBottom: '2px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: '0.8rem',
-                          color: 'white'
-                        }}
-                      >
-                        {diskSize}
-                      </div>
-                    ))}
+                    <AnimatePresence>
+                      {pole.map((diskSize, diskIndex) => (
+                        <motion.div
+                          key={diskSize}
+                          layout
+                          initial={{ y: -50, opacity: 0 }}
+                          animate={{ y: 0, opacity: 1 }}
+                          exit={{ y: -50, opacity: 0 }}
+                          style={{
+                            width: `${diskSize * 30}px`,
+                            height: '20px',
+                            backgroundColor: '#1e40af',
+                            border: '1px solid #64ffda',
+                            borderRadius: '4px',
+                            marginBottom: '2px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '0.8rem',
+                            color: 'white',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
+                          }}
+                        >
+                          {diskSize}
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
                   </div>
                 </div>
               ))}
@@ -1871,14 +1894,16 @@ const Round2 = ({ onCompleteRound2 }) => {
                   marginBottom: '0.5rem'
                 }}>
                   {/* Water level indicator */}
-                  <div style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    width: '100%',
-                    height: `${(waterJugState.jugs[0] / waterJugState.capacities[0]) * 100}%`,
-                    backgroundColor: waterJugState.jugs[0] > 0 ? 'rgba(59, 130, 246, 0.8)' : 'transparent',
-                    transition: 'height 0.3s ease'
-                  }} />
+                  <motion.div 
+                    animate={{ height: `${(waterJugState.jugs[0] / waterJugState.capacities[0]) * 100}%` }}
+                    transition={{ type: "spring", stiffness: 100, damping: 15 }}
+                    style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      width: '100%',
+                      backgroundColor: waterJugState.jugs[0] > 0 ? 'rgba(59, 130, 246, 0.8)' : 'transparent',
+                    }} 
+                  />
                 </div>
                 <div style={{ color: '#e2e8f0', fontWeight: 'bold' }}>Jug 1<br/>({waterJugState.jugs[0]}/{waterJugState.capacities[0]} gal)</div>
               </div>
@@ -2017,14 +2042,16 @@ const Round2 = ({ onCompleteRound2 }) => {
                   marginBottom: '0.5rem'
                 }}>
                   {/* Water level indicator */}
-                  <div style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    width: '100%',
-                    height: `${(waterJugState.jugs[1] / waterJugState.capacities[1]) * 100}%`,
-                    backgroundColor: waterJugState.jugs[1] > 0 ? 'rgba(59, 130, 246, 0.8)' : 'transparent',
-                    transition: 'height 0.3s ease'
-                  }} />
+                  <motion.div 
+                    animate={{ height: `${(waterJugState.jugs[1] / waterJugState.capacities[1]) * 100}%` }}
+                    transition={{ type: "spring", stiffness: 100, damping: 15 }}
+                    style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      width: '100%',
+                      backgroundColor: waterJugState.jugs[1] > 0 ? 'rgba(59, 130, 246, 0.8)' : 'transparent',
+                    }} 
+                  />
                 </div>
                 <div style={{ color: '#e2e8f0', fontWeight: 'bold' }}>Jug 2<br/>({waterJugState.jugs[1]}/{waterJugState.capacities[1]} gal)</div>
               </div>
@@ -2119,11 +2146,17 @@ const Round2 = ({ onCompleteRound2 }) => {
                 </div>
                 
                 {/* Box */}
-                <div 
+                <motion.div 
+                  layout
+                  animate={{ 
+                    x: monkeyBananaState.boxPosition === 'corner' ? 0 : 250,
+                    y: monkeyBananaState.holdingBox ? -20 : 0
+                  }}
+                  transition={{ type: "spring", stiffness: 200, damping: 25 }}
                   style={{
                     position: 'absolute',
                     top: '200px',
-                    [monkeyBananaState.boxPosition === 'corner' ? 'left' : 'right']: '40px',
+                    left: '40px',
                     width: '50px',
                     height: '50px',
                     backgroundColor: monkeyBananaState.holdingBox ? '#f59e0b' : '#8b5cf6',
@@ -2133,20 +2166,27 @@ const Round2 = ({ onCompleteRound2 }) => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     color: 'white',
-                    fontWeight: 'bold'
+                    fontWeight: 'bold',
+                    boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
+                    zIndex: 4
                   }}
                 >
                   📦
-                </div>
+                </motion.div>
                 
                 {/* Monkey */}
-                <div 
+                <motion.div 
+                  layout
+                  animate={{ 
+                    x: monkeyBananaState.monkeyPosition === 'corner' ? 0 : 
+                       monkeyBananaState.monkeyPosition === 'under-banana' ? 250 : 0,
+                    y: monkeyBananaState.onBox ? -60 : 0
+                  }}
+                  transition={{ type: "spring", stiffness: 200, damping: 25 }}
                   style={{
                     position: 'absolute',
-                    top: monkeyBananaState.onBox ? '140px' : '220px',
-                    [monkeyBananaState.monkeyPosition === 'corner' ? 'left' : 
-                     monkeyBananaState.monkeyPosition === 'under-banana' ? 'right' : 
-                     monkeyBananaState.monkeyPosition === 'box' ? 'left' : 'left']: '80px',
+                    top: '210px',
+                    left: '80px',
                     width: '40px',
                     height: '40px',
                     backgroundColor: '#fbbf24',
@@ -2157,11 +2197,12 @@ const Round2 = ({ onCompleteRound2 }) => {
                     justifyContent: 'center',
                     color: '#0a192f',
                     fontWeight: 'bold',
-                    zIndex: 10
+                    zIndex: 10,
+                    boxShadow: '0 4px 8px rgba(0,0,0,0.2)'
                   }}
                 >
                   {monkeyBananaState.hasBanana ? '🐵🍌' : '🐵'}
-                </div>
+                </motion.div>
                 
                 {/* Positions labels */}
                 <div style={{
@@ -2385,7 +2426,7 @@ const Round2 = ({ onCompleteRound2 }) => {
           <p>You can reset and retry any activity as many times as needed.</p>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 

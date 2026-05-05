@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 const PhotoGallery = ({ isMobile = false }) => {
   return (
@@ -12,24 +13,34 @@ const PhotoGallery = ({ isMobile = false }) => {
       textAlign: 'center'
     }}>
       {/* Coming Soon Section */}
-      <div style={{
-        backgroundColor: 'rgba(10, 25, 47, 0.7)',
-        backdropFilter: 'blur(10px)',
-        borderRadius: isMobile ? '15px' : '20px',
-        padding: isMobile ? '1.5rem' : '3rem',
-        maxWidth: '600px',
-        width: '100%',
-        border: '1px solid rgba(100, 255, 218, 0.3)',
-        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
-        animation: 'pulse 2s infinite'
-      }}>
-        <div style={{
-          fontSize: isMobile ? '3.5rem' : '5rem',
-          marginBottom: '1.5rem',
-          animation: 'bounce 2s infinite'
-        }}>
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        whileHover={{ boxShadow: '0 10px 40px rgba(100, 255, 218, 0.2)' }}
+        style={{
+          backgroundColor: 'rgba(10, 25, 47, 0.7)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: isMobile ? '15px' : '20px',
+          padding: isMobile ? '1.5rem' : '3rem',
+          maxWidth: '600px',
+          width: '100%',
+          border: '1px solid rgba(100, 255, 218, 0.3)',
+          boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
+          position: 'relative',
+          zIndex: 1
+        }}
+      >
+        <motion.div 
+          animate={{ y: [0, -20, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          style={{
+            fontSize: isMobile ? '3.5rem' : '5rem',
+            marginBottom: '1.5rem'
+          }}
+        >
           📸
-        </div>
+        </motion.div>
         
         <h1 style={{
           color: '#64ffda',
@@ -41,13 +52,18 @@ const PhotoGallery = ({ isMobile = false }) => {
           Photo Gallery
         </h1>
         
-        <div style={{
-          backgroundColor: 'rgba(100, 255, 218, 0.1)',
-          borderRadius: '12px',
-          padding: isMobile ? '1rem' : '1.5rem',
-          marginBottom: '2rem',
-          border: '1px solid rgba(100, 255, 218, 0.3)'
-        }}>
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.3 }}
+          style={{
+            backgroundColor: 'rgba(100, 255, 218, 0.1)',
+            borderRadius: '12px',
+            padding: isMobile ? '1rem' : '1.5rem',
+            marginBottom: '2rem',
+            border: '1px solid rgba(100, 255, 218, 0.3)'
+          }}
+        >
           <h2 style={{
             color: '#64ffda',
             fontSize: isMobile ? '1.5rem' : '1.8rem',
@@ -63,7 +79,7 @@ const PhotoGallery = ({ isMobile = false }) => {
           }}>
             We're working hard to bring you an amazing collection of photos from our AI Club events, activities, and memorable moments. Stay tuned for an exciting visual journey through our club's journey!
           </p>
-        </div>
+        </motion.div>
         
         <div style={{
           display: 'flex',
@@ -72,53 +88,50 @@ const PhotoGallery = ({ isMobile = false }) => {
           flexWrap: 'wrap',
           marginBottom: '2rem'
         }}>
-          <div style={{
-            backgroundColor: 'rgba(36, 112, 161, 0.2)',
-            borderRadius: '10px',
-            padding: isMobile ? '0.75rem' : '1rem',
-            minWidth: isMobile ? '100px' : '120px',
-            flex: '1 1 auto',
-            maxWidth: '150px'
-          }}>
-            <div style={{ fontSize: isMobile ? '1.5rem' : '2rem', marginBottom: '0.5rem' }}>🎉</div>
-            <div style={{ color: '#e2e8f0', fontSize: isMobile ? '0.8rem' : '0.9rem' }}>Events</div>
-          </div>
-          <div style={{
-            backgroundColor: 'rgba(36, 112, 161, 0.2)',
-            borderRadius: '10px',
-            padding: isMobile ? '0.75rem' : '1rem',
-            minWidth: isMobile ? '100px' : '120px',
-            flex: '1 1 auto',
-            maxWidth: '150px'
-          }}>
-            <div style={{ fontSize: isMobile ? '1.5rem' : '2rem', marginBottom: '0.5rem' }}>🤖</div>
-            <div style={{ color: '#e2e8f0', fontSize: isMobile ? '0.8rem' : '0.9rem' }}>Projects</div>
-          </div>
-          <div style={{
-            backgroundColor: 'rgba(36, 112, 161, 0.2)',
-            borderRadius: '10px',
-            padding: isMobile ? '0.75rem' : '1rem',
-            minWidth: isMobile ? '100px' : '120px',
-            flex: '1 1 auto',
-            maxWidth: '150px'
-          }}>
-            <div style={{ fontSize: isMobile ? '1.5rem' : '2rem', marginBottom: '0.5rem' }}>👥</div>
-            <div style={{ color: '#e2e8f0', fontSize: isMobile ? '0.8rem' : '0.9rem' }}>Team</div>
-          </div>
+          {[
+            { emoji: '🎉', label: 'Events' },
+            { emoji: '🤖', label: 'Projects' },
+            { emoji: '👥', label: 'Team' }
+          ].map((item, index) => (
+            <motion.div 
+              key={index}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 + index * 0.1 }}
+              whileHover={{ scale: 1.05, backgroundColor: 'rgba(36, 112, 161, 0.3)' }}
+              style={{
+                backgroundColor: 'rgba(36, 112, 161, 0.2)',
+                borderRadius: '10px',
+                padding: isMobile ? '0.75rem' : '1rem',
+                minWidth: isMobile ? '100px' : '120px',
+                flex: '1 1 auto',
+                maxWidth: '150px',
+                cursor: 'default'
+              }}
+            >
+              <div style={{ fontSize: isMobile ? '1.5rem' : '2rem', marginBottom: '0.5rem' }}>{item.emoji}</div>
+              <div style={{ color: '#e2e8f0', fontSize: isMobile ? '0.8rem' : '0.9rem' }}>{item.label}</div>
+            </motion.div>
+          ))}
         </div>
         
-        <div style={{
-          backgroundColor: 'rgba(255, 193, 7, 0.15)',
-          border: '1px solid rgba(255, 193, 7, 0.4)',
-          borderRadius: '10px',
-          padding: isMobile ? '0.75rem' : '1rem',
-          color: '#ffd54f'
-        }}>
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+          style={{
+            backgroundColor: 'rgba(255, 193, 7, 0.15)',
+            border: '1px solid rgba(255, 193, 7, 0.4)',
+            borderRadius: '10px',
+            padding: isMobile ? '0.75rem' : '1rem',
+            color: '#ffd54f'
+          }}
+        >
           <p style={{ margin: '0', fontSize: isMobile ? '0.85rem' : '1rem' }}>
             <strong>Expected Features:</strong> Event photos, project showcases, team moments, and behind-the-scenes content
           </p>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
       
       <style>{`
         @keyframes pulse {
