@@ -125,7 +125,11 @@ const Faculty = ({ isMobile = false }) => {
               height: '300px',
               backgroundImage: `url(${faculty.image})`,
               backgroundSize: faculty.name === 'Prof. Sowmya H N' ? '80%' : 'cover',
-              backgroundPosition: faculty.name === 'Prof. Jayaprada S Hiremath' ? 'center 2%' : faculty.name === 'Prof. Pavithra B G' ? 'center 30%' : faculty.name === 'Dr. Shantakumar B Patil' ? 'center 30%' : 'center',
+              backgroundPosition: 
+                faculty.name === 'Dr. Padma Reddy A.M' ? 'center 15%' :
+                faculty.name === 'Prof. Jayaprada S Hiremath' ? 'center 2%' : 
+                faculty.name === 'Prof. Pavithra B G' ? 'center 30%' : 
+                faculty.name === 'Dr. Shantakumar B Patil' ? 'center 30%' : 'center',
               display: 'flex',
               alignItems: 'flex-end',
               justifyContent: 'center',

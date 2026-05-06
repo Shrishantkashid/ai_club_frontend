@@ -6,16 +6,18 @@ const OpenDayGrid = ({ puzzles, onSelectPuzzle, isMobile }) => {
         <div style={{
             position: 'relative',
             width: '100%',
-            height: '80vh',
+            width: '100%',
+            height: isMobile ? '60vh' : '80vh',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            overflow: 'visible'
+            overflow: 'visible',
+            minHeight: isMobile ? '350px' : '500px'
         }}>
             {puzzles.map((puzzle, index) => {
                 // Calculate orbit position
                 const angle = (index / puzzles.length) * Math.PI * 2;
-                const radius = isMobile ? 110 : 250;
+                const radius = isMobile ? (window.innerWidth < 400 ? 90 : 110) : 250;
                 
                 return (
                     <motion.div
@@ -45,8 +47,8 @@ const OpenDayGrid = ({ puzzles, onSelectPuzzle, isMobile }) => {
                         onClick={() => onSelectPuzzle(puzzle)}
                         style={{
                             position: 'absolute',
-                            width: isMobile ? '100px' : '140px',
-                            height: isMobile ? '100px' : '140px',
+                            width: isMobile ? (window.innerWidth < 400 ? '80px' : '100px') : '140px',
+                            height: isMobile ? (window.innerWidth < 400 ? '80px' : '100px') : '140px',
                             background: 'rgba(30, 58, 95, 0.6)',
                             backdropFilter: 'blur(10px)',
                             border: `2px solid ${puzzle.completed ? '#4ade80' : 'rgba(100, 255, 218, 0.3)'}`,
@@ -61,7 +63,7 @@ const OpenDayGrid = ({ puzzles, onSelectPuzzle, isMobile }) => {
                             boxShadow: puzzle.completed ? '0 0 20px rgba(74, 222, 128, 0.4)' : '0 0 15px rgba(30, 58, 95, 0.5)'
                         }}
                     >
-                        <div style={{ fontSize: isMobile ? '1.8rem' : '2.5rem', marginBottom: '0.5rem' }}>{puzzle.icon}</div>
+                        <div style={{ fontSize: isMobile ? (window.innerWidth < 400 ? '1.5rem' : '1.8rem') : '2.5rem', marginBottom: '0.5rem' }}>{puzzle.icon}</div>
                         <div style={{ 
                             fontSize: isMobile ? '0.7rem' : '0.9rem', 
                             fontWeight: 'bold', 
@@ -99,8 +101,8 @@ const OpenDayGrid = ({ puzzles, onSelectPuzzle, isMobile }) => {
                 }}
                 transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
                 style={{
-                    width: '100px',
-                    height: '100px',
+                    width: isMobile ? '60px' : '100px',
+                    height: isMobile ? '60px' : '100px',
                     borderRadius: '50%',
                     background: 'radial-gradient(circle, #64ffda 0%, transparent 70%)',
                     opacity: 0.3,

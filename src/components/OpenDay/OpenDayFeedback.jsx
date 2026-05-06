@@ -69,7 +69,9 @@ const OpenDayFeedback = ({ onSubmit, isMobile }) => {
                         minHeight: '120px',
                         fontSize: '1rem',
                         outline: 'none',
-                        resize: 'none'
+                        resize: 'none',
+                        width: '100%',
+                        boxSizing: 'border-box'
                     }}
                 />
 

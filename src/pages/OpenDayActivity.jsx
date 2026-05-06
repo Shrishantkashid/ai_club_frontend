@@ -84,7 +84,7 @@ const OpenDayActivity = ({ onBackToHome, isMobile }) => {
     return (
         <div style={{
             minHeight: '100vh',
-            width: '100vw',
+            width: '100%',
             position: isMobile ? 'relative' : 'fixed',
             top: 0,
             left: 0,
@@ -149,15 +149,21 @@ const OpenDayActivity = ({ onBackToHome, isMobile }) => {
                     position: 'absolute',
                     top: isMobile ? '1rem' : '2rem',
                     right: isMobile ? '1rem' : '2rem',
-                    background: 'rgba(100, 255, 218, 0.1)',
+                    background: 'rgba(100, 255, 218, 0.15)',
                     color: '#64ffda',
-                    border: '1px solid rgba(100, 255, 218, 0.3)',
-                    padding: '0.5rem 1rem',
-                    borderRadius: '30px',
+                    border: '1px solid rgba(100, 255, 218, 0.4)',
+                    padding: isMobile ? '0.5rem' : '0.5rem 1rem',
+                    width: isMobile ? '40px' : 'auto',
+                    height: isMobile ? '40px' : 'auto',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     cursor: 'pointer',
                     zIndex: 1000,
                     fontWeight: 'bold',
-                    fontSize: isMobile ? '0.8rem' : '1rem'
+                    fontSize: isMobile ? '1.2rem' : '1rem',
+                    boxShadow: '0 0 15px rgba(100, 255, 218, 0.2)'
                 }}
             >
                 {isMobile ? '✕' : 'ESC Exit'}

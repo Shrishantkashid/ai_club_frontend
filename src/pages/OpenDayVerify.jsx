@@ -81,7 +81,7 @@ const OpenDayVerify = ({ isMobile }) => {
     return (
         <div style={{
             minHeight: '100vh',
-            width: '100vw',
+            width: '100%',
             backgroundColor: '#0a192f',
             display: 'flex',
             alignItems: 'center',

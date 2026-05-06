@@ -8,6 +8,7 @@ import image4 from '../assets/WhatsApp Image 2026-03-01 at 3.30.51 PM.jpeg'
 import image5 from '../assets/WhatsApp Image 2026-03-01 at 3.30.53 PM.jpeg'
 import image6 from '../assets/WhatsApp Image 2026-03-01 at 3.30.55 PM.jpeg'
 import image7 from '../assets/WhatsApp Image 2026-03-01 at 3.30.57 PM.jpeg'
+import image8 from '../assets/WhatsApp Image 2026-05-06 at 8.37.26 AM.jpeg'
 
 const OfficeBearers = ({ isMobile = false }) => {
   const containerVariants = {
@@ -78,10 +79,10 @@ const OfficeBearers = ({ isMobile = false }) => {
     {
       id: 6,
       name: "Shashank M",
-      position: "joint-Treasurer",
+      position: "Joint-Treasurer",
       department: "Computer Science & Engineering",
       year: "Third Year",
-      image: image4,
+      image: image8,
       bio: "Handling financial matters and resource management. Interested in AI ethics and policy. Manages club budget and sponsorships."
     },
     {
@@ -110,24 +111,6 @@ const OfficeBearers = ({ isMobile = false }) => {
       year: "Second Year",
       image: image6,
       bio: "The membership coordinator is responsible for recruiting new members and maintaining members records. They engage memebers encourage effective communication within the club."
-    },
-    {
-      id: 10,
-      name: "Member Name",
-      position: "Video Editing",
-      department: "Computer Science & Engineering",
-      year: "Second Year",
-      image: image4, // Using a fallback image
-      bio: "Responsible for video editing and multimedia content creation for club events and promotional materials."
-    },
-    {
-      id: 11,
-      name: "Member Name",
-      position: "Photographer",
-      department: "Computer Science & Engineering",
-      year: "Second Year",
-      image: image5, // Using a fallback image
-      bio: "Captures moments at club events and creates visual content for social media and promotional purposes."
     }
   ]
 
@@ -147,7 +130,7 @@ const OfficeBearers = ({ isMobile = false }) => {
         Office Bearers
       </h1>
 
-      <motion.div 
+      <motion.div
         initial="hidden"
         animate="visible"
         variants={containerVariants}
@@ -158,11 +141,11 @@ const OfficeBearers = ({ isMobile = false }) => {
         }}
       >
         {bearers.map((bearer, index) => (
-          <motion.div 
-            key={bearer.id} 
+          <motion.div
+            key={bearer.id}
             variants={cardVariants}
-            whileHover={{ 
-              y: -10, 
+            whileHover={{
+              y: -10,
               scale: 1.02,
               boxShadow: '0 12px 40px rgba(30, 58, 95, 0.5), 0 0 20px rgba(100, 255, 218, 0.2)'
             }}
@@ -179,14 +162,15 @@ const OfficeBearers = ({ isMobile = false }) => {
               height: '200px',
               backgroundImage: `url(${bearer.image})`,
               backgroundSize: 'cover',
-              backgroundPosition: bearer.name === 'Nithin Raj G' ? 'center 20%' : 
+              backgroundPosition: bearer.name === 'Nithin Raj G' ? 'center 20%' :
                 bearer.name === 'Nishanth R' ? 'center 10%' :
-                bearer.name === 'Sanjana R' ? 'center 65%' :
-                bearer.name === 'Shrishant Shridhar Kashid' ? 'center 48%' :
-                bearer.name === 'Akshay A Agile' ? 'center 25%' :
-                bearer.name === 'Yashwanth Gowda H' ? 'center 27%' :
-                bearer.name === 'Rakshitha J K' ? 'center 53%' :
-                bearer.name === 'Shreekara Bhat A P' ? 'center 50%' : 'center',
+                  bearer.name === 'Sanjana R' ? 'center 65%' :
+                    bearer.name === 'Shrishant Shridhar Kashid' ? 'center 48%' :
+                      bearer.name === 'Akshay A Agile' ? 'center 25%' :
+                        bearer.name === 'Yashwanth Gowda H' ? 'center 27%' :
+                          bearer.name === 'Rakshitha J K' ? 'center 53%' :
+                            bearer.name === 'Shreekara Bhat A P' ? 'center 50%' :
+                              bearer.name === 'Shashank M' ? 'center 20%' : 'center',
               display: 'flex',
               alignItems: 'flex-end',
               justifyContent: 'center',
@@ -206,16 +190,16 @@ const OfficeBearers = ({ isMobile = false }) => {
                 padding: '1rem',
                 textAlign: 'center'
               }}>
-                <h3 style={{ 
-                  color: '#64ffda', 
+                <h3 style={{
+                  color: '#64ffda',
                   margin: '0',
                   fontSize: '1.4rem'
                 }}>
                   {bearer.name}
                 </h3>
-                <p style={{ 
-                  color: '#4ade80', 
-                  fontWeight: 'bold', 
+                <p style={{
+                  color: '#4ade80',
+                  fontWeight: 'bold',
                   margin: '0.25rem 0',
                   fontSize: '1.1rem'
                 }}>
@@ -223,18 +207,18 @@ const OfficeBearers = ({ isMobile = false }) => {
                 </p>
               </div>
             </div>
-            
+
             <div style={{ padding: '1.5rem' }}>
-              <p style={{ 
-                color: '#cbd5e0', 
+              <p style={{
+                color: '#cbd5e0',
                 marginBottom: '0.5rem',
                 fontStyle: 'italic'
               }}>
                 {bearer.department} - {bearer.year}
               </p>
-              <p style={{ 
-                color: '#e2e8f0', 
-                lineHeight: '1.4' 
+              <p style={{
+                color: '#e2e8f0',
+                lineHeight: '1.4'
               }}>
                 {bearer.bio}
               </p>
