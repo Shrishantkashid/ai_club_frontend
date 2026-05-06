@@ -196,9 +196,9 @@ function App() {
 
     if (showOpenDay) {
       if (openDayState === 'verify') {
-        return <OpenDayVerify />
+        return <OpenDayVerify isMobile={isMobile} />
       }
-      return <OpenDayActivity onBackToHome={() => {
+      return <OpenDayActivity isMobile={isMobile} onBackToHome={() => {
         setShowOpenDay(false)
         window.location.hash = ''
       }} />
@@ -341,7 +341,7 @@ function App() {
           borderBottom: '1px solid rgba(100, 255, 218, 0.2)',
           display: (showContest || showOpenDay) ? 'none' : 'block', // Hide navigation during contest or open day
           padding: isMobile ? '0.5rem 0' : '0.75rem 0',
-          width: '100vw', // Set to full viewport width
+          width: '100%', // Changed from 100vw to 100% to prevent horizontal scroll
           marginLeft: '0'
         }}
       >
@@ -389,14 +389,15 @@ function App() {
               fontWeight: '700',
               textShadow: '0 0 10px rgba(100, 255, 218, 0.4)',
               letterSpacing: isMobile ? '0.2px' : '0.5px',
-              whiteSpace: 'nowrap'
+              whiteSpace: isMobile ? 'normal' : 'nowrap',
+              lineHeight: '1.2'
             }}>
               Artificial Intelligence Club
             </h1>
           </div>
           <div style={{ 
-            flexGrow: 1, // Allow this middle space to grow and push navigation left
-            margin: '0 2rem' // Consolidated margin to avoid conflict
+            flexGrow: isMobile ? 0 : 1, 
+            margin: isMobile ? '0 0.5rem' : '0 2rem' 
           }}></div>
           <div>
             {!showContest && <Navigation activeSection={activeSection} setActiveSection={setActiveSection} isMobile={isMobile} />}
@@ -410,8 +411,10 @@ function App() {
         flex: 1,
         overflow: 'auto',
         padding: '0',
-        maxHeight: showContest ? '100vh' : (isMobile ? 'calc(100vh - 70px)' : 'calc(100vh - 120px)'), // Adjust height based on navigation visibility
-        width: '100%'
+        maxHeight: (showContest || showOpenDay) ? '100vh' : (isMobile ? 'calc(100vh - 70px)' : 'calc(100vh - 120px)'), // Adjust height based on navigation visibility
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column'
       }}>
         {showContest && contestState === 'leaderboard' && (
           <div style={{

@@ -17,8 +17,8 @@ const Navigation = ({ activeSection, setActiveSection, isMobile = false }) => {
       <nav style={{
         backgroundColor: 'rgba(10, 25, 47, 0.98)',
         backdropFilter: 'blur(15px)',
-        padding: '0.75rem 1rem',
-        position: 'relative',
+        padding: '0.5rem',
+        position: 'static', // Changed from relative to allow dropdown to use header width
         borderTop: '1px solid rgba(100, 255, 218, 0.15)'
       }}>
         {/* Mobile menu button */}
@@ -29,10 +29,11 @@ const Navigation = ({ activeSection, setActiveSection, isMobile = false }) => {
             backgroundColor: 'rgba(100, 255, 218, 0.15)',
             border: '1px solid rgba(100, 255, 218, 0.4)',
             color: '#64ffda',
-            padding: '0.6rem 1.2rem',
+            padding: '0.5rem 1rem',
             borderRadius: '8px',
             cursor: 'pointer',
-            width: '100%',
+            width: 'fit-content', // Changed from 100%
+            marginLeft: 'auto', // Push to right
             textAlign: 'center',
             fontWeight: 'bold',
             fontSize: '1rem',
@@ -60,9 +61,10 @@ const Navigation = ({ activeSection, setActiveSection, isMobile = false }) => {
                 border: '1px solid rgba(100, 255, 218, 0.3)',
                 borderRadius: '0 0 12px 12px',
                 zIndex: 1000,
-                boxShadow: '0 8px 20px rgba(0, 0, 0, 0.4)',
-                marginTop: '0.5rem',
-                overflow: 'hidden'
+                boxShadow: '0 8px 30px rgba(0, 0, 0, 0.5)',
+                marginTop: '0',
+                width: '100vw',
+                left: 0
               }}
             >
               {navItems.map((item, index) => (

@@ -2,7 +2,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import Webcam from 'react-webcam';
 
-const OpenDayEntry = ({ onRegister }) => {
+const OpenDayEntry = ({ onRegister, isMobile }) => {
     const [formData, setFormData] = useState({ name: '', usn: '', email: '', password: '' });
     const [image, setImage] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -32,13 +32,13 @@ const OpenDayEntry = ({ onRegister }) => {
             style={{
                 background: 'rgba(30, 58, 95, 0.4)',
                 backdropFilter: 'blur(15px)',
-                padding: '2.5rem',
+                padding: isMobile ? '1.5rem' : '2.5rem',
                 borderRadius: '24px',
                 border: '1px solid rgba(100, 255, 218, 0.3)',
                 boxShadow: '0 0 40px rgba(100, 255, 218, 0.1)',
                 maxWidth: '500px',
-                width: '90%',
-                margin: '2rem auto',
+                width: '100%',
+                margin: isMobile ? '0' : '2rem auto',
                 color: '#e2e8f0',
                 position: 'relative',
                 overflow: 'hidden'
@@ -63,7 +63,7 @@ const OpenDayEntry = ({ onRegister }) => {
                 textAlign: 'center', 
                 color: '#64ffda', 
                 marginBottom: '2rem',
-                fontSize: '1.8rem',
+                fontSize: isMobile ? '1.4rem' : '1.8rem',
                 textShadow: '0 0 10px rgba(100, 255, 218, 0.5)'
             }}>
                 ID Verification

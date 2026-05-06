@@ -86,7 +86,7 @@ const MonkeyBanana = ({ onComplete }) => {
                 </motion.div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', maxWidth: '500px', margin: '0 auto' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem', width: '100%', maxWidth: '500px', margin: '0 auto' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                     <button onClick={() => moveMonkey('A')} style={actBtnStyle}>Go to A</button>
                     <button onClick={() => moveMonkey('B')} style={actBtnStyle}>Go to B</button>

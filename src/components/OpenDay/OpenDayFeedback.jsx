@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const OpenDayFeedback = ({ onSubmit }) => {
+const OpenDayFeedback = ({ onSubmit, isMobile }) => {
     const [rating, setRating] = useState(5);
     const [comments, setComments] = useState('');
     const [loading, setLoading] = useState(false);
@@ -21,16 +21,16 @@ const OpenDayFeedback = ({ onSubmit }) => {
             style={{
                 background: 'rgba(30, 58, 95, 0.4)',
                 backdropFilter: 'blur(15px)',
-                padding: '3rem',
+                padding: isMobile ? '1.5rem' : '3rem',
                 borderRadius: '32px',
                 border: '1px solid rgba(100, 255, 218, 0.3)',
                 maxWidth: '600px',
-                width: '90%',
-                margin: '2rem auto',
+                width: '100%',
+                margin: isMobile ? '0' : '2rem auto',
                 textAlign: 'center'
             }}
         >
-            <h2 style={{ color: '#64ffda', marginBottom: '1.5rem', fontSize: '2rem' }}>Experience Feedback</h2>
+            <h2 style={{ color: '#64ffda', marginBottom: '1.5rem', fontSize: isMobile ? '1.5rem' : '2rem' }}>Experience Feedback</h2>
             <p style={{ color: '#94a3b8', marginBottom: '2rem' }}>How did you like the AI Club Zero-Gravity interface?</p>
 
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -45,7 +45,7 @@ const OpenDayFeedback = ({ onSubmit }) => {
                             style={{
                                 background: 'none',
                                 border: 'none',
-                                fontSize: '2.5rem',
+                                fontSize: isMobile ? '1.8rem' : '2.5rem',
                                 cursor: 'pointer',
                                 color: star <= rating ? '#fbbf24' : 'rgba(255, 255, 255, 0.1)',
                                 filter: star <= rating ? 'drop-shadow(0 0 10px rgba(251, 191, 36, 0.5))' : 'none'

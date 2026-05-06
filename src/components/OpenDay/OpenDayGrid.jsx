@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const OpenDayGrid = ({ puzzles, onSelectPuzzle }) => {
+const OpenDayGrid = ({ puzzles, onSelectPuzzle, isMobile }) => {
     return (
         <div style={{
             position: 'relative',
@@ -15,7 +15,7 @@ const OpenDayGrid = ({ puzzles, onSelectPuzzle }) => {
             {puzzles.map((puzzle, index) => {
                 // Calculate orbit position
                 const angle = (index / puzzles.length) * Math.PI * 2;
-                const radius = window.innerWidth < 768 ? 120 : 250;
+                const radius = isMobile ? 110 : 250;
                 
                 return (
                     <motion.div
@@ -45,8 +45,8 @@ const OpenDayGrid = ({ puzzles, onSelectPuzzle }) => {
                         onClick={() => onSelectPuzzle(puzzle)}
                         style={{
                             position: 'absolute',
-                            width: '140px',
-                            height: '140px',
+                            width: isMobile ? '100px' : '140px',
+                            height: isMobile ? '100px' : '140px',
                             background: 'rgba(30, 58, 95, 0.6)',
                             backdropFilter: 'blur(10px)',
                             border: `2px solid ${puzzle.completed ? '#4ade80' : 'rgba(100, 255, 218, 0.3)'}`,
@@ -61,9 +61,9 @@ const OpenDayGrid = ({ puzzles, onSelectPuzzle }) => {
                             boxShadow: puzzle.completed ? '0 0 20px rgba(74, 222, 128, 0.4)' : '0 0 15px rgba(30, 58, 95, 0.5)'
                         }}
                     >
-                        <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>{puzzle.icon}</div>
+                        <div style={{ fontSize: isMobile ? '1.8rem' : '2.5rem', marginBottom: '0.5rem' }}>{puzzle.icon}</div>
                         <div style={{ 
-                            fontSize: '0.9rem', 
+                            fontSize: isMobile ? '0.7rem' : '0.9rem', 
                             fontWeight: 'bold', 
                             color: puzzle.completed ? '#4ade80' : '#64ffda' 
                         }}>

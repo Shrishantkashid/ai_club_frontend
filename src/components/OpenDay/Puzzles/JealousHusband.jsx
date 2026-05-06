@@ -86,7 +86,7 @@ const JealousHusband = ({ onComplete }) => {
             
             <div style={{ display: 'flex', justifyContent: 'space-between', height: '200px', background: 'rgba(30, 58, 95, 0.2)', borderRadius: '16px', padding: '1rem', position: 'relative' }}>
                 {/* Left Shore */}
-                <div style={{ width: '150px', borderRight: '2px dashed rgba(100, 255, 218, 0.2)' }}>
+                <div style={{ width: '30%', minWidth: '80px', borderRight: '2px dashed rgba(100, 255, 218, 0.2)' }}>
                     <div style={{ marginBottom: '10px', fontSize: '0.8rem', color: '#64ffda' }}>Left Bank</div>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
                         {leftSide.map(p => <Person key={p} name={p} onClick={() => toggleBoat(p, 'shore')} />)}
@@ -97,14 +97,14 @@ const JealousHusband = ({ onComplete }) => {
                 <div style={{ flex: 1, display: 'flex', justifyContent: boatPos === 'left' ? 'flex-start' : 'flex-end', alignItems: 'center', padding: '0 20px' }}>
                     <motion.div
                         layout
-                        style={{ width: '120px', height: '60px', background: '#475569', borderRadius: '30px 30px 10px 10px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px', cursor: 'pointer' }}
+                        style={{ width: '100px', height: '50px', background: '#475569', borderRadius: '30px 30px 10px 10px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px', cursor: 'pointer' }}
                     >
                         {boat.map(p => <Person key={p} name={p} onClick={() => toggleBoat(p, 'boat')} isSmall />)}
                     </motion.div>
                 </div>
 
                 {/* Right Shore */}
-                <div style={{ width: '150px', borderLeft: '2px dashed rgba(100, 255, 218, 0.2)' }}>
+                <div style={{ width: '30%', minWidth: '80px', borderLeft: '2px dashed rgba(100, 255, 218, 0.2)' }}>
                     <div style={{ marginBottom: '10px', fontSize: '0.8rem', color: '#64ffda' }}>Right Bank</div>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
                         {rightSide.map(p => <Person key={p} name={p} onClick={() => toggleBoat(p, 'shore')} />)}

@@ -13,7 +13,7 @@ import JealousHusband from '../components/OpenDay/Puzzles/JealousHusband';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-const OpenDayActivity = ({ onBackToHome }) => {
+const OpenDayActivity = ({ onBackToHome, isMobile }) => {
     const [step, setStep] = useState('ENTRY'); // ENTRY, PUZZLES, FEEDBACK, COMPLETED
     const [attemptId, setAttemptId] = useState(null);
     const [puzzles, setPuzzles] = useState([
@@ -85,16 +85,18 @@ const OpenDayActivity = ({ onBackToHome }) => {
         <div style={{
             minHeight: '100vh',
             width: '100vw',
-            position: 'fixed',
+            position: isMobile ? 'relative' : 'fixed',
             top: 0,
             left: 0,
             zIndex: 100,
             backgroundColor: '#0a192f',
-            overflow: 'hidden',
+            overflowX: 'hidden',
+            overflowY: 'auto',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: isMobile ? 'flex-start' : 'center',
+            padding: isMobile ? '4rem 1rem 2rem' : '0'
         }}>
             {/* Zero-Gravity background particles */}
             <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }}>
@@ -144,9 +146,9 @@ const OpenDayActivity = ({ onBackToHome }) => {
             <button
                 onClick={onBackToHome}
                 style={{
-                    position: 'fixed',
-                    top: '2rem',
-                    right: '2rem',
+                    position: 'absolute',
+                    top: isMobile ? '1rem' : '2rem',
+                    right: isMobile ? '1rem' : '2rem',
                     background: 'rgba(100, 255, 218, 0.1)',
                     color: '#64ffda',
                     border: '1px solid rgba(100, 255, 218, 0.3)',
@@ -154,28 +156,31 @@ const OpenDayActivity = ({ onBackToHome }) => {
                     borderRadius: '30px',
                     cursor: 'pointer',
                     zIndex: 1000,
-                    fontWeight: 'bold'
+                    fontWeight: 'bold',
+                    fontSize: isMobile ? '0.8rem' : '1rem'
                 }}
             >
-                ESC Exit
+                {isMobile ? '✕' : 'ESC Exit'}
             </button>
 
             <AnimatePresence mode="wait">
                 {step === 'ENTRY' && (
-                    <OpenDayEntry onRegister={handleRegister} key="entry" />
+                    <OpenDayEntry onRegister={handleRegister} key="entry" isMobile={isMobile} />
                 )}
 
                 {step === 'PUZZLES' && !activePuzzle && (
-                    <div key="grid" style={{ width: '100%', height: '100%' }}>
-                        <OpenDayGrid puzzles={puzzles} onSelectPuzzle={setActivePuzzle} />
+                    <div key="grid" style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                        <OpenDayGrid puzzles={puzzles} onSelectPuzzle={setActivePuzzle} isMobile={isMobile} />
                         <div style={{ 
-                            position: 'fixed', 
-                            bottom: '3rem', 
-                            left: '50%', 
-                            transform: 'translateX(-50%)',
-                            textAlign: 'center'
+                            position: isMobile ? 'relative' : 'fixed', 
+                            bottom: isMobile ? '1rem' : '3rem', 
+                            left: isMobile ? 'auto' : '50%', 
+                            transform: isMobile ? 'none' : 'translateX(-50%)',
+                            textAlign: 'center',
+                            marginTop: isMobile ? '2rem' : '0',
+                            paddingBottom: isMobile ? '2rem' : '0'
                         }}>
-                            <p style={{ color: '#94a3b8', marginBottom: '1rem' }}>
+                            <p style={{ color: '#94a3b8', marginBottom: '1rem', fontSize: isMobile ? '0.8rem' : '1rem' }}>
                                 Complete activities to unlock final verification
                             </p>
                             <motion.button
@@ -186,10 +191,11 @@ const OpenDayActivity = ({ onBackToHome }) => {
                                     background: 'rgba(100, 255, 218, 0.1)',
                                     color: '#64ffda',
                                     border: '1px solid #64ffda',
-                                    padding: '0.75rem 2rem',
+                                    padding: isMobile ? '0.6rem 1.5rem' : '0.75rem 2rem',
                                     borderRadius: '30px',
                                     cursor: 'pointer',
-                                    fontWeight: 'bold'
+                                    fontWeight: 'bold',
+                                    fontSize: isMobile ? '0.9rem' : '1rem'
                                 }}
                             >
                                 Finish Experience
@@ -232,7 +238,7 @@ const OpenDayActivity = ({ onBackToHome }) => {
                 )}
 
                 {step === 'FEEDBACK' && (
-                    <OpenDayFeedback onSubmit={handleFeedbackSubmit} key="feedback" />
+                    <OpenDayFeedback onSubmit={handleFeedbackSubmit} key="feedback" isMobile={isMobile} />
                 )}
 
                 {step === 'COMPLETED' && (

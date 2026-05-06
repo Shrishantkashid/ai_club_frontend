@@ -52,13 +52,13 @@ const TowerOfHanoi = ({ onComplete }) => {
     return (
         <div style={{ textAlign: 'center' }}>
             <p style={{ color: '#94a3b8', marginBottom: '2rem' }}>Move all disks to another pole. Larger disks cannot be placed on smaller ones.</p>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '40px', height: '200px', alignItems: 'flex-end' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', height: '200px', alignItems: 'flex-end', overflow: 'hidden' }}>
                 {poles.map((pole, i) => (
                     <div 
                         key={i} 
                         onClick={() => handlePoleClick(i)}
                         style={{ 
-                            width: '100px', 
+                            width: '80px', 
                             height: '100%', 
                             position: 'relative', 
                             cursor: 'pointer',

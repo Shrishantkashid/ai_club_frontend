@@ -4,7 +4,7 @@ import Webcam from 'react-webcam';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-const OpenDayVerify = () => {
+const OpenDayVerify = ({ isMobile }) => {
     const [status, setStatus] = useState('LOADING'); // LOADING, READY, VERIFYING, SUCCESS, ERROR
     const [token, setToken] = useState('');
     const [usn, setUsn] = useState('');
@@ -98,11 +98,11 @@ const OpenDayVerify = () => {
                 style={{
                     background: 'rgba(17, 34, 64, 0.7)',
                     backdropFilter: 'blur(15px)',
-                    padding: '3rem',
+                    padding: isMobile ? '1.5rem' : '3rem',
                     borderRadius: '30px',
                     border: '1px solid rgba(100, 255, 218, 0.2)',
                     maxWidth: '500px',
-                    width: '90%',
+                    width: '95%',
                     textAlign: 'center',
                     boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
                     zIndex: 1,
@@ -140,18 +140,18 @@ const OpenDayVerify = () => {
 
                 {status === 'READY' && (
                     <>
-                        <h2 style={{ color: '#64ffda', marginBottom: '0.5rem', fontSize: '2rem', textTransform: 'uppercase', letterSpacing: '3px' }}>Identity Link</h2>
+                        <h2 style={{ color: '#64ffda', marginBottom: '0.5rem', fontSize: isMobile ? '1.5rem' : '2rem', textTransform: 'uppercase', letterSpacing: '3px' }}>Identity Link</h2>
                         <div style={{ height: '2px', width: '50px', background: '#64ffda', margin: '0 auto 2rem' }} />
                         
                         {/* Prefilled non-editable info */}
                         <div style={{ marginBottom: '2rem', textAlign: 'left', background: 'rgba(10, 25, 47, 0.5)', padding: '1.5rem', borderRadius: '15px', border: '1px solid rgba(100, 255, 218, 0.1)' }}>
                             <div style={{ marginBottom: '1rem' }}>
                                 <label style={{ display: 'block', fontSize: '0.7rem', color: '#64ffda', textTransform: 'uppercase', marginBottom: '0.3rem', opacity: 0.7 }}>Subject Name</label>
-                                <div style={{ fontSize: '1.2rem', color: '#e2e8f0', fontWeight: 'bold' }}>{name || '...'}</div>
+                                <div style={{ fontSize: isMobile ? '1rem' : '1.2rem', color: '#e2e8f0', fontWeight: 'bold' }}>{name || '...'}</div>
                             </div>
                             <div>
                                 <label style={{ display: 'block', fontSize: '0.7rem', color: '#64ffda', textTransform: 'uppercase', marginBottom: '0.3rem', opacity: 0.7 }}>Nexus ID (USN)</label>
-                                <div style={{ fontSize: '1.2rem', color: '#e2e8f0', fontWeight: 'bold' }}>{usn}</div>
+                                <div style={{ fontSize: isMobile ? '1rem' : '1.2rem', color: '#e2e8f0', fontWeight: 'bold' }}>{usn}</div>
                             </div>
                         </div>
 

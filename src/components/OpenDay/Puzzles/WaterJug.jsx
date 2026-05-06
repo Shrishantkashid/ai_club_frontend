@@ -45,7 +45,7 @@ const WaterJug = ({ onComplete }) => {
         <div style={{ textAlign: 'center' }}>
             <p style={{ color: '#94a3b8', marginBottom: '2rem' }}>Goal: Get exactly <strong>4 Liters</strong> in the 5L jug.</p>
             
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '50px', alignItems: 'flex-end', height: '250px' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', alignItems: 'flex-end', height: '200px' }}>
                 {jugs.map((amount, i) => (
                     <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <div style={{ 

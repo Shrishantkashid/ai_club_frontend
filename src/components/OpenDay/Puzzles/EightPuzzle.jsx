@@ -61,7 +61,8 @@ const EightPuzzle = ({ onComplete }) => {
                     display: 'grid',
                     gridTemplateColumns: 'repeat(3, 1fr)',
                     gap: '10px',
-                    width: '300px',
+                    width: '100%',
+                    maxWidth: '300px',
                     margin: '0 auto'
                 }}>
                     {tiles.map((tile, i) => (
@@ -70,8 +71,7 @@ const EightPuzzle = ({ onComplete }) => {
                             layout
                             onClick={() => moveTile(i)}
                             style={{
-                                width: '90px',
-                                height: '90px',
+                                aspectRatio: '1/1',
                                 background: tile ? 'rgba(100, 255, 218, 0.1)' : 'transparent',
                                 border: tile ? '2px solid #64ffda' : '2px dashed rgba(100, 255, 218, 0.2)',
                                 borderRadius: '12px',
