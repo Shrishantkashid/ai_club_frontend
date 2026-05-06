@@ -131,7 +131,7 @@ const Activities = ({ navigateToContest, setShowContest, setContestState, isMobi
                 boxShadow: '0 4px 15px rgba(100, 255, 218, 0.3)'
               }}
             >
-              Learn More →
+              Join Experience →
             </motion.button>
           </motion.div>
         </motion.div>
